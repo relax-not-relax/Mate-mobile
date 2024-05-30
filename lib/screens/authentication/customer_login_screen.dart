@@ -5,6 +5,7 @@ import 'package:mate_project/screens/authentication/customer_register_screen.dar
 import 'package:mate_project/widgets/edit_pass_field.dart';
 import 'package:mate_project/widgets/edit_text_field.dart';
 import 'package:mate_project/widgets/normal_button_custom.dart';
+import 'package:mate_project/widgets/normal_dialog_custom.dart';
 
 class CustomerLoginScreen extends StatefulWidget {
   const CustomerLoginScreen({super.key});
@@ -17,6 +18,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String errorText = "";
+  NormalDialogCustom dialogCustom = NormalDialogCustom();
 
   @override
   void initState() {
@@ -233,7 +235,16 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                       ),
                       NormalButtonCustom(
                         name: "Login",
-                        action: () {},
+                        action: () {
+                          dialogCustom.showWaitingDialog(
+                            context,
+                            'assets/pics/oldpeople.png',
+                            "Have a nice day",
+                            "Togetherness - Companion - Sharing",
+                            true,
+                            const Color.fromARGB(255, 68, 60, 172),
+                          );
+                        },
                         background: const Color.fromARGB(255, 84, 110, 255),
                       ),
                       SizedBox(
