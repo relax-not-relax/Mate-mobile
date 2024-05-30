@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_project/screens/authentication/customer_login_screen.dart';
+import 'package:mate_project/screens/authentication/staff_login_screen.dart';
 import 'package:mate_project/widgets/normal_button_custom.dart';
 import 'package:mate_project/widgets/outline_button_custom.dart';
 
@@ -87,7 +88,16 @@ class LoginSelectionScreen extends StatelessWidget {
                   ),
                   OutlineButtonCustom(
                     name: 'LOGIN AS STAFF',
-                    action: () {},
+                    action: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return StaffLoginScreen();
+                          },
+                        ),
+                      );
+                    },
                     selectionColor: const Color.fromARGB(255, 84, 110, 255),
                   ),
                   SizedBox(
