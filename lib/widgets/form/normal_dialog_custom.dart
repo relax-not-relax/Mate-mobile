@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mate_project/widgets/circular_progress.dart';
-import 'package:mate_project/widgets/normal_button_custom.dart';
+import 'package:mate_project/widgets/form/circular_progress.dart';
+import 'package:mate_project/widgets/form/normal_button_custom.dart';
 
 class NormalDialogCustom {
   const NormalDialogCustom();
