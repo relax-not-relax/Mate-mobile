@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_project/screens/authentication/customer_register_screen.dart';
-import 'package:mate_project/widgets/edit_pass_field.dart';
-import 'package:mate_project/widgets/edit_text_field.dart';
-import 'package:mate_project/widgets/normal_button_custom.dart';
-import 'package:mate_project/widgets/normal_dialog_custom.dart';
+import 'package:mate_project/widgets/form/edit_pass_field.dart';
+import 'package:mate_project/widgets/form/edit_text_field.dart';
+import 'package:mate_project/widgets/form/normal_button_custom.dart';
+import 'package:mate_project/widgets/form/normal_dialog_custom.dart';
 
 class CustomerLoginScreen extends StatefulWidget {
   const CustomerLoginScreen({super.key});

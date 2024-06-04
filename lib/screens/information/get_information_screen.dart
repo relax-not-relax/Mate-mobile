@@ -6,8 +6,8 @@ import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/screens/information/widgets/birthday_selection.dart';
 import 'package:mate_project/screens/information/widgets/gender_selection.dart';
 import 'package:mate_project/screens/information/widgets/hobbies_selection.dart';
-import 'package:mate_project/widgets/disabled_button_custom.dart';
-import 'package:mate_project/widgets/normal_button_custom.dart';
+import 'package:mate_project/widgets/form/disabled_button_custom.dart';
+import 'package:mate_project/widgets/form/normal_button_custom.dart';
 
 class GetInformationScreen extends StatefulWidget {
   const GetInformationScreen({super.key});
@@ -52,7 +52,7 @@ class _GetInformationScreenState extends State<GetInformationScreen> {
   @override
   void initState() {
     super.initState();
-    pageIndex = 2;
+    pageIndex = 0;
     _initGender = getCurrentGender();
     _initGender.then((value) {
       gender = value;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mate_project/widgets/normal_button_custom.dart';
-import 'package:mate_project/widgets/normal_dialog_custom.dart';
-import 'package:mate_project/widgets/otp_form.dart';
+import 'package:mate_project/widgets/form/normal_button_custom.dart';
+import 'package:mate_project/widgets/form/normal_dialog_custom.dart';
+import 'package:mate_project/widgets/form/otp_form.dart';
 
 class VerificationScreen extends StatefulWidget {
   const VerificationScreen({super.key});

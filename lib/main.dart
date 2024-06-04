@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mate_project/screens/authentication/customer_login_screen.dart';
 import 'package:mate_project/screens/authentication/start_screen.dart';
 import 'package:mate_project/screens/authentication/verification_screen.dart';
+import 'package:mate_project/screens/home/home_screen.dart';
+import 'package:mate_project/screens/home/main_screen.dart';
 import 'package:mate_project/screens/information/get_information_screen.dart';
 
 void main() {
@@ -25,7 +27,10 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         //home: const StartScreen(),
-        home: GetInformationScreen(),
+        home: MainScreen(
+          inputScreen: HomeScreen(),
+          screenIndex: 0,
+        ),
         debugShowCheckedModeBanner: false,
       ),
       designSize: const Size(360, 800),

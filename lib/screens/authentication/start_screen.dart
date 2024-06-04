@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mate_project/screens/introduction/onboard_screen.dart';
-import 'package:mate_project/widgets/circular_progress.dart';
+import 'package:mate_project/widgets/form/circular_progress.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
