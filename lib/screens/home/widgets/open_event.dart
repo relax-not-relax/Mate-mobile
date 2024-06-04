@@ -44,16 +44,17 @@ class _OpenEventState extends State<OpenEvent> {
       width: 360.w,
       height: 140.h,
       decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 238, 241, 255),
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: const [
-            BoxShadow(
-              color: Color.fromARGB(38, 20, 19, 19),
-              spreadRadius: 0,
-              blurRadius: 10,
-              offset: Offset(0, 4), // changes position of shadow
-            )
-          ]),
+        color: const Color.fromARGB(255, 238, 241, 255),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromARGB(38, 20, 19, 19),
+            spreadRadius: 0,
+            blurRadius: 10,
+            offset: Offset(0, 4), // changes position of shadow
+          )
+        ],
+      ),
       child: Row(
         children: [
           Container(

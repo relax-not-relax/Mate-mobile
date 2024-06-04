@@ -14,6 +14,14 @@ class LockMembership extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 239, 238, 254),
         borderRadius: BorderRadius.circular(15),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromARGB(38, 20, 19, 19),
+            spreadRadius: 0,
+            blurRadius: 10,
+            offset: Offset(0, 4), // changes position of shadow
+          )
+        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -21,7 +29,7 @@ class LockMembership extends StatelessWidget {
         children: [
           Flexible(
             child: Text(
-              "Room Membership",
+              "Pack Membership",
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.inter(

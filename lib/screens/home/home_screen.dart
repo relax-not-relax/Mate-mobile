@@ -3,10 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/models/event.dart';
+import 'package:mate_project/models/pack.dart';
+import 'package:mate_project/models/room.dart';
 import 'package:mate_project/screens/home/widgets/lock_event.dart';
 import 'package:mate_project/screens/home/widgets/lock_membership.dart';
 import 'package:mate_project/screens/home/widgets/lock_my_room.dart';
+import 'package:mate_project/screens/home/widgets/my_room.dart';
 import 'package:mate_project/screens/home/widgets/open_event.dart';
+import 'package:mate_project/screens/home/widgets/room_membership.dart';
 import 'package:mate_project/widgets/app_bar/main_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -195,7 +199,27 @@ class _HomeScreenState extends State<HomeScreen>
                 children: [
                   // use when user is not a member
                   // LockMembership(),
-                  // LockMyRoom(),
+                  // LockMyPack(),
+
+                  // use when user is a memeber
+                  PackMembership(
+                    pack: Pack(
+                      packId: 1,
+                      packName: "Gold Room",
+                      description:
+                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                      price: 120.0,
+                      duration: 12,
+                      status: true,
+                    ),
+                  ),
+                  MyRoom(
+                    room: Room(
+                      roomId: 1,
+                      managerId: 1,
+                      roomName: "“Sunflower” Room",
+                    ),
+                  ),
                 ],
               ),
               SizedBox(

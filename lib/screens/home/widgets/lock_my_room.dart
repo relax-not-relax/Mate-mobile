@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 
-class LockMyRoom extends StatelessWidget {
-  const LockMyRoom({super.key});
+class LockMyPack extends StatelessWidget {
+  const LockMyPack({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +15,14 @@ class LockMyRoom extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 243, 243, 243),
         borderRadius: BorderRadius.circular(15),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromARGB(38, 20, 19, 19),
+            spreadRadius: 0,
+            blurRadius: 10,
+            offset: Offset(0, 4), // changes position of shadow
+          )
+        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -27,7 +35,7 @@ class LockMyRoom extends StatelessWidget {
               SizedBox(
                 width: 45.w,
                 child: Text(
-                  "My Room",
+                  "My Pack",
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.inter(
@@ -45,7 +53,7 @@ class LockMyRoom extends StatelessWidget {
             ],
           ),
           Text(
-            "You are not a member of any room yet!",
+            "You are not a member of any pack yet!",
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.inter(
