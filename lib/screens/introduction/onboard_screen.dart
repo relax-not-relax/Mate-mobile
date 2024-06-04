@@ -29,7 +29,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
     'Annual Event At Mate'
   ];
   List<String> descriptions = [
-    'Examine the 24-hour care system. Many useful services, such as utility rooms and massage services, are available. Come and join us in the society of the elderly.',
+    'Examine the 24-hour care system. Many useful services, such as utility packs and massage services, are available. Come and join us in the society of the elderly.',
     'Togetherness - Companion - Sharing',
     'Please come quarterly and join us for the memorable music concert!'
   ];
