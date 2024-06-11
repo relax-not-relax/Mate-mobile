@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconly/iconly.dart';
-import 'package:mate_project/screens/home/home_screen.dart';
+import 'package:mate_project/screens/home/customer/home_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen(
-      {super.key, required this.inputScreen, required this.screenIndex});
+  const MainScreen({
+    super.key,
+    required this.inputScreen,
+    required this.screenIndex,
+  });
 
   final Widget inputScreen;
   final int screenIndex;
