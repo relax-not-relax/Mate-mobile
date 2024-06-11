@@ -5,12 +5,12 @@ import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/models/event.dart';
 import 'package:mate_project/models/pack.dart';
 import 'package:mate_project/models/room.dart';
-import 'package:mate_project/screens/home/widgets/lock_event.dart';
-import 'package:mate_project/screens/home/widgets/lock_membership.dart';
-import 'package:mate_project/screens/home/widgets/lock_my_room.dart';
-import 'package:mate_project/screens/home/widgets/my_room.dart';
-import 'package:mate_project/screens/home/widgets/open_event.dart';
-import 'package:mate_project/screens/home/widgets/room_membership.dart';
+import 'package:mate_project/screens/home/customer/widgets/lock_event.dart';
+import 'package:mate_project/screens/home/customer/widgets/lock_membership.dart';
+import 'package:mate_project/screens/home/customer/widgets/lock_my_room.dart';
+import 'package:mate_project/screens/home/customer/widgets/my_room.dart';
+import 'package:mate_project/screens/home/customer/widgets/open_event.dart';
+import 'package:mate_project/screens/home/customer/widgets/room_membership.dart';
 import 'package:mate_project/widgets/app_bar/main_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
