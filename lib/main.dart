@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mate_project/screens/authentication/customer_login_screen.dart';
 import 'package:mate_project/screens/authentication/start_screen.dart';
 import 'package:mate_project/screens/authentication/verification_screen.dart';
+import 'package:mate_project/screens/home/admin/admin_home_screen.dart';
+import 'package:mate_project/screens/home/admin/admin_main_screen.dart';
 import 'package:mate_project/screens/home/customer/home_screen.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/home/staff/staff_home_screen.dart';
@@ -29,8 +31,8 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         //home: const StartScreen(),
-        home: StaffMainScreen(
-          inputScreen: StaffHomeScreen(),
+        home: AdminMainScreen(
+          inputScreen: AdminHomeScreen(),
           screenIndex: 0,
         ),
         debugShowCheckedModeBanner: false,
