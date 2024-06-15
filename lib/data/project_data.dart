@@ -19,4 +19,31 @@ class ProjectData {
     "Taking photos",
     "Social interaction",
   ];
+
+  static List<String> benefits(int id) {
+    switch (id) {
+      case 1:
+        return [
+          "Single room",
+          "Service available: Massage, Assistance in organizing special events",
+          "TV available in the room",
+          "High - quality dishes (buffet)"
+        ];
+      case 2:
+        return [
+          "Two-beds room",
+          "Service available: Massage, Assistance in organizing special events",
+          "TV available in the room",
+          "Delicious food",
+        ];
+      case 3:
+        return [
+          "Room for 3-5 people",
+          "TV available in the room",
+          "Good food",
+        ];
+      default:
+        return [];
+    }
+  }
 }
