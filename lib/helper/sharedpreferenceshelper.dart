@@ -1,9 +1,13 @@
+import 'dart:convert';
+
+import 'package:mate_project/models/pack.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
   static const String gender = 'gender';
   static const String age = 'age';
   static const String hobbies = 'hobbies';
+  static const String pack = 'pack';
 
   static Future<void> setGender(String genderSelection) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -47,6 +51,24 @@ class SharedPreferencesHelper {
       return hobbyList;
     } else {
       return [];
+    }
+  }
+
+  static Future<void> setPack(Pack packChosen) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String packJson = jsonEncode(packChosen.toJson());
+    prefs.setString(pack, packJson);
+  }
+
+  static Future<Pack?> getPack() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? packJson = prefs.getString(pack);
+
+    if (packJson != null) {
+      Map<String, dynamic> packMap = jsonDecode(packJson);
+      return Pack.fromJson(packMap);
+    } else {
+      return null;
     }
   }
 }

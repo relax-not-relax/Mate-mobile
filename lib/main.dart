@@ -10,6 +10,7 @@ import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/home/staff/staff_home_screen.dart';
 import 'package:mate_project/screens/home/staff/staff_main_screen.dart';
 import 'package:mate_project/screens/information/get_information_screen.dart';
+import 'package:mate_project/screens/subscription/room_subscription_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,10 +32,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         //home: const StartScreen(),
-        home: AdminMainScreen(
-          inputScreen: AdminHomeScreen(),
-          screenIndex: 0,
-        ),
+        home: RoomSubscriptionScreen(),
         debugShowCheckedModeBanner: false,
       ),
       designSize: const Size(360, 800),
