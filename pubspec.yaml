@@ -44,6 +44,7 @@ dependencies:
   google_nav_bar: ^5.0.6
   unicons: ^2.1.1
   gradient_borders: ^1.0.1
+  readmore: ^3.0.0
 
 dev_dependencies:
   flutter_test:
