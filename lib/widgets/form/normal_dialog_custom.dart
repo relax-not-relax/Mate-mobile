@@ -94,14 +94,14 @@ class NormalDialogCustom {
   }
 
   void showSelectionDialog(
-    BuildContext context,
-    String imgUrl,
-    String title,
-    String description,
-    bool isDismiss,
-    Color selectionColor,
-    String content,
-  ) {
+      BuildContext context,
+      String imgUrl,
+      String title,
+      String description,
+      bool isDismiss,
+      Color selectionColor,
+      String content,
+      void Function() click) {
     showDialog(
       context: context,
       barrierDismissible: isDismiss,
@@ -161,7 +161,9 @@ class NormalDialogCustom {
                 ),
                 NormalButtonCustom(
                   name: content,
-                  action: () {},
+                  action: () {
+                    click();
+                  },
                   background: selectionColor,
                 ),
               ],
