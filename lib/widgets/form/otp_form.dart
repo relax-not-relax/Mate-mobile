@@ -4,13 +4,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class OtpForm extends StatefulWidget {
-  const OtpForm({super.key});
-
+  const OtpForm({super.key, required this.inputCode});
+  final void Function(int, String) inputCode;
   @override
-  State<OtpForm> createState() => _OtpFormState();
+  // ignore: no_logic_in_create_state
+  State<OtpForm> createState() => _OtpFormState(inputCode: inputCode);
 }
 
 class _OtpFormState extends State<OtpForm> {
+  final void Function(int, String) inputCode;
+  _OtpFormState({required this.inputCode});
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -23,6 +27,7 @@ class _OtpFormState extends State<OtpForm> {
             child: TextFormField(
               onChanged: (value) {
                 if (value.length == 1) {
+                  inputCode(0, value);
                   FocusScope.of(context).nextFocus();
                 }
               },
@@ -69,6 +74,7 @@ class _OtpFormState extends State<OtpForm> {
               onChanged: (value) {
                 if (value.length == 1) {
                   FocusScope.of(context).nextFocus();
+                  inputCode(1, value);
                 }
               },
               onSaved: (newValue) {},
@@ -113,6 +119,7 @@ class _OtpFormState extends State<OtpForm> {
             child: TextFormField(
               onChanged: (value) {
                 if (value.length == 1) {
+                  inputCode(2, value);
                   FocusScope.of(context).nextFocus();
                 }
               },
@@ -158,6 +165,7 @@ class _OtpFormState extends State<OtpForm> {
             child: TextFormField(
               onChanged: (value) {
                 if (value.length == 1) {
+                  inputCode(3, value);
                   FocusScope.of(context).nextFocus();
                 }
               },
@@ -203,6 +211,7 @@ class _OtpFormState extends State<OtpForm> {
             child: TextFormField(
               onChanged: (value) {
                 if (value.length == 1) {
+                  inputCode(4, value);
                   FocusScope.of(context).nextFocus();
                 }
               },
@@ -248,6 +257,7 @@ class _OtpFormState extends State<OtpForm> {
             child: TextFormField(
               onChanged: (value) {
                 if (value.length == 1) {
+                  inputCode(5, value);
                   FocusScope.of(context).nextFocus();
                 }
               },

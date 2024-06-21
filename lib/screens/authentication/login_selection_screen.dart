@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mate_project/helper/sharedpreferenceshelper.dart';
+import 'package:mate_project/models/rememberme.dart';
 import 'package:mate_project/screens/authentication/customer_login_screen.dart';
 import 'package:mate_project/screens/authentication/staff_login_screen.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
@@ -71,12 +73,16 @@ class LoginSelectionScreen extends StatelessWidget {
                 children: [
                   NormalButtonCustom(
                     name: 'LOGIN AS CUSTOMER',
-                    action: () {
+                    action: () async {
+                      Rememberme? rm =
+                          await SharedPreferencesHelper.getRememberMe();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return CustomerLoginScreen();
+                            return CustomerLoginScreen(
+                              rememberme: rm,
+                            );
                           },
                         ),
                       );
