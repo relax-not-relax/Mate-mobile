@@ -7,6 +7,8 @@ import 'package:mate_project/screens/chat/widgets/chat_details.dart';
 import 'package:mate_project/screens/chat/widgets/chat_text_field.dart';
 import 'package:mate_project/screens/chat/widgets/conversation.dart';
 import 'package:mate_project/screens/chat/widgets/first_chat.dart';
+import 'package:mate_project/screens/home/customer/home_screen.dart';
+import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -99,8 +101,23 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 250, 250, 250),
       extendBodyBehindAppBar: false,
-      appBar: const TNormalAppBar(
+      appBar: TNormalAppBar(
         title: "Mate's Assistant",
+        back: () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const MainScreen(
+                  inputScreen: HomeScreen(),
+                  screenIndex: 0,
+                );
+              },
+            ),
+            (route) => false,
+          );
+        },
+        isBordered: true,
       ),
       body: Stack(
         children: [

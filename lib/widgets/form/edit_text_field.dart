@@ -8,13 +8,11 @@ class EditTextField extends StatefulWidget {
     required this.controller,
     required this.title,
     this.errorText,
-    this.selectionColor,
   });
 
   final TextEditingController controller;
   final String title;
   final String? errorText;
-  final Color? selectionColor;
 
   @override
   State<EditTextField> createState() => _EditTextFieldState();
