@@ -184,4 +184,26 @@ class ProjectData {
         return [];
     }
   }
+
+  static List<Color> getGradient(int packId) {
+    switch (packId) {
+      case 1:
+        return [
+          const Color.fromARGB(255, 24, 22, 14),
+          const Color.fromARGB(255, 255, 223, 150),
+        ];
+      case 2:
+        return [
+          const Color.fromARGB(255, 24, 22, 14),
+          const Color.fromARGB(255, 205, 205, 233),
+        ];
+      case 3:
+        return [
+          const Color.fromARGB(255, 24, 22, 14),
+          const Color.fromARGB(255, 249, 161, 89),
+        ];
+      default:
+        return [];
+    }
+  }
 }
