@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconly/iconly.dart';
+import 'package:mate_project/models/room.dart';
+import 'package:mate_project/screens/chat/chat_screen.dart';
 import 'package:mate_project/screens/home/customer/home_screen.dart';
+import 'package:mate_project/screens/management/customer/my_room_screen.dart';
+import 'package:mate_project/screens/profile_management/customer/account_main_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({
@@ -42,10 +46,19 @@ class _MainScreenState extends State<MainScreen> {
         activePage = HomeScreen();
         break;
       case 1:
+        activePage = ChatScreen();
         break;
       case 2:
+        activePage = MyRoomScreen(
+          myRoom: Room(
+            roomId: 1,
+            managerId: 1,
+            roomName: "“Sunflower” Room",
+          ),
+        );
         break;
       case 3:
+        activePage = AccountMainScreen();
         break;
     }
 
