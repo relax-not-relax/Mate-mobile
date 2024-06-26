@@ -8,6 +8,11 @@ import 'package:mate_project/data/project_data.dart';
 import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/screens/home/customer/home_screen.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_address_screen.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_language_screen.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_password_screen.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_profile_screen.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_favorite_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/widgets/account_edit_element.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 
@@ -71,7 +76,16 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const CustomerProfileScreen();
+                      },
+                    ),
+                  );
+                },
                 child: Container(
                   padding: EdgeInsetsDirectional.symmetric(
                     horizontal: 16.w,
@@ -180,7 +194,16 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
                     AccountEditElement(
                       icon: IconsaxPlusLinear.location,
                       title: "Address",
-                      choose: () {},
+                      choose: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const CustomerAddressScreen();
+                            },
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(
                       height: 16.h,
@@ -195,7 +218,16 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
                     AccountEditElement(
                       icon: IconsaxPlusLinear.heart,
                       title: "Favorites",
-                      choose: () {},
+                      choose: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const CustomerFavoriteScreen();
+                            },
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(
                       height: 16.h,
@@ -210,7 +242,16 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
                     AccountEditElement(
                       icon: IconsaxPlusLinear.security_safe,
                       title: "Change password",
-                      choose: () {},
+                      choose: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const CustomerPasswordScreen();
+                            },
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -246,7 +287,16 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
                     AccountEditElement(
                       icon: IconsaxPlusLinear.global,
                       title: "Language",
-                      choose: () {},
+                      choose: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const CustomerLanguageScreen();
+                            },
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(
                       height: 16.h,

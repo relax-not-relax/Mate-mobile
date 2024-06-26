@@ -10,6 +10,11 @@ import 'package:mate_project/screens/management/customer/attendance_history_scre
 import 'package:mate_project/screens/management/customer/care_history_screen.dart';
 import 'package:mate_project/screens/management/customer/my_room_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/account_main_screen.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_address_screen.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_favorite_screen.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_language_screen.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_password_screen.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_profile_screen.dart';
 
 import 'package:mate_project/screens/subscription/room_details_screen.dart';
 import 'package:mate_project/blocs/authen_bloc.dart';
@@ -46,9 +51,9 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          //home: AccountMainScreen(),
+          home: CustomerLanguageScreen(),
 
-          home: const LoginSelectionScreen(),
+          //home: const LoginSelectionScreen(),
           debugShowCheckedModeBanner: false,
         ),
         designSize: const Size(360, 800),

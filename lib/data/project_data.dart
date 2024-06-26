@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mate_project/models/facility.dart';
+import 'package:mate_project/models/language.dart';
 import 'package:unicons/unicons.dart';
 
 class ProjectData {
+  static List<Language> languages = [
+    const Language(
+      countryCode: "US",
+      language: "English (United States)",
+    ),
+    const Language(
+      countryCode: "VN",
+      language: "Vietnamese",
+    ),
+  ];
+
   static List<String> hobbyChoice = [
     "Play chess",
     "Listening to music",

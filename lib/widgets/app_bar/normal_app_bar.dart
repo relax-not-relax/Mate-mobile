@@ -13,7 +13,7 @@ class TNormalAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   final String title;
   void Function()? back;
-  IconButton? action;
+  Widget? action;
   final bool isBordered;
 
   @override

@@ -188,11 +188,15 @@ class _GetInformationScreenState extends State<GetInformationScreen> {
           selected: hobbiesSelected,
           onHobbyChanged: handleHobbiesChange,
         );
-        button = NormalButtonCustom(
-          name: "SAVE",
-          action: () {},
-          background: const Color.fromARGB(255, 46, 62, 140),
-        );
+        button = hobbiesSelected.length <= 5
+            ? NormalButtonCustom(
+                name: "SAVE",
+                action: () {},
+                background: const Color.fromARGB(255, 46, 62, 140),
+              )
+            : const DisabledButtonCustom(
+                name: "SAVE",
+              );
         break;
     }
 
