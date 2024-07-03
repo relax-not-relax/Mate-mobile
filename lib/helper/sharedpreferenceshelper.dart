@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:mate_project/models/pack.dart';
 import 'package:mate_project/models/rememberme.dart';
-import 'package:mate_project/response/CustomerResponse.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {

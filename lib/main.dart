@@ -15,6 +15,8 @@ import 'package:mate_project/screens/profile_management/customer/customer_favori
 import 'package:mate_project/screens/profile_management/customer/customer_language_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_password_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_profile_screen.dart';
+import 'package:mate_project/screens/home/customer/home_screen.dart';
+import 'package:mate_project/screens/introduction/onboard_screen.dart';
 
 import 'package:mate_project/screens/subscription/room_details_screen.dart';
 import 'package:mate_project/blocs/authen_bloc.dart';

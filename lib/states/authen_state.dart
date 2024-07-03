@@ -1,5 +1,5 @@
 import 'package:mate_project/helper/custom_exception.dart';
-import 'package:mate_project/response/CustomerResponse.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 
 abstract class AuthenticationState {}
 
@@ -54,6 +54,8 @@ class LoginSuccess extends AuthenticationState {
 
   LoginSuccess({required this.customerResponse});
 }
+
+class LoginLoading extends AuthenticationState {}
 
 class LoginFail extends AuthenticationState {
   final CustomException error;
