@@ -6,7 +6,7 @@ import 'package:mate_project/events/authen_event.dart';
 import 'package:mate_project/helper/custom_exception.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/repositories/authen_repo.dart';
-import 'package:mate_project/response/CustomerResponse.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/states/authen_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -85,6 +85,7 @@ class AuthenticationBloc
 
   FutureOr<void> _onLoginPressed(
       LoginPressed event, Emitter<AuthenticationState> emit) async {
+    emit(LoginLoading());
     try {
       CustomerResponse customer = await authenticationRepository.authenCustomer(
           email: event.email, password: event.password, fcm: event.fcm);

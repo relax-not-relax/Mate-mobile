@@ -6,7 +6,7 @@ import 'package:mate_project/helper/config.dart';
 import 'package:mate_project/helper/custom_exception.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/customer.dart';
-import 'package:mate_project/response/CustomerResponse.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 
 class Authenrepository {
   bool isValidEmail(String email) {
@@ -139,18 +139,9 @@ class Authenrepository {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonBody);
-    print('call');
-    print(jsonBody);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-      print('okeoke');
-      print(response.body);
-      try {
-        CustomerResponse.fromJson(jsonData);
-      } catch (er) {
-        print(er.toString());
-      }
+      CustomerResponse.fromJson(jsonData);
       await SharedPreferencesHelper.setCustomer(
           CustomerResponse.fromJson(jsonData));
       return CustomerResponse.fromJson(jsonData);

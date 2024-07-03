@@ -7,6 +7,9 @@ import 'package:mate_project/enums/failure_enum.dart';
 import 'package:mate_project/events/authen_event.dart';
 import 'package:mate_project/models/rememberme.dart';
 import 'package:mate_project/screens/authentication/customer_register_screen.dart';
+import 'package:mate_project/screens/home/customer/home_screen.dart';
+import 'package:mate_project/screens/home/customer/main_screen.dart';
+import 'package:mate_project/screens/information/get_information_screen.dart';
 import 'package:mate_project/states/authen_state.dart';
 import 'package:mate_project/widgets/form/edit_pass_field.dart';
 import 'package:mate_project/widgets/form/edit_text_field.dart';
@@ -55,8 +58,18 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
       ),
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) async {
-        print(state.toString());
+        if (state is LoginLoading) {
+          dialogCustom.showWaitingDialog(
+            context,
+            'assets/pics/oldpeople.png',
+            "Wating..",
+            "Togetherness - Companion - Sharing",
+            true,
+            const Color.fromARGB(255, 68, 60, 172),
+          );
+        }
         if (state is LoginSuccess) {
+          Navigator.of(context).pop();
           dialogCustom.showWaitingDialog(
             context,
             'assets/pics/oldpeople.png',
@@ -65,6 +78,28 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
             true,
             const Color.fromARGB(255, 68, 60, 172),
           );
+
+          await Future.delayed(Duration(seconds: 2), () {
+            if (state.customerResponse.gender == null ||
+                state.customerResponse.gender == "") {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const GetInformationScreen()),
+                (Route<dynamic> route) => false,
+              );
+            } else {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const MainScreen(
+                          inputScreen: HomeScreen(),
+                          screenIndex: 0,
+                        )),
+                (Route<dynamic> route) => false,
+              );
+            }
+          });
         }
         if (state is LoginFail && state.error.type == Failure.System) {
           dialogCustom.showSelectionDialog(

@@ -3,11 +3,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
+import 'package:mate_project/models/request/update_customer_request.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/repositories/customer_repo.dart';
+import 'package:mate_project/screens/home/customer/home_screen.dart';
+import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/information/widgets/birthday_selection.dart';
 import 'package:mate_project/screens/information/widgets/gender_selection.dart';
 import 'package:mate_project/screens/information/widgets/hobbies_selection.dart';
 import 'package:mate_project/widgets/form/disabled_button_custom.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
+import 'package:mate_project/widgets/form/normal_dialog_custom.dart';
 
 class GetInformationScreen extends StatefulWidget {
   const GetInformationScreen({super.key});
@@ -36,6 +42,8 @@ class _GetInformationScreenState extends State<GetInformationScreen> {
   String? birthday;
   String? errorMessage;
   List<String> hobbiesSelected = [];
+  CustomerRepository customerRepository = CustomerRepository();
+  NormalDialogCustom dialogCustom = NormalDialogCustom();
 
   Future<String> getCurrentGender() async {
     return await SharedPreferencesHelper.getGender();
@@ -188,15 +196,61 @@ class _GetInformationScreenState extends State<GetInformationScreen> {
           selected: hobbiesSelected,
           onHobbyChanged: handleHobbiesChange,
         );
-        button = hobbiesSelected.length <= 5
-            ? NormalButtonCustom(
-                name: "SAVE",
-                action: () {},
-                background: const Color.fromARGB(255, 46, 62, 140),
-              )
-            : const DisabledButtonCustom(
-                name: "SAVE",
-              );
+        button = NormalButtonCustom(
+          name: "SAVE",
+          action: () async {
+            CustomerResponse? customer =
+                await SharedPreferencesHelper.getCustomer();
+            if (customer != null) {
+              String favorite = "";
+              if (hobbiesSelected.isNotEmpty) {
+                for (String element in hobbiesSelected) {
+                  favorite += element + " ";
+                }
+              }
+
+              UpdateCustomerRequest data = UpdateCustomerRequest(
+                  avatar: "",
+                  fullname: customer.fullname,
+                  dateOfBirth: birthday!,
+                  gender: gender!,
+                  phoneNumber: (customer.phoneNumber != null)
+                      ? customer.phoneNumber!
+                      : "xxxx-xxxx-xxxx",
+                  address: customer.address != null ? customer.address! : "",
+                  favorite: favorite.trim(),
+                  note: "");
+              try {
+                await customerRepository.UpdateInformation(
+                    data: data, customerId: customer.customerId);
+                Navigator.pushAndRemoveUntil(
+                  // ignore: use_build_context_synchronously
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const MainScreen(
+                            inputScreen: HomeScreen(),
+                            screenIndex: 0,
+                          )),
+                  (Route<dynamic> route) => false,
+                );
+              } catch (error) {
+                dialogCustom.showSelectionDialog(
+                  context,
+                  'assets/pics/error.png',
+                  'Update failed!',
+                  'System fail!',
+                  true,
+                  const Color.fromARGB(255, 230, 57, 71),
+                  'Continue',
+                  () {
+                    Navigator.of(context).pop();
+                  },
+                );
+              }
+            }
+          },
+          background: const Color.fromARGB(255, 46, 62, 140),
+        );
         break;
     }
 
