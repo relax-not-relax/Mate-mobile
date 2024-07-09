@@ -189,6 +189,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
       appBar: TNormalAppBar(
         title: "My Profile",
         isBordered: false,
+        isBack: true,
         back: () {
           Navigator.pushReplacement(
             context,

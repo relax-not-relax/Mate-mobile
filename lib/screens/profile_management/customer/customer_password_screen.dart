@@ -104,6 +104,7 @@ class _CustomerPasswordScreenState extends State<CustomerPasswordScreen> {
       appBar: TNormalAppBar(
         title: "Change Password",
         isBordered: false,
+        isBack: true,
         back: () {
           Navigator.pushReplacement(
             context,

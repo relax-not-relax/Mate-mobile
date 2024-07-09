@@ -78,6 +78,7 @@ class _CustomerFavoriteScreenState extends State<CustomerFavoriteScreen> {
       appBar: TNormalAppBar(
         title: "My Favorites",
         isBordered: false,
+        isBack: true,
         back: () {
           Navigator.pushReplacement(
             context,

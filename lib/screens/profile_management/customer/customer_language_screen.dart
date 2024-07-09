@@ -58,6 +58,7 @@ class _CustomerLanguageScreenState extends State<CustomerLanguageScreen> {
       appBar: TNormalAppBar(
         title: "Change Password",
         isBordered: false,
+        isBack: true,
         back: () {
           Navigator.pushReplacement(
             context,

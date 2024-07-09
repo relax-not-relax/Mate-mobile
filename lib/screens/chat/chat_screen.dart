@@ -103,21 +103,8 @@ class _ChatScreenState extends State<ChatScreen> {
       extendBodyBehindAppBar: false,
       appBar: TNormalAppBar(
         title: "Mate's Assistant",
-        back: () {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return const MainScreen(
-                  inputScreen: HomeScreen(),
-                  screenIndex: 0,
-                );
-              },
-            ),
-            (route) => false,
-          );
-        },
         isBordered: true,
+        isBack: false,
       ),
       body: Stack(
         children: [

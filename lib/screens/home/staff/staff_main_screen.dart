@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mate_project/screens/home/staff/staff_home_screen.dart';
+import 'package:mate_project/screens/notification/staff_notification_screen.dart';
 
 class StaffMainScreen extends StatefulWidget {
   const StaffMainScreen({
@@ -42,6 +44,7 @@ class _StaffMainScreenState extends State<StaffMainScreen> {
         activePage = StaffHomeScreen();
         break;
       case 1:
+        activePage = StaffNotificationScreen();
         break;
       case 2:
         break;
@@ -77,20 +80,34 @@ class _StaffMainScreenState extends State<StaffMainScreen> {
           onTabChange: (value) {
             _selectPage(value);
           },
-          tabs: const [
-            GButton(
+          tabs: [
+            const GButton(
               icon: IconlyBold.home,
               text: "Home",
             ),
             GButton(
               icon: IconlyBold.notification,
+              leading: Badge(
+                isLabelVisible: true,
+                backgroundColor: const Color.fromARGB(255, 84, 110, 255),
+                label: Text(
+                  "1",
+                  style: GoogleFonts.inter(
+                    color: Colors.white,
+                  ),
+                ),
+                child: const Icon(
+                  IconlyBold.notification,
+                  color: Colors.white,
+                ),
+              ),
               text: "News",
             ),
-            GButton(
+            const GButton(
               icon: IconlyBold.calendar,
               text: "Assign",
             ),
-            GButton(
+            const GButton(
               icon: IconlyBold.user_2,
               leading: CircleAvatar(
                 backgroundImage: AssetImage("assets/pics/nurse.png"),

@@ -6,9 +6,13 @@ import 'package:mate_project/models/room.dart';
 import 'package:mate_project/screens/authentication/customer_login_screen.dart';
 import 'package:mate_project/screens/chat/chat_screen.dart';
 import 'package:mate_project/screens/chat/widgets/first_chat.dart';
+import 'package:mate_project/screens/home/customer/main_screen.dart';
+import 'package:mate_project/screens/home/staff/staff_home_screen.dart';
+import 'package:mate_project/screens/home/staff/staff_main_screen.dart';
 import 'package:mate_project/screens/management/customer/attendance_history_screen.dart';
 import 'package:mate_project/screens/management/customer/care_history_screen.dart';
 import 'package:mate_project/screens/management/customer/my_room_screen.dart';
+import 'package:mate_project/screens/notification/staff_notification_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/account_main_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_address_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_favorite_screen.dart';
@@ -53,7 +57,10 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          home: CustomerLanguageScreen(),
+          home: StaffMainScreen(
+            inputScreen: StaffNotificationScreen(),
+            screenIndex: 1,
+          ),
 
           //home: const LoginSelectionScreen(),
           debugShowCheckedModeBanner: false,

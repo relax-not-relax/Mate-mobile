@@ -195,6 +195,7 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
       appBar: TNormalAppBar(
         title: "Attendance history",
         isBordered: false,
+        isBack: true,
         back: () {
           Navigator.pushReplacement(
             context,
