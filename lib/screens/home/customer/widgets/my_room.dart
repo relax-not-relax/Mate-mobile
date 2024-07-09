@@ -20,6 +20,7 @@ class MyRoom extends StatefulWidget {
 
 class _MyRoomState extends State<MyRoom> {
   String _currentTime = '';
+  Timer? _timer;
 
   @override
   void initState() {
@@ -39,7 +40,13 @@ class _MyRoomState extends State<MyRoom> {
       _currentTime =
           '${hours.padLeft(2, '0')}:$minutes'; // Pad hours to 2 digits
     });
-    Timer(const Duration(seconds: 1), updateTime);
+    _timer = Timer(const Duration(seconds: 1), updateTime);
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
