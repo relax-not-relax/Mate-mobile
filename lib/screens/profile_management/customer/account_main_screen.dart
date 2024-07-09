@@ -50,6 +50,7 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
       appBar: TNormalAppBar(
         title: "My Account",
         isBordered: false,
+        isBack: true,
         back: () {
           Navigator.pushReplacement(
             context,

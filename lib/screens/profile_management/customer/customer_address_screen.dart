@@ -45,6 +45,7 @@ class _CustomerAddressScreenState extends State<CustomerAddressScreen> {
       appBar: TNormalAppBar(
         title: "My Address",
         isBordered: false,
+        isBack: true,
         back: () {
           Navigator.pushReplacement(
             context,

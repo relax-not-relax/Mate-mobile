@@ -9,12 +9,14 @@ class TNormalAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.back,
     this.action,
     required this.isBordered,
+    required this.isBack,
   });
 
   final String title;
   void Function()? back;
   Widget? action;
   final bool isBordered;
+  final bool isBack;
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +43,15 @@ class TNormalAppBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             AppBar(
               backgroundColor: Colors.white,
-              leading: IconButton(
-                onPressed: back,
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Color.fromARGB(255, 35, 47, 107),
-                ),
-              ),
+              leading: isBack
+                  ? IconButton(
+                      onPressed: back,
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Color.fromARGB(255, 35, 47, 107),
+                      ),
+                    )
+                  : Container(),
               title: Text(
                 title,
                 style: GoogleFonts.inter(

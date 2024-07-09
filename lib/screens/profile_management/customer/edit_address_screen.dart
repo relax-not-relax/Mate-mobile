@@ -190,6 +190,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
       appBar: TNormalAppBar(
         title: "Edit address",
         isBordered: false,
+        isBack: true,
         back: () {
           Navigator.pushReplacement(
             context,

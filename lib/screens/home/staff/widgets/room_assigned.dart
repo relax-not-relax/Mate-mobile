@@ -15,6 +15,7 @@ class RoomAssigned extends StatefulWidget {
 
 class _RoomAssignedState extends State<RoomAssigned> {
   String _currentTime = '';
+  Timer? _timer;
 
   @override
   void initState() {
@@ -34,7 +35,13 @@ class _RoomAssignedState extends State<RoomAssigned> {
       _currentTime =
           '${hours.padLeft(2, '0')}:$minutes'; // Pad hours to 2 digits
     });
-    Timer(const Duration(seconds: 1), updateTime);
+    _timer = Timer(const Duration(seconds: 1), updateTime);
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -53,165 +60,163 @@ class _RoomAssignedState extends State<RoomAssigned> {
         color: const Color.fromARGB(255, 41, 45, 50),
         borderRadius: BorderRadius.circular(30),
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "May 27, 2024",
-                  style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                  ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "May 27, 2024",
+                style: GoogleFonts.inter(
+                  color: Colors.white,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
                 ),
-                Image.asset(
-                  "assets/pics/gold.png",
-                  width: 42.w,
-                  height: 42.h,
+              ),
+              SizedBox(
+                height: 24.h,
+              ),
+              Text(
+                "“Sunflower” Room",
+                style: GoogleFonts.inter(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
                 ),
-              ],
-            ),
-            SizedBox(
-              height: 24.h,
-            ),
-            Text(
-              "“Sunflower” Room",
-              style: GoogleFonts.inter(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-            Text(
-              "10 members",
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w300,
-              ),
-            ),
-            SizedBox(
-              height: 24.h,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 84, 87, 91),
-                    borderRadius: BorderRadius.circular(30.w),
+              Wrap(
+                alignment: WrapAlignment.start,
+                crossAxisAlignment: WrapCrossAlignment.start,
+                children: [
+                  Text(
+                    "10 rooms",
+                    style: GoogleFonts.inter(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: const Color.fromARGB(255, 118, 141, 255),
+                    ),
                   ),
-                  child: Center(
-                    child: Wrap(
-                      alignment: WrapAlignment.spaceEvenly,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      spacing: 4.w,
-                      children: [
-                        Icon(
-                          IconlyLight.time_circle,
+                  Icon(
+                    UniconsLine.angle_double_right,
+                    size: 24.sp,
+                    color: const Color.fromARGB(255, 118, 141, 255),
+                  ),
+                ],
+              )
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 84, 87, 91),
+                  borderRadius: BorderRadius.circular(30.w),
+                ),
+                child: Center(
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceEvenly,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 4.w,
+                    children: [
+                      Icon(
+                        IconlyLight.time_circle,
+                        color: Colors.white,
+                        size: 15.sp,
+                      ),
+                      Text(
+                        _currentTime,
+                        style: GoogleFonts.inter(
                           color: Colors.white,
-                          size: 15.sp,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
                         ),
-                        Text(
-                          _currentTime,
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        )
-                      ],
-                    ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      )
+                    ],
                   ),
                 ),
-                SizedBox(
-                  width: 8.w,
+              ),
+              SizedBox(
+                width: 8.w,
+              ),
+
+              // Used when the room has not been attended yet
+              // Container(
+              //   padding:
+              //       EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+              //   decoration: BoxDecoration(
+              //     color: const Color.fromARGB(80, 250, 101, 88),
+              //     borderRadius: BorderRadius.circular(30.w),
+              //   ),
+              //   child: Center(
+              //     child: Wrap(
+              //       alignment: WrapAlignment.spaceEvenly,
+              //       crossAxisAlignment: WrapCrossAlignment.center,
+              //       spacing: 4.w,
+              //       children: [
+              //         Icon(
+              //           UniconsLine.file_exclamation,
+              //           color: const Color.fromARGB(255, 218, 92, 83),
+              //           size: 16.sp,
+              //         ),
+              //         Text(
+              //           "Waiting to be counted",
+              //           style: GoogleFonts.inter(
+              //             color: const Color.fromARGB(255, 218, 92, 83),
+              //             fontSize: 12.sp,
+              //             fontWeight: FontWeight.w500,
+              //           ),
+              //           overflow: TextOverflow.ellipsis,
+              //           maxLines: 1,
+              //         )
+              //       ],
+              //     ),
+              //   ),
+              // ),
+
+              // Used when the room is attended
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(77, 105, 212, 133),
+                  borderRadius: BorderRadius.circular(30.w),
                 ),
-
-                // Used when the room has not been attended yet
-                // Container(
-                //   padding:
-                //       EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-                //   decoration: BoxDecoration(
-                //     color: const Color.fromARGB(80, 250, 101, 88),
-                //     borderRadius: BorderRadius.circular(30.w),
-                //   ),
-                //   child: Center(
-                //     child: Wrap(
-                //       alignment: WrapAlignment.spaceEvenly,
-                //       crossAxisAlignment: WrapCrossAlignment.center,
-                //       spacing: 4.w,
-                //       children: [
-                //         Icon(
-                //           UniconsLine.file_exclamation,
-                //           color: const Color.fromARGB(255, 218, 92, 83),
-                //           size: 16.sp,
-                //         ),
-                //         Text(
-                //           "Waiting to be counted",
-                //           style: GoogleFonts.inter(
-                //             color: const Color.fromARGB(255, 218, 92, 83),
-                //             fontSize: 12.sp,
-                //             fontWeight: FontWeight.w500,
-                //           ),
-                //           overflow: TextOverflow.ellipsis,
-                //           maxLines: 1,
-                //         )
-                //       ],
-                //     ),
-                //   ),
-                // ),
-
-                // Used when the room is attended
-                Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(77, 105, 212, 133),
-                    borderRadius: BorderRadius.circular(30.w),
-                  ),
-                  child: Center(
-                    child: Wrap(
-                      alignment: WrapAlignment.spaceEvenly,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      spacing: 4.w,
-                      children: [
-                        Icon(
-                          UniconsLine.file_exclamation,
+                child: Center(
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceEvenly,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 4.w,
+                    children: [
+                      Icon(
+                        UniconsLine.file_exclamation,
+                        color: const Color.fromARGB(255, 52, 168, 83),
+                        size: 16.sp,
+                      ),
+                      Text(
+                        "Attended",
+                        style: GoogleFonts.inter(
                           color: const Color.fromARGB(255, 52, 168, 83),
-                          size: 16.sp,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
                         ),
-                        Text(
-                          "Attended",
-                          style: GoogleFonts.inter(
-                            color: const Color.fromARGB(255, 52, 168, 83),
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        )
-                      ],
-                    ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      )
+                    ],
                   ),
                 ),
-              ],
-            )
-          ],
-        ),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

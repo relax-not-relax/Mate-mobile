@@ -195,6 +195,7 @@ class _CareHistoryScreenState extends State<CareHistoryScreen> {
       backgroundColor: Colors.white,
       appBar: TNormalAppBar(
         title: "Care history",
+        isBack: true,
         back: () {
           Navigator.pushReplacement(
             context,
