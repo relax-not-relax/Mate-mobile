@@ -50,9 +50,10 @@ class TNormalAppBar extends StatelessWidget implements PreferredSizeWidget {
               leading: isBack
                   ? IconButton(
                       onPressed: back,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.arrow_back,
-                        color: Color.fromARGB(255, 35, 47, 107),
+                        color: titleColor ??
+                            const Color.fromARGB(255, 35, 47, 107),
                       ),
                     )
                   : Container(),

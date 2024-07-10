@@ -5,6 +5,7 @@ import 'package:mate_project/models/attendance.dart';
 import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/models/pack.dart';
 import 'package:mate_project/models/room.dart';
+import 'package:mate_project/screens/management/staff/room_attendance_screen.dart';
 
 class RoomAssignItem extends StatefulWidget {
   const RoomAssignItem({
@@ -42,7 +43,7 @@ class _RoomAssignItemState extends State<RoomAssignItem> {
     pack = Pack(
       packId: 1,
       price: 200.0,
-      packName: "Gold Room",
+      packName: "Gold",
       description: "",
       duration: 1,
       status: true,
@@ -64,95 +65,111 @@ class _RoomAssignItemState extends State<RoomAssignItem> {
         break;
     }
 
-    return Container(
-      width: 330.w,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      margin: EdgeInsets.only(
-        bottom: 16.h,
-      ),
-      padding: EdgeInsets.all(16.w),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 160.w,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  room.roomName,
-                  style: GoogleFonts.inter(
-                    color: const Color.fromARGB(255, 35, 38, 47),
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  pack.packName,
-                  style: GoogleFonts.inter(
-                    color: roomColor,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(
-                  height: 16.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 20.w,
-                      backgroundImage: AssetImage(customer.avatar!),
-                    ),
-                    SizedBox(
-                      width: 8.w,
-                    ),
-                    Text(
-                      customer.fullName,
-                      style: GoogleFonts.inter(
-                        color: const Color.fromARGB(255, 79, 81, 89),
-                        fontSize: 10.sp,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    )
-                  ],
-                ),
-              ],
-            ),
+    return InkWell(
+      onTap: () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return RoomAttendanceScreen(
+                attendance: widget.attendance,
+              );
+            },
           ),
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 10.w,
-              vertical: 8.h,
-            ),
-            decoration: BoxDecoration(
-              color: widget.attendance.status == 1
-                  ? const Color.fromARGB(255, 52, 168, 83)
-                  : const Color.fromARGB(255, 234, 68, 53),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              widget.attendance.status == 1 ? "Attendance taken" : "Not taken",
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: 10.sp,
-                fontWeight: FontWeight.w500,
+        );
+      },
+      child: Container(
+        width: 330.w,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+        ),
+        margin: EdgeInsets.only(
+          bottom: 16.h,
+        ),
+        padding: EdgeInsets.all(16.w),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 160.w,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    room.roomName,
+                    style: GoogleFonts.inter(
+                      color: const Color.fromARGB(255, 35, 38, 47),
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    "${pack.packName} room",
+                    style: GoogleFonts.inter(
+                      color: roomColor,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 20.w,
+                        backgroundImage: AssetImage(customer.avatar!),
+                      ),
+                      SizedBox(
+                        width: 8.w,
+                      ),
+                      Text(
+                        customer.fullName,
+                        style: GoogleFonts.inter(
+                          color: const Color.fromARGB(255, 79, 81, 89),
+                          fontSize: 10.sp,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                    ],
+                  ),
+                ],
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
-          )
-        ],
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 10.w,
+                vertical: 8.h,
+              ),
+              decoration: BoxDecoration(
+                color: widget.attendance.status == 1
+                    ? const Color.fromARGB(255, 52, 168, 83)
+                    : const Color.fromARGB(255, 234, 68, 53),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                widget.attendance.status == 1
+                    ? "Attendance taken"
+                    : "Not taken",
+                style: GoogleFonts.inter(
+                  color: Colors.white,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

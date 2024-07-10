@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:mate_project/models/attendance_type.dart';
 import 'package:mate_project/models/facility.dart';
 import 'package:mate_project/models/language.dart';
 import 'package:unicons/unicons.dart';
@@ -223,4 +224,15 @@ class ProjectData {
   static String getWeekday(DateTime day) {
     return DateFormat.E().format(day);
   }
+
+  static List<AttendanceType> attendanceType = [
+    const AttendanceType(
+      icon: UniconsLine.sun,
+      session: "Morning",
+    ),
+    const AttendanceType(
+      icon: UniconsLine.moon,
+      session: "Evening",
+    ),
+  ];
 }

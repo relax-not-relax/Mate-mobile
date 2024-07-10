@@ -34,7 +34,7 @@ class DisabledButtonCustom extends StatelessWidget {
           style: GoogleFonts.inter(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
-            color: const Color.fromARGB(255, 226, 226, 226),
+            color: Colors.white,
           ),
         ),
       ),
