@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/models/event.dart';
 import 'package:mate_project/models/pack.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/models/room.dart';
 import 'package:mate_project/screens/home/customer/widgets/lock_event.dart';
 import 'package:mate_project/screens/home/customer/widgets/lock_membership.dart';
@@ -24,12 +26,26 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
   late int tabIndex;
+  CustomerResponse? customer = null;
+
+  Future<CustomerResponse?> getCustomer() async {
+    return await SharedPreferencesHelper.getCustomer();
+  }
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: 2, vsync: this);
     tabIndex = 0;
+    getCustomer().then(
+      (value) {
+        if (mounted && value != null) {
+          setState(() {
+            customer = value;
+          });
+        }
+      },
+    );
   }
 
   @override
@@ -79,9 +95,9 @@ class _HomeScreenState extends State<HomeScreen>
       extendBodyBehindAppBar: false,
       appBar: TMainAppBar(
         customer: Customer(
-          customerId: 1,
-          email: "lorem@gmail.com",
-          fullName: 'Lorem ispun',
+          customerId: customer != null ? customer!.customerId : 0,
+          email: customer != null ? customer!.email : "",
+          fullName: customer != null ? customer!.fullname : "loading...",
           avatar: "assets/pics/user_test.png",
         ),
       ),

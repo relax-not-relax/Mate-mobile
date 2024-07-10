@@ -5,7 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:mate_project/data/project_data.dart';
+import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/customer.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/screens/home/customer/home_screen.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_address_screen.dart';
@@ -25,18 +27,33 @@ class AccountMainScreen extends StatefulWidget {
 
 class _AccountMainScreenState extends State<AccountMainScreen> {
   //Test data (Thay đổi khi call API để lấy dữ liệu)
-  late Customer? customer;
+  Customer? customer =
+      Customer(customerId: 0, email: "loading....", fullName: "loading...");
   int? packId; // lấy ra id của gói mà người dùng sở hữu
   List<Color> avatarBorder = [];
+  Future<CustomerResponse?> getCustomer() async {
+    return SharedPreferencesHelper.getCustomer();
+  }
 
   @override
   void initState() {
     super.initState();
-    customer = Customer(
-      customerId: 1,
-      email: "loremispum@gmail.com",
-      fullName: "Lorem Ispum",
-      avatar: "assets/pics/user_test.png",
+    getCustomer().then(
+      (value) {
+        setState(() {
+          customer = Customer(
+              customerId: value!.customerId,
+              email: value!.email,
+              fullName: value.fullname,
+              address: value.address,
+              avatar: "assets/pics/user_test.png",
+              dateOfBirth: value.dateOfBirth.toString(),
+              favorite: value.favorite,
+              gender: value.gender,
+              note: value.note,
+              phoneNumber: value.phoneNumber);
+        });
+      },
     );
     packId = 1;
     avatarBorder = ProjectData.getGradient(packId!);
@@ -110,7 +127,10 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
                             height: 50.w,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: AssetImage(customer!.avatar!),
+                                image: (customer!.avatar != null &&
+                                        customer!.avatar!.isNotEmpty)
+                                    ? AssetImage("assets/pics/user_test.png")
+                                    : AssetImage("assets/pics/user_test.png"),
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.circular(50),

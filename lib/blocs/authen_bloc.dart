@@ -16,11 +16,24 @@ class AuthenticationBloc
 
   AuthenticationBloc({required this.authenticationRepository})
       : super(RegisterInitial()) {
+    on<LogoutPressed>(_onLogoutPressed);
     on<RegisterPressed>(_onRegisterPressed);
     on<ConfirmCodePressed>(_onConfirmCodePressed);
     on<RegisterDonePressed>(_onRegisterDonePressed);
     on<LoginPressed>(_onLoginPressed);
   }
+
+  Future<void> _onLogoutPressed(
+      LogoutPressed event, Emitter<AuthenticationState> emit) async {
+    emit(LogoutLoading());
+    try {
+      authenticationRepository.LogoutCustomer(customerId: event.customerId);
+      emit(LogoutSuccess());
+    } catch (er) {
+      emit(LogoutSuccess());
+    }
+  }
+
   Future<void> _onRegisterPressed(
       RegisterPressed event, Emitter<AuthenticationState> emit) async {
     emit(SendCodeLoading());
