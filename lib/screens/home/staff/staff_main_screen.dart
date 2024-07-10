@@ -80,6 +80,7 @@ class _StaffMainScreenState extends State<StaffMainScreen> {
           onTabChange: (value) {
             _selectPage(value);
           },
+          selectedIndex: _selectedPageIndex,
           tabs: [
             const GButton(
               icon: IconlyBold.home,

@@ -86,6 +86,7 @@ class _MainScreenState extends State<MainScreen> {
           onTabChange: (value) {
             _selectPage(value);
           },
+          selectedIndex: _selectedPageIndex,
           tabs: const [
             GButton(
               icon: IconlyBold.home,

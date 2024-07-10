@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:mate_project/models/facility.dart';
 import 'package:mate_project/models/language.dart';
 import 'package:unicons/unicons.dart';
@@ -217,5 +218,9 @@ class ProjectData {
       default:
         return [];
     }
+  }
+
+  static String getWeekday(DateTime day) {
+    return DateFormat.E().format(day);
   }
 }
