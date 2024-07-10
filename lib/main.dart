@@ -10,6 +10,7 @@ import 'package:mate_project/screens/authentication/customer_login_screen.dart';
 import 'package:mate_project/screens/chat/chat_screen.dart';
 import 'package:mate_project/screens/chat/widgets/first_chat.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
+import 'package:mate_project/screens/home/staff/staff_main_screen.dart';
 import 'package:mate_project/screens/management/customer/attendance_history_screen.dart';
 import 'package:mate_project/screens/management/customer/care_history_screen.dart';
 import 'package:mate_project/screens/management/customer/my_room_screen.dart';
@@ -77,16 +78,19 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          home: customer == null
-              ? const OnboardScreen(
-                  index: 0,
-                )
-              : const MainScreen(
-                  inputScreen: HomeScreen(),
-                  screenIndex: 0,
-                ),
+          // home: customer == null
+          //     ? const OnboardScreen(
+          //         index: 0,
+          //       )
+          //     : const MainScreen(
+          //         inputScreen: HomeScreen(),
+          //         screenIndex: 0,
+          //       ),
 
-          //home: const LoginSelectionScreen(),
+          home: StaffMainScreen(
+            inputScreen: StaffScheduleScreen(),
+            screenIndex: 2,
+          ),
           debugShowCheckedModeBanner: false,
         ),
         designSize: const Size(360, 800),
