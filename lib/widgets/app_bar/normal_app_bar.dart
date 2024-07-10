@@ -10,6 +10,8 @@ class TNormalAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.action,
     required this.isBordered,
     required this.isBack,
+    this.bgColor,
+    this.titleColor,
   });
 
   final String title;
@@ -17,6 +19,8 @@ class TNormalAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget? action;
   final bool isBordered;
   final bool isBack;
+  Color? bgColor;
+  Color? titleColor;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +29,7 @@ class TNormalAppBar extends StatelessWidget implements PreferredSizeWidget {
       height: 90.h,
       decoration: isBordered
           ? BoxDecoration(
-              color: Colors.white,
+              color: bgColor ?? Colors.white,
               border: Border(
                 bottom: BorderSide(
                   width: 0.5.h,
@@ -33,8 +37,8 @@ class TNormalAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
             )
-          : const BoxDecoration(
-              color: Colors.white,
+          : BoxDecoration(
+              color: bgColor ?? Colors.white,
             ),
       child: SingleChildScrollView(
         child: Column(
@@ -42,7 +46,7 @@ class TNormalAppBar extends StatelessWidget implements PreferredSizeWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AppBar(
-              backgroundColor: Colors.white,
+              backgroundColor: bgColor ?? Colors.white,
               leading: isBack
                   ? IconButton(
                       onPressed: back,
@@ -55,7 +59,7 @@ class TNormalAppBar extends StatelessWidget implements PreferredSizeWidget {
               title: Text(
                 title,
                 style: GoogleFonts.inter(
-                  color: const Color.fromARGB(255, 35, 47, 107),
+                  color: titleColor ?? const Color.fromARGB(255, 35, 47, 107),
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w700,
                 ),

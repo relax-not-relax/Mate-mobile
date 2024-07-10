@@ -102,10 +102,10 @@ class _StaffNotificationScreenState extends State<StaffNotificationScreen> {
     DateTime currentWeekStart = DateTime.now().subtract(Duration(
         days: (DateTime.now().day - 1 + (DateTime.now().weekday == 1 ? 7 : 0)) %
             7));
-    print(currentWeekStart.toString());
+
     DateTime myDateTime = timeCheck.subtract(Duration(
         days: (timeCheck.day - 1 + (timeCheck.weekday == 1 ? 7 : 0)) % 7));
-    print(myDateTime.toString());
+
     bool isSameWeek = currentWeekStart.day == myDateTime.day;
 
     if (isSameWeek) {

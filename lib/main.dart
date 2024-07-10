@@ -13,6 +13,7 @@ import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/management/customer/attendance_history_screen.dart';
 import 'package:mate_project/screens/management/customer/care_history_screen.dart';
 import 'package:mate_project/screens/management/customer/my_room_screen.dart';
+import 'package:mate_project/screens/management/staff/staff_schedule_screen.dart';
 import 'package:mate_project/screens/notification/staff_notification_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/account_main_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_address_screen.dart';
