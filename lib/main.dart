@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/pack.dart';
+import 'package:mate_project/models/rememberme.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/models/room.dart';
 import 'package:mate_project/screens/authentication/customer_login_screen.dart';
 import 'package:mate_project/screens/chat/chat_screen.dart';
 import 'package:mate_project/screens/chat/widgets/first_chat.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
-import 'package:mate_project/screens/home/staff/staff_home_screen.dart';
-import 'package:mate_project/screens/home/staff/staff_main_screen.dart';
 import 'package:mate_project/screens/management/customer/attendance_history_screen.dart';
 import 'package:mate_project/screens/management/customer/care_history_screen.dart';
 import 'package:mate_project/screens/management/customer/my_room_screen.dart';
@@ -31,12 +32,30 @@ import 'package:mate_project/screens/authentication/start_screen.dart';
 import 'package:mate_project/screens/authentication/verification_screen.dart';
 import 'package:mate_project/screens/information/get_information_screen.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Rememberme? rememberme = await SharedPreferencesHelper.getRememberMe();
+  if (rememberme != null) {
+    Authenrepository authenrepository = Authenrepository();
+    try {
+      CustomerResponse customerResponse = await authenrepository.authenCustomer(
+          email: rememberme.email, password: rememberme.password, fcm: "");
+      runApp(MyApp(customer: customerResponse));
+    } catch (error) {
+      runApp(MyApp(customer: null));
+    }
+  } else {
+    runApp(MyApp(
+      customer: null,
+    ));
+  }
 }
 
 class MyApp extends StatelessWidget {
   final Authenrepository authenrepository = Authenrepository();
+  final CustomerResponse? customer;
+
+  MyApp({super.key, required this.customer});
 
   // This widget is the root of your application.
   @override
@@ -57,10 +76,14 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          home: StaffMainScreen(
-            inputScreen: StaffNotificationScreen(),
-            screenIndex: 1,
-          ),
+          home: customer == null
+              ? const OnboardScreen(
+                  index: 0,
+                )
+              : const MainScreen(
+                  inputScreen: HomeScreen(),
+                  screenIndex: 0,
+                ),
 
           //home: const LoginSelectionScreen(),
           debugShowCheckedModeBanner: false,

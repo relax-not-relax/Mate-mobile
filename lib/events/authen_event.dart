@@ -41,3 +41,9 @@ class LoginPressed extends AuthenticationEvent {
       required this.fcm,
       required this.rememberCheck});
 }
+
+class LogoutPressed extends AuthenticationEvent {
+  final int customerId;
+
+  LogoutPressed({required this.customerId});
+}

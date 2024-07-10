@@ -6,6 +6,7 @@ class CustomerResponse {
   String? gender;
   String? phoneNumber;
   String? address;
+  String? avatar;
   String? favorite;
   String? note;
   bool status;
@@ -22,6 +23,7 @@ class CustomerResponse {
       required this.gender,
       required this.phoneNumber,
       required this.address,
+      required this.avatar,
       required this.favorite,
       required this.note,
       required this.status,
@@ -41,6 +43,7 @@ class CustomerResponse {
         gender: json['gender'],
         phoneNumber: json['phoneNumber'],
         address: json['address'],
+        avatar: json['avatar'],
         favorite: json['favorite'],
         note: json['note'],
         status: json['status'],
@@ -59,6 +62,7 @@ class CustomerResponse {
       'gender': gender,
       'phoneNumber': phoneNumber,
       'address': address,
+      'avatar': avatar,
       'favorite': favorite,
       'note': note,
       'status': status,

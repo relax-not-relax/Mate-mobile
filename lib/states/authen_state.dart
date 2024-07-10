@@ -62,3 +62,7 @@ class LoginFail extends AuthenticationState {
 
   LoginFail({required this.error});
 }
+
+class LogoutLoading extends AuthenticationState {}
+
+class LogoutSuccess extends AuthenticationState {}

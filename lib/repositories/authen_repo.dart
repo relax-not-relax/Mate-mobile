@@ -97,8 +97,6 @@ class Authenrepository {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
-    print('${Config.apiRoot}api/customer/Verify-Email-Customer/$email');
-    print(response.statusCode);
     if (response.statusCode == 200) {
       SharedPreferencesHelper.setRegisterInformation(password, fullName, email);
       return response.body;
@@ -142,6 +140,7 @@ class Authenrepository {
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       CustomerResponse.fromJson(jsonData);
+      print(jsonData);
       await SharedPreferencesHelper.setCustomer(
           CustomerResponse.fromJson(jsonData));
       return CustomerResponse.fromJson(jsonData);
@@ -151,5 +150,19 @@ class Authenrepository {
     } else {
       throw Exception('System failure');
     }
+  }
+
+  Future<void> LogoutCustomer({required int customerId}) async {
+    var account = await SharedPreferencesHelper.getCustomer();
+    final response = await http.post(
+        Uri.parse(
+            "${Config.apiRoot}api/authen/Revoke-Token-Customer/$customerId"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${account!.accessToken}',
+        });
+    print(response.statusCode);
+    print(customerId);
+    print(account.accessToken);
   }
 }
