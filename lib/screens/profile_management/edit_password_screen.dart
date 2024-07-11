@@ -1,19 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mate_project/screens/profile_management/customer/account_main_screen.dart';
-import 'package:mate_project/screens/profile_management/customer/widgets/edit_password.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
+import 'package:mate_project/screens/profile_management/widgets/edit_password.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
 
-class CustomerPasswordScreen extends StatefulWidget {
-  const CustomerPasswordScreen({super.key});
+class EditPasswordScreen extends StatefulWidget {
+  const EditPasswordScreen({super.key});
 
   @override
-  State<CustomerPasswordScreen> createState() => _CustomerPasswordScreenState();
+  State<EditPasswordScreen> createState() => _EditPasswordScreenState();
 }
 
-class _CustomerPasswordScreenState extends State<CustomerPasswordScreen> {
+class _EditPasswordScreenState extends State<EditPasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -110,7 +110,7 @@ class _CustomerPasswordScreenState extends State<CustomerPasswordScreen> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return const AccountMainScreen();
+                return const CustomerAccountMainScreen();
               },
             ),
           );

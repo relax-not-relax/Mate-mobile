@@ -1,62 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
-import 'package:mate_project/data/project_data.dart';
-import 'package:mate_project/helper/sharedpreferenceshelper.dart';
-import 'package:mate_project/models/customer.dart';
-import 'package:mate_project/models/response/CustomerResponse.dart';
-import 'package:mate_project/screens/home/customer/home_screen.dart';
-import 'package:mate_project/screens/home/customer/main_screen.dart';
-import 'package:mate_project/screens/profile_management/customer/customer_address_screen.dart';
-import 'package:mate_project/screens/profile_management/customer/customer_language_screen.dart';
-import 'package:mate_project/screens/profile_management/customer/customer_password_screen.dart';
-import 'package:mate_project/screens/profile_management/customer/customer_profile_screen.dart';
-import 'package:mate_project/screens/profile_management/customer/customer_favorite_screen.dart';
-import 'package:mate_project/screens/profile_management/customer/widgets/account_edit_element.dart';
+import 'package:mate_project/models/staff.dart';
+import 'package:mate_project/screens/profile_management/account_address_screen.dart';
+import 'package:mate_project/screens/profile_management/edit_language_screen.dart';
+import 'package:mate_project/screens/profile_management/edit_password_screen.dart';
+import 'package:mate_project/screens/profile_management/edit_profile_screen.dart';
+import 'package:mate_project/screens/profile_management/widgets/account_edit_element.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 
-class AccountMainScreen extends StatefulWidget {
-  const AccountMainScreen({super.key});
+class StaffAccountMainScreen extends StatefulWidget {
+  const StaffAccountMainScreen({super.key});
 
   @override
-  State<AccountMainScreen> createState() => _AccountMainScreenState();
+  State<StaffAccountMainScreen> createState() => _StaffAccountMainScreenState();
 }
 
-class _AccountMainScreenState extends State<AccountMainScreen> {
+class _StaffAccountMainScreenState extends State<StaffAccountMainScreen> {
   //Test data (Thay đổi khi call API để lấy dữ liệu)
-  Customer? customer =
-      Customer(customerId: 0, email: "loading....", fullName: "loading...");
-  int? packId; // lấy ra id của gói mà người dùng sở hữu
-  List<Color> avatarBorder = [];
-  Future<CustomerResponse?> getCustomer() async {
-    return SharedPreferencesHelper.getCustomer();
-  }
+  Staff? staff;
 
   @override
   void initState() {
     super.initState();
-    getCustomer().then(
-      (value) {
-        setState(() {
-          customer = Customer(
-              customerId: value!.customerId,
-              email: value!.email,
-              fullName: value.fullname,
-              address: value.address,
-              avatar: "assets/pics/user_test.png",
-              dateOfBirth: value.dateOfBirth.toString(),
-              favorite: value.favorite,
-              gender: value.gender,
-              note: value.note,
-              phoneNumber: value.phoneNumber);
-        });
-      },
+    staff = Staff(
+      staffId: 1,
+      email: "staff@mate.org",
+      fullName: "Lorem Ipsum",
+      avatar: "assets/pics/nurse.png",
     );
-    packId = 1;
-    avatarBorder = ProjectData.getGradient(packId!);
   }
 
   @override
@@ -67,20 +40,7 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
       appBar: TNormalAppBar(
         title: "My Account",
         isBordered: false,
-        isBack: true,
-        back: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return const MainScreen(
-                  inputScreen: HomeScreen(),
-                  screenIndex: 0,
-                );
-              },
-            ),
-          );
-        },
+        isBack: false,
       ),
       body: Container(
         width: 360.w,
@@ -99,7 +59,7 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return const CustomerProfileScreen();
+                        return const EditProfileScreen();
                       },
                     ),
                   );
@@ -127,24 +87,10 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
                             height: 50.w,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: (customer!.avatar != null &&
-                                        customer!.avatar!.isNotEmpty)
-                                    ? AssetImage("assets/pics/user_test.png")
-                                    : AssetImage("assets/pics/user_test.png"),
+                                image: AssetImage(staff!.avatar!),
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.circular(50),
-                              border: GradientBoxBorder(
-                                width: 2.w,
-                                gradient: LinearGradient(
-                                  colors: avatarBorder != []
-                                      ? avatarBorder
-                                      : const [
-                                          Color.fromARGB(255, 244, 244, 244),
-                                          Color.fromARGB(255, 244, 244, 244),
-                                        ],
-                                ),
-                              ),
                             ),
                           ),
                           Column(
@@ -152,7 +98,7 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                customer!.fullName,
+                                staff!.fullName,
                                 style: GoogleFonts.inter(
                                   color: const Color.fromARGB(255, 32, 35, 43),
                                   fontSize: 14.sp,
@@ -162,7 +108,7 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
-                                customer!.email,
+                                staff!.email,
                                 style: GoogleFonts.inter(
                                   color: const Color.fromARGB(255, 32, 35, 43),
                                   fontSize: 12.sp,
@@ -220,31 +166,7 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) {
-                              return const CustomerAddressScreen();
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(
-                      height: 16.h,
-                    ),
-                    Container(
-                      height: 0.5.h,
-                      color: const Color.fromARGB(255, 189, 190, 191),
-                    ),
-                    SizedBox(
-                      height: 16.h,
-                    ),
-                    AccountEditElement(
-                      icon: IconsaxPlusLinear.heart,
-                      title: "Favorites",
-                      choose: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return const CustomerFavoriteScreen();
+                              return const AccountAddressScreen();
                             },
                           ),
                         );
@@ -268,7 +190,7 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) {
-                              return const CustomerPasswordScreen();
+                              return const EditPasswordScreen();
                             },
                           ),
                         );
@@ -313,26 +235,11 @@ class _AccountMainScreenState extends State<AccountMainScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) {
-                              return const CustomerLanguageScreen();
+                              return const EditLanguageScreen();
                             },
                           ),
                         );
                       },
-                    ),
-                    SizedBox(
-                      height: 16.h,
-                    ),
-                    Container(
-                      height: 0.5.h,
-                      color: const Color.fromARGB(255, 189, 190, 191),
-                    ),
-                    SizedBox(
-                      height: 16.h,
-                    ),
-                    AccountEditElement(
-                      icon: IconsaxPlusLinear.messages_2,
-                      title: "Need help? Let’s chat",
-                      choose: () {},
                     ),
                   ],
                 ),

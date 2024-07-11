@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
-import 'package:mate_project/screens/profile_management/customer/widgets/account_edit_text_field.dart';
+import 'package:mate_project/screens/profile_management/widgets/account_edit_text_field.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
 
 class EditAddressManually extends StatefulWidget {

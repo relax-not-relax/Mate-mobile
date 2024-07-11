@@ -5,25 +5,27 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:mate_project/models/customer.dart';
-import 'package:mate_project/screens/profile_management/customer/account_main_screen.dart';
-import 'package:mate_project/screens/profile_management/customer/edit_address_screen.dart';
-import 'package:mate_project/screens/profile_management/customer/widgets/account_edit_selection_field.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
+import 'package:mate_project/screens/profile_management/edit_address_screen.dart';
+import 'package:mate_project/screens/profile_management/widgets/account_edit_selection_field.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
 
-class CustomerAddressScreen extends StatefulWidget {
-  const CustomerAddressScreen({super.key});
+class AccountAddressScreen extends StatefulWidget {
+  const AccountAddressScreen({super.key});
 
   @override
-  State<CustomerAddressScreen> createState() => _CustomerAddressScreenState();
+  State<AccountAddressScreen> createState() => _AccountAddressScreenState();
 }
 
-class _CustomerAddressScreenState extends State<CustomerAddressScreen> {
+class _AccountAddressScreenState extends State<AccountAddressScreen> {
   // ignore: prefer_final_fields
   TextEditingController _addressController = TextEditingController();
 
   //Test data (Thay đổi khi call API để lấy dữ liệu)
+  //Check xem account đăng nhập đang là role nào (customer hay staff) và sử dụng tương ứng
   late Customer? customer;
+  //late Staff staff;
 
   @override
   void initState() {
@@ -51,7 +53,12 @@ class _CustomerAddressScreenState extends State<CustomerAddressScreen> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return const AccountMainScreen();
+                // Thay đổi theo role
+                // Nếu là Customer thì back về CustomerAccountMainScreen()
+                return const CustomerAccountMainScreen();
+
+                // Nếu là Staff thì back về StaffAccountMainScreen()
+                // return const StaffAccountMainScreen();
               },
             ),
           );
