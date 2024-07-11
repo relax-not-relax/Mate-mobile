@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mate_project/data/project_data.dart';
-import 'package:mate_project/screens/profile_management/customer/widgets/account_edit_selection_field.dart';
+import 'package:mate_project/screens/profile_management/widgets/account_edit_selection_field.dart';
 
 class EditFavorite extends StatefulWidget {
   const EditFavorite({

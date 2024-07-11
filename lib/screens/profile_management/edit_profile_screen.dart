@@ -12,21 +12,22 @@ import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mate_project/models/customer.dart';
-import 'package:mate_project/screens/profile_management/customer/account_main_screen.dart';
-import 'package:mate_project/screens/profile_management/customer/widgets/account_edit_date_field.dart';
-import 'package:mate_project/screens/profile_management/customer/widgets/account_edit_selection_field.dart';
-import 'package:mate_project/screens/profile_management/customer/widgets/account_edit_text_field.dart';
+import 'package:mate_project/models/staff.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
+import 'package:mate_project/screens/profile_management/widgets/account_edit_date_field.dart';
+import 'package:mate_project/screens/profile_management/widgets/account_edit_selection_field.dart';
+import 'package:mate_project/screens/profile_management/widgets/account_edit_text_field.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
 
-class CustomerProfileScreen extends StatefulWidget {
-  const CustomerProfileScreen({super.key});
+class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({super.key});
 
   @override
-  State<CustomerProfileScreen> createState() => _CustomerProfileScreenState();
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
-class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
+class _EditProfileScreenState extends State<EditProfileScreen> {
   // ignore: prefer_final_fields
   TextEditingController _nameController = TextEditingController();
   // ignore: prefer_final_fields
@@ -37,7 +38,9 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
   TextEditingController _genderController = TextEditingController();
 
   //Test data (Thay đổi khi call API để lấy dữ liệu)
+  //Check xem account đăng nhập đang là role nào (customer hay staff) và sử dụng tương ứng
   late Customer? customer;
+  //late Staff staff;
   List<String> genders = [
     "Male",
     "Female",
@@ -195,7 +198,12 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return const AccountMainScreen();
+                // Thay đổi theo role
+                // Nếu là Customer thì back về CustomerAccountMainScreen()
+                return const CustomerAccountMainScreen();
+
+                // Nếu là Staff thì back về StaffAccountMainScreen()
+                // return const StaffAccountMainScreen();
               },
             ),
           );

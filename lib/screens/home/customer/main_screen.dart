@@ -6,7 +6,7 @@ import 'package:mate_project/models/room.dart';
 import 'package:mate_project/screens/chat/chat_screen.dart';
 import 'package:mate_project/screens/home/customer/home_screen.dart';
 import 'package:mate_project/screens/management/customer/my_room_screen.dart';
-import 'package:mate_project/screens/profile_management/customer/account_main_screen.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({
@@ -58,7 +58,7 @@ class _MainScreenState extends State<MainScreen> {
         );
         break;
       case 3:
-        activePage = AccountMainScreen();
+        activePage = CustomerAccountMainScreen();
         break;
     }
 

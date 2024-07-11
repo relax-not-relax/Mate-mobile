@@ -5,9 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mate_project/data/project_data.dart';
 import 'package:mate_project/models/customer.dart';
-import 'package:mate_project/screens/profile_management/customer/account_main_screen.dart';
-import 'package:mate_project/screens/profile_management/customer/widgets/account_edit_selection_field.dart';
-import 'package:mate_project/screens/profile_management/customer/widgets/account_edit_text_field.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
+import 'package:mate_project/screens/profile_management/widgets/account_edit_selection_field.dart';
+import 'package:mate_project/screens/profile_management/widgets/account_edit_text_field.dart';
 import 'package:mate_project/screens/profile_management/customer/widgets/edit_favorite.dart';
 import 'package:mate_project/screens/profile_management/customer/widgets/edit_note.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
@@ -84,7 +84,7 @@ class _CustomerFavoriteScreenState extends State<CustomerFavoriteScreen> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return const AccountMainScreen();
+                return const CustomerAccountMainScreen();
               },
             ),
           );

@@ -5,20 +5,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:mate_project/data/project_data.dart';
 import 'package:mate_project/models/language.dart';
-import 'package:mate_project/screens/profile_management/customer/account_main_screen.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 import 'package:country_flags/country_flags.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
 import 'package:unicons/unicons.dart';
 
-class CustomerLanguageScreen extends StatefulWidget {
-  const CustomerLanguageScreen({super.key});
+class EditLanguageScreen extends StatefulWidget {
+  const EditLanguageScreen({super.key});
 
   @override
-  State<CustomerLanguageScreen> createState() => _CustomerLanguageScreenState();
+  State<EditLanguageScreen> createState() => _EditLanguageScreenState();
 }
 
-class _CustomerLanguageScreenState extends State<CustomerLanguageScreen> {
+class _EditLanguageScreenState extends State<EditLanguageScreen> {
   late Language defaultLanguage;
 
   bool isSelecting = false;
@@ -64,7 +64,7 @@ class _CustomerLanguageScreenState extends State<CustomerLanguageScreen> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return const AccountMainScreen();
+                return const CustomerAccountMainScreen();
               },
             ),
           );

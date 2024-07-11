@@ -6,10 +6,10 @@ import 'package:iconly/iconly.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:mate_project/api/location_api.dart';
 import 'package:mate_project/models/location.dart';
-import 'package:mate_project/screens/profile_management/customer/customer_address_screen.dart';
-import 'package:mate_project/screens/profile_management/customer/widgets/account_edit_text_field.dart';
-import 'package:mate_project/screens/profile_management/customer/widgets/edit_address_manually.dart';
-import 'package:mate_project/screens/profile_management/customer/widgets/location_list_element.dart';
+import 'package:mate_project/screens/profile_management/account_address_screen.dart';
+import 'package:mate_project/screens/profile_management/widgets/account_edit_text_field.dart';
+import 'package:mate_project/screens/profile_management/widgets/edit_address_manually.dart';
+import 'package:mate_project/screens/profile_management/widgets/location_list_element.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
 
@@ -196,7 +196,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return const CustomerAddressScreen();
+                return const AccountAddressScreen();
               },
             ),
           );
