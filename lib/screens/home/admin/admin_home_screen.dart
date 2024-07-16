@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:intl/intl.dart';
+import 'package:mate_project/screens/chat/admin/messages_list_screen.dart';
 import 'package:mate_project/screens/home/admin/widgets/data_management_view.dart';
 import 'package:mate_project/screens/home/admin/widgets/statistics_view.dart';
 
@@ -133,7 +134,16 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                             ),
                           ),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return MessagesListScreen();
+                                  },
+                                ),
+                              );
+                            },
                             child: CircleAvatar(
                               backgroundColor: Color.fromARGB(169, 84, 87, 91),
                               radius: 25,

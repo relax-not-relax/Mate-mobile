@@ -4,12 +4,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/rememberme.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/screens/chat/admin/messages_list_screen.dart';
+import 'package:mate_project/screens/home/admin/admin_home_screen.dart';
+import 'package:mate_project/screens/home/admin/admin_main_screen.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/home/customer/home_screen.dart';
 import 'package:mate_project/screens/home/staff/staff_main_screen.dart';
 import 'package:mate_project/screens/introduction/onboard_screen.dart';
 import 'package:mate_project/blocs/authen_bloc.dart';
 import 'package:mate_project/repositories/authen_repo.dart';
+import 'package:mate_project/screens/management/staff/staff_schedule_screen.dart';
 import 'package:mate_project/screens/profile_management/staff/staff_account_main_screen.dart';
 
 void main() async {
@@ -56,19 +60,19 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          // home: customer == null
-          //     ? const OnboardScreen(
-          //         index: 0,
-          //       )
-          //     : const MainScreen(
-          //         inputScreen: HomeScreen(),
-          //         screenIndex: 0,
-          //       ),
+          home: customer == null
+              ? const OnboardScreen(
+                  index: 0,
+                )
+              : const MainScreen(
+                  inputScreen: HomeScreen(),
+                  screenIndex: 0,
+                ),
 
-          home: StaffMainScreen(
-            inputScreen: StaffAccountMainScreen(),
-            screenIndex: 3,
-          ),
+          // home: AdminMainScreen(
+          //   inputScreen: AdminHomeScreen(),
+          //   screenIndex: 0,
+          // ),
           debugShowCheckedModeBanner: false,
         ),
         designSize: const Size(360, 800),

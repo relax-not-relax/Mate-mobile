@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mate_project/screens/home/admin/admin_home_screen.dart';
+import 'package:mate_project/screens/management/admin/user_data_screen.dart';
 
 class AdminMainScreen extends StatefulWidget {
   const AdminMainScreen({
@@ -42,6 +43,9 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
         activePage = AdminHomeScreen();
         break;
       case 1:
+        activePage = UserDataScreen(
+          tabIndex: 0,
+        );
         break;
       case 2:
         break;
@@ -77,6 +81,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
           onTabChange: (value) {
             _selectPage(value);
           },
+          selectedIndex: _selectedPageIndex,
           tabs: const [
             GButton(
               icon: IconlyBold.home,
