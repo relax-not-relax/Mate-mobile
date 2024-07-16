@@ -4,7 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mate_project/screens/home/staff/staff_home_screen.dart';
+import 'package:mate_project/screens/management/staff/staff_schedule_screen.dart';
 import 'package:mate_project/screens/notification/staff_notification_screen.dart';
+import 'package:mate_project/screens/profile_management/staff/staff_account_main_screen.dart';
 
 class StaffMainScreen extends StatefulWidget {
   const StaffMainScreen({
@@ -47,8 +49,10 @@ class _StaffMainScreenState extends State<StaffMainScreen> {
         activePage = StaffNotificationScreen();
         break;
       case 2:
+        activePage = StaffScheduleScreen();
         break;
       case 3:
+        activePage = StaffAccountMainScreen();
         break;
     }
 
