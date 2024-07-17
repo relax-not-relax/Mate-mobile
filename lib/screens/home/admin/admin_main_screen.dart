@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mate_project/screens/home/admin/admin_home_screen.dart';
+import 'package:mate_project/screens/management/admin/admin_assign_screen.dart';
 import 'package:mate_project/screens/management/admin/user_data_screen.dart';
 
 class AdminMainScreen extends StatefulWidget {
@@ -40,14 +41,15 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
 
     switch (_selectedPageIndex) {
       case 0:
-        activePage = AdminHomeScreen();
+        activePage = const AdminHomeScreen();
         break;
       case 1:
-        activePage = UserDataScreen(
+        activePage = const UserDataScreen(
           tabIndex: 0,
         );
         break;
       case 2:
+        activePage = AdminAssignScreen();
         break;
       case 3:
         break;
