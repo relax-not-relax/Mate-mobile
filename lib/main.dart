@@ -60,19 +60,19 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          home: customer == null
-              ? const OnboardScreen(
-                  index: 0,
-                )
-              : const MainScreen(
-                  inputScreen: HomeScreen(),
-                  screenIndex: 0,
-                ),
+          // home: customer == null
+          //     ? const OnboardScreen(
+          //         index: 0,
+          //       )
+          //     : const MainScreen(
+          //         inputScreen: HomeScreen(),
+          //         screenIndex: 0,
+          //       ),
 
-          // home: AdminMainScreen(
-          //   inputScreen: AdminHomeScreen(),
-          //   screenIndex: 0,
-          // ),
+          home: AdminMainScreen(
+            inputScreen: AdminHomeScreen(),
+            screenIndex: 0,
+          ),
           debugShowCheckedModeBanner: false,
         ),
         designSize: const Size(360, 800),
