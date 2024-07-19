@@ -4,6 +4,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mate_project/screens/home/admin/admin_home_screen.dart';
 import 'package:mate_project/screens/management/admin/admin_assign_screen.dart';
+import 'package:mate_project/screens/management/admin/admin_statistics_screen.dart';
 import 'package:mate_project/screens/management/admin/user_data_screen.dart';
 
 class AdminMainScreen extends StatefulWidget {
@@ -52,6 +53,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
         activePage = AdminAssignScreen();
         break;
       case 3:
+        activePage = AdminStatisticsScreen();
         break;
     }
 
@@ -70,38 +72,42 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
         ),
         decoration: const BoxDecoration(
           color: Color.fromARGB(255, 41, 45, 50),
-          borderRadius: BorderRadius.all(Radius.circular(50)),
+          borderRadius: BorderRadius.all(
+            Radius.circular(50),
+          ),
         ),
-        child: GNav(
-          backgroundColor: Colors.transparent,
-          color: Colors.white,
-          textSize: 12.sp,
-          activeColor: Colors.white,
-          tabBackgroundColor: const Color.fromARGB(255, 127, 119, 245),
-          gap: 8.w,
-          padding: EdgeInsets.all(16.w),
-          onTabChange: (value) {
-            _selectPage(value);
-          },
-          selectedIndex: _selectedPageIndex,
-          tabs: const [
-            GButton(
-              icon: IconlyBold.home,
-              text: "Home",
-            ),
-            GButton(
-              icon: IconlyBold.folder,
-              text: "Data",
-            ),
-            GButton(
-              icon: IconlyBold.paper,
-              text: "Assign",
-            ),
-            GButton(
-              icon: IconlyBold.chart,
-              text: "Statistics",
-            ),
-          ],
+        child: ClipRRect(
+          child: GNav(
+            backgroundColor: Colors.transparent,
+            color: Colors.white,
+            textSize: 12.sp,
+            activeColor: Colors.white,
+            tabBackgroundColor: const Color.fromARGB(255, 127, 119, 245),
+            gap: 8.w,
+            padding: EdgeInsets.all(16.w),
+            onTabChange: (value) {
+              _selectPage(value);
+            },
+            selectedIndex: _selectedPageIndex,
+            tabs: const [
+              GButton(
+                icon: IconlyBold.home,
+                text: "Home",
+              ),
+              GButton(
+                icon: IconlyBold.folder,
+                text: "Data",
+              ),
+              GButton(
+                icon: IconlyBold.paper,
+                text: "Assign",
+              ),
+              GButton(
+                icon: IconlyBold.chart,
+                text: "Statistics",
+              ),
+            ],
+          ),
         ),
       ),
     );
