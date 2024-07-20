@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,8 +31,9 @@ class CustomerAccountMainScreen extends StatefulWidget {
 
 class _CustomerAccountMainScreenState extends State<CustomerAccountMainScreen> {
   //Test data (Thay đổi khi call API để lấy dữ liệu)
-  Customer? customer =
-      Customer(customerId: 0, email: "loading...", fullName: "loading...");
+  Customer customer =
+      Customer(customerId: 0, email: "loading....", fullName: "loading...");
+  CustomerResponse? customerR;
   int? packId; // lấy ra id của gói mà người dùng sở hữu
   List<Color> avatarBorder = [];
   Future<CustomerResponse?> getCustomer() async {
@@ -42,6 +46,7 @@ class _CustomerAccountMainScreenState extends State<CustomerAccountMainScreen> {
     getCustomer().then(
       (value) {
         setState(() {
+          customerR = value;
           customer = Customer(
               customerId: value!.customerId,
               email: value!.email,
@@ -87,7 +92,7 @@ class _CustomerAccountMainScreenState extends State<CustomerAccountMainScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return const EditProfileScreen();
+                        return EditProfileScreen(customer: customerR!);
                       },
                     ),
                   );

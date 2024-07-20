@@ -29,7 +29,7 @@ class _AccountEditDateFieldState extends State<AccountEditDateField> {
     FocusScope.of(context).unfocus();
     final DateTime? datePicker = await showDatePicker(
       context: context,
-      initialDate: DateTime.parse(widget.initBirthday),
+      initialDate: DateFormat('dd/MM/yyyy').parse(widget.initBirthday),
       firstDate: DateTime(1900),
       lastDate: DateTime(3000),
     );

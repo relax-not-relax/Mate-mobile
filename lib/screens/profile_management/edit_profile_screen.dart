@@ -2,29 +2,43 @@
 
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:mate_project/blocs/authen_bloc.dart';
+import 'package:mate_project/blocs/customer_bloc.dart';
+import 'package:mate_project/enums/failure_enum.dart';
+import 'package:mate_project/events/customer_event.dart';
 import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/models/staff.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
 import 'package:mate_project/screens/profile_management/widgets/account_edit_date_field.dart';
 import 'package:mate_project/screens/profile_management/widgets/account_edit_selection_field.dart';
 import 'package:mate_project/screens/profile_management/widgets/account_edit_text_field.dart';
+import 'package:mate_project/models/request/update_customer_request.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/states/authen_state.dart';
+import 'package:mate_project/states/customer_state.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
+import 'package:mate_project/widgets/form/normal_dialog_custom.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+  const EditProfileScreen({super.key, required this.customer});
+  final CustomerResponse customer;
 
   @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
+  State<EditProfileScreen> createState() =>
+      // ignore: no_logic_in_create_state
+      _EditProfileScreenState(customer: customer);
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
@@ -36,11 +50,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _birthdayController = TextEditingController();
   TextEditingController _genderController = TextEditingController();
+  CustomerResponse customer;
 
-  //Test data (Thay đổi khi call API để lấy dữ liệu)
-  //Check xem account đăng nhập đang là role nào (customer hay staff) và sử dụng tương ứng
-  late Customer? customer;
-  //late Staff staff;
   List<String> genders = [
     "Male",
     "Female",
@@ -50,33 +61,42 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   File? _selectedImage;
   late String avatar;
 
+  _EditProfileScreenState({required this.customer});
+
+  String convertDateFormat(String dateString) {
+    // Định dạng ban đầu
+    DateFormat inputFormat = DateFormat("dd/MM/yyyy");
+    // Định dạng mong muốn
+    DateFormat outputFormat = DateFormat("yyyy-MM-dd");
+
+    try {
+      // Phân tích chuỗi ngày tháng theo định dạng ban đầu
+      DateTime dateTime = inputFormat.parse(dateString);
+      // Chuyển đổi sang định dạng mong muốn
+      String formattedDate = outputFormat.format(dateTime);
+      return formattedDate;
+    } catch (e) {
+      print("Error: $e");
+      return ""; // hoặc trả về giá trị mặc định nào đó
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    customer = Customer(
-      customerId: 1,
-      email: "loremispum@gmail.com",
-      fullName: "Lorem Ispum",
-      avatar: "assets/pics/user_test.png",
-      dateOfBirth: "1975-01-01 17:00:20",
-      gender: "Male",
-    );
-    _nameController.text = customer!.fullName;
-    _emailController.text = customer!.email;
-    _phoneController.text = customer!.phoneNumber ?? "";
-    _birthdayController.text = DateFormat("dd/MM/yyyy").format(
-      DateTime.parse(
-        customer!.dateOfBirth!,
-      ),
-    );
-    _genderController.text = customer!.gender ?? "Male";
+    _nameController.text = customer.fullname;
+    _emailController.text = customer.email;
+    _phoneController.text = customer.phoneNumber ?? "";
+    _birthdayController.text =
+        DateFormat("dd/MM/yyyy").format(customer.dateOfBirth!);
+    _genderController.text = customer.gender ?? "Male";
     for (var gender in genders) {
-      if ((gender.toUpperCase().compareTo(customer!.gender!.toUpperCase())) ==
+      if ((gender.toUpperCase().compareTo(customer.gender!.toUpperCase())) ==
           0) {
         genderOption = gender;
       }
     }
-    avatar = customer!.avatar ?? "assets/pics/no_ava.png";
+    avatar = customer.avatar ?? "assets/pics/no_ava.png";
   }
 
   Future _pickImageFromGallery() async {
@@ -93,6 +113,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     // print(response);
   }
+
+  // Future uploadFile(File? image) async {
+  //   if (image == null) return;
+
+  //   final storageRef = FirebaseStorage.instance
+  //       .ref()
+  //       .child('uploads/${DateTime.now().millisecondsSinceEpoch}.png');
+  //   final uploadTask = storageRef.putFile(image);
+
+  //   final snapshot = await uploadTask.whenComplete(() => null);
+  //   final downloadURL = await snapshot.ref.getDownloadURL();
+
+  //   avatar = downloadURL;
+
+  //   print(avatar);
+  // }
+
+  NormalDialogCustom dialogCustom = const NormalDialogCustom();
 
   @override
   Widget build(BuildContext context) {
@@ -187,150 +225,227 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     return Scaffold(
-      extendBodyBehindAppBar: false,
-      backgroundColor: Colors.white,
-      appBar: TNormalAppBar(
-        title: "My Profile",
-        isBordered: false,
-        isBack: true,
-        back: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                // Thay đổi theo role
-                // Nếu là Customer thì back về CustomerAccountMainScreen()
-                return const CustomerAccountMainScreen();
-
-                // Nếu là Staff thì back về StaffAccountMainScreen()
-                // return const StaffAccountMainScreen();
-              },
-            ),
-          );
-        },
-      ),
-      body: Container(
-        width: 360.w,
-        height: 710.h,
-        padding: EdgeInsets.symmetric(
-          horizontal: 24.w,
+        extendBodyBehindAppBar: false,
+        backgroundColor: Colors.white,
+        appBar: TNormalAppBar(
+          title: "My Profile",
+          isBordered: false,
+          isBack: true,
+          back: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return const CustomerAccountMainScreen();
+                },
+              ),
+            );
+          },
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Customize your personal information",
-                style: GoogleFonts.inter(
-                  color: const Color.fromARGB(255, 84, 87, 91),
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              SizedBox(
-                height: 24.h,
-              ),
-              Wrap(
-                direction: Axis.vertical,
-                alignment: WrapAlignment.start,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: -20.h,
+        body: BlocListener<CustomerBloc, CustomerState>(listener:
+            (context, state) async {
+          if (state is UpdateCustomerLoading) {
+            dialogCustom.showWaitingDialog(
+              context,
+              'assets/pics/oldpeople.png',
+              "Wating..",
+              "Togetherness - Companion - Sharing",
+              false,
+              const Color.fromARGB(255, 68, 60, 172),
+            );
+          }
+          if (state is UpdateCustomerSuccess) {
+            Navigator.of(context).pop();
+            dialogCustom.showWaitingDialog(
+              context,
+              'assets/pics/oldpeople.png',
+              "Update success",
+              "Togetherness - Companion - Sharing",
+              false,
+              const Color.fromARGB(255, 68, 60, 172),
+            );
+            await Future.delayed(const Duration(seconds: 1));
+            // ignore: use_build_context_synchronously
+            Navigator.of(context).pop();
+          }
+          if (state is UpdateCustomerFailure) {
+            Navigator.of(context).pop();
+          }
+          if (state is UpdateCustomerFailure &&
+              state.error.type == Failure.System) {
+            dialogCustom.showSelectionDialog(
+              context,
+              'assets/pics/error.png',
+              'System failure',
+              'Please check again',
+              true,
+              const Color.fromARGB(255, 230, 57, 71),
+              'Continue',
+              () {
+                Navigator.of(context).pop();
+              },
+            );
+          }
+        }, child:
+            BlocBuilder<CustomerBloc, CustomerState>(builder: (context, state) {
+          return Container(
+            width: 360.w,
+            height: 710.h,
+            padding: EdgeInsets.symmetric(
+              horizontal: 24.w,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 100.w,
-                    height: 100.w,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: _selectedImage != null
-                            ? FileImage(_selectedImage!)
-                            : AssetImage(customer!.avatar!),
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadius.circular(30),
+                  Text(
+                    "Customize your personal information",
+                    style: GoogleFonts.inter(
+                      color: const Color.fromARGB(255, 84, 87, 91),
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  IconButton(
-                    onPressed: () {
-                      _pickImageFromGallery();
-                    },
-                    icon: Icon(
-                      IconlyBold.camera,
-                      size: 24.sp,
-                      color: const Color.fromARGB(255, 84, 110, 255),
-                    ),
-                    padding: EdgeInsets.all(12.w),
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                        Color.fromARGB(255, 229, 233, 255),
+                  SizedBox(
+                    height: 24.h,
+                  ),
+                  Wrap(
+                    direction: Axis.vertical,
+                    alignment: WrapAlignment.start,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: -20.h,
+                    children: [
+                      Container(
+                        width: 100.w,
+                        height: 100.w,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: (_selectedImage == null &&
+                                    (customer.avatar == null ||
+                                        customer.avatar!.isEmpty))
+                                ? const AssetImage("assets/pics/no_ava.png")
+                                : (_selectedImage != null
+                                    ? FileImage(_selectedImage!)
+                                    : NetworkImage(customer.avatar!)),
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                       ),
-                    ),
+                      IconButton(
+                        onPressed: () {
+                          _pickImageFromGallery();
+                        },
+                        icon: Icon(
+                          IconlyBold.camera,
+                          size: 24.sp,
+                          color: const Color.fromARGB(255, 84, 110, 255),
+                        ),
+                        padding: EdgeInsets.all(12.w),
+                        style: const ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                            Color.fromARGB(255, 229, 233, 255),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 24.h,
+                  ),
+                  AccountEditTextField(
+                    controller: _nameController,
+                    iconData: IconsaxPlusBold.profile,
+                    type: TextInputType.name,
+                    borderColor: const Color.fromARGB(255, 148, 141, 246),
+                    title: "Full name",
+                    errorText: (state is UpdateCustomerFailure &&
+                            state.error.type == Failure.Fullname)
+                        ? state.error.content
+                        : null,
+                  ),
+                  SizedBox(
+                    height: 16.h,
+                  ),
+                  AccountEditTextField(
+                    controller: _emailController,
+                    iconData: IconlyBold.message,
+                    type: TextInputType.emailAddress,
+                    borderColor: const Color.fromARGB(255, 148, 141, 246),
+                    title: "Email",
+                  ),
+                  SizedBox(
+                    height: 16.h,
+                  ),
+                  AccountEditTextField(
+                    controller: _phoneController,
+                    iconData: IconsaxPlusBold.call,
+                    type: TextInputType.phone,
+                    borderColor: const Color.fromARGB(255, 148, 141, 246),
+                    title: "Phone number",
+                    errorText: (state is UpdateCustomerFailure &&
+                            state.error.type == Failure.PhoneNumber)
+                        ? state.error.content
+                        : null,
+                  ),
+                  SizedBox(
+                    height: 16.h,
+                  ),
+                  AccountEditDateField(
+                    controller: _birthdayController,
+                    title: "Birthday",
+                    initBirthday:
+                        DateFormat("dd/MM/yyyy").format(customer.dateOfBirth!),
+                    errorText: (state is UpdateCustomerFailure &&
+                            state.error.type == Failure.Birthday)
+                        ? state.error.content
+                        : null,
+                  ),
+                  SizedBox(
+                    height: 16.h,
+                  ),
+                  AccountEditSelectionField(
+                    controller: _genderController,
+                    onPressed: () {
+                      displayBottomSheet(context);
+                    },
+                    title: "Gender",
+                    iconData: IconsaxPlusBold.profile_2user,
+                  ),
+                  SizedBox(
+                    height: 64.h,
+                  ),
+                  NormalButtonCustom(
+                    name: "Save",
+                    action: () async {
+                      // await uploadFile(_selectedImage);
+                      UpdateCustomerRequest reuqest = UpdateCustomerRequest(
+                        avatar: avatar,
+                        fullname: _nameController.text,
+                        dateOfBirth:
+                            convertDateFormat(_birthdayController.text),
+                        gender: _genderController.text,
+                        phoneNumber: _phoneController.text,
+                        address: customer.address!,
+                        favorite: customer.address!,
+                        note: customer.note!,
+                      );
+                      BlocProvider.of<CustomerBloc>(context).add(
+                        SaveUpdatePressed(
+                            avatar: _selectedImage,
+                            customerId: customer.customerId,
+                            customerRequest: reuqest),
+                      );
+                    },
+                    background: const Color.fromARGB(255, 84, 110, 255),
                   ),
                 ],
               ),
-              SizedBox(
-                height: 24.h,
-              ),
-              AccountEditTextField(
-                controller: _nameController,
-                iconData: IconsaxPlusBold.profile,
-                type: TextInputType.name,
-                borderColor: const Color.fromARGB(255, 148, 141, 246),
-                title: "Full name",
-              ),
-              SizedBox(
-                height: 16.h,
-              ),
-              AccountEditTextField(
-                controller: _emailController,
-                iconData: IconlyBold.message,
-                type: TextInputType.emailAddress,
-                borderColor: const Color.fromARGB(255, 148, 141, 246),
-                title: "Email",
-              ),
-              SizedBox(
-                height: 16.h,
-              ),
-              AccountEditTextField(
-                controller: _phoneController,
-                iconData: IconsaxPlusBold.call,
-                type: TextInputType.phone,
-                borderColor: const Color.fromARGB(255, 148, 141, 246),
-                title: "Phone number",
-              ),
-              SizedBox(
-                height: 16.h,
-              ),
-              AccountEditDateField(
-                controller: _birthdayController,
-                title: "Birthday",
-                initBirthday: customer!.dateOfBirth!,
-              ),
-              SizedBox(
-                height: 16.h,
-              ),
-              AccountEditSelectionField(
-                controller: _genderController,
-                onPressed: () {
-                  displayBottomSheet(context);
-                },
-                title: "Gender",
-                iconData: IconsaxPlusBold.profile_2user,
-              ),
-              SizedBox(
-                height: 64.h,
-              ),
-              NormalButtonCustom(
-                name: "Save",
-                action: () {},
-                background: const Color.fromARGB(255, 84, 110, 255),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
+        })));
   }
 }

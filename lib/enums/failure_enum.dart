@@ -5,5 +5,7 @@ enum Failure {
   Email,
   System,
   ConfirmMail,
-  LoginFail
+  LoginFail,
+  PhoneNumber,
+  Birthday
 }

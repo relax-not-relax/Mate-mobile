@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "262021364783",
+    "project_id": "mate-ccd5e",
+    "storage_bucket": "mate-ccd5e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:262021364783:android:ba6e8e177f7b02ca6ddada",
+        "android_client_info": {
+          "package_name": "com.example.mate_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCd7uxVtQ2st-PDKfLT70pLQNxgHlD98sg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

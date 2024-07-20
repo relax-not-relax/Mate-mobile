@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/models/staff.dart';
 import 'package:mate_project/screens/profile_management/account_address_screen.dart';
 import 'package:mate_project/screens/profile_management/edit_language_screen.dart';
@@ -20,6 +21,7 @@ class StaffAccountMainScreen extends StatefulWidget {
 class _StaffAccountMainScreenState extends State<StaffAccountMainScreen> {
   //Test data (Thay đổi khi call API để lấy dữ liệu)
   Staff? staff;
+  CustomerResponse? customerResponse;
 
   @override
   void initState() {
@@ -59,7 +61,9 @@ class _StaffAccountMainScreenState extends State<StaffAccountMainScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return const EditProfileScreen();
+                        return EditProfileScreen(
+                          customer: customerResponse!,
+                        );
                       },
                     ),
                   );

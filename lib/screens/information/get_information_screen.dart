@@ -70,7 +70,7 @@ class _GetInformationScreenState extends State<GetInformationScreen> {
       if (value != "") {
         birthday = value;
       } else {
-        birthday = DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(DateTime.now());
+        birthday = DateFormat("yyyy-MM-dd").format(DateTime.now());
       }
     });
     _initHobbies = getCurrentHobbies();
