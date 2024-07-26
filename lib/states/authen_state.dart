@@ -55,6 +55,12 @@ class LoginSuccess extends AuthenticationState {
   LoginSuccess({required this.customerResponse});
 }
 
+class LoginSuccessNotPack extends AuthenticationState {
+  final CustomerResponse customerResponse;
+
+  LoginSuccessNotPack({required this.customerResponse});
+}
+
 class LoginLoading extends AuthenticationState {}
 
 class LoginFail extends AuthenticationState {

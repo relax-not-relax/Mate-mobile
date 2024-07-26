@@ -93,74 +93,12 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
     // Test data, lấy những phòng nhân viên này sẽ phải điểm danh trong ngày được chọn (Gọi API)
     attendanceList = [
       Attendance(
+        staff: null,
         attendanceId: 1,
         customerId: 1,
         staffId: 1,
         checkDate: selected,
         status: 1,
-      ),
-      Attendance(
-        attendanceId: 2,
-        customerId: 2,
-        staffId: 1,
-        checkDate: selected,
-        status: 0,
-      ),
-      Attendance(
-        attendanceId: 3,
-        customerId: 3,
-        staffId: 1,
-        checkDate: selected,
-        status: 0,
-      ),
-      Attendance(
-        attendanceId: 4,
-        customerId: 4,
-        staffId: 1,
-        checkDate: selected,
-        status: 0,
-      ),
-      Attendance(
-        attendanceId: 5,
-        customerId: 5,
-        staffId: 1,
-        checkDate: selected,
-        status: 0,
-      ),
-      Attendance(
-        attendanceId: 6,
-        customerId: 6,
-        staffId: 1,
-        checkDate: selected,
-        status: 0,
-      ),
-      Attendance(
-        attendanceId: 7,
-        customerId: 7,
-        staffId: 1,
-        checkDate: selected,
-        status: 0,
-      ),
-      Attendance(
-        attendanceId: 8,
-        customerId: 8,
-        staffId: 1,
-        checkDate: selected,
-        status: 0,
-      ),
-      Attendance(
-        attendanceId: 9,
-        customerId: 9,
-        staffId: 1,
-        checkDate: selected,
-        status: 0,
-      ),
-      Attendance(
-        attendanceId: 10,
-        customerId: 10,
-        staffId: 1,
-        checkDate: selected,
-        status: 0,
       ),
     ];
   }

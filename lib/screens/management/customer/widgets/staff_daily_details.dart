@@ -5,14 +5,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:mate_project/models/staff.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StaffDailyDetails extends StatefulWidget {
   const StaffDailyDetails({
     super.key,
     required this.staff,
+    required this.dateCare,
   });
 
   final Staff staff;
+  final DateTime dateCare;
 
   @override
   State<StaffDailyDetails> createState() => _StaffDailyDetailsState();
@@ -22,6 +25,17 @@ class _StaffDailyDetailsState extends State<StaffDailyDetails> {
   //Ngày phụ trách phòng của nhân viên (Gọi API để thay đổi)
   DateTime careDate = DateTime.now();
   String formatDate = "";
+  void _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunch(launchUri.toString())) {
+      await launch(launchUri.toString());
+    } else {
+      throw 'Could not launch $phoneNumber';
+    }
+  }
 
   @override
   void initState() {
@@ -55,7 +69,10 @@ class _StaffDailyDetailsState extends State<StaffDailyDetails> {
                     children: [
                       CircleAvatar(
                         radius: 20.w,
-                        backgroundImage: AssetImage(widget.staff.avatar!),
+                        backgroundImage: widget.staff.avatar == null
+                            ? const NetworkImage(
+                                "https://firebasestorage.googleapis.com/v0/b/lottery-4803d.appspot.com/o/admin.png?alt=media&token=36c3bf42-b2b3-4742-bf5b-671f06926823")
+                            : NetworkImage(widget.staff.avatar!),
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -119,7 +136,7 @@ class _StaffDailyDetailsState extends State<StaffDailyDetails> {
                 children: [
                   Flexible(
                     child: Text(
-                      "Nursing care: $formatDate",
+                      "Nursing care: ${widget.dateCare.day}/${widget.dateCare.month}/${widget.dateCare.year}",
                       style: GoogleFonts.inter(
                         color: const Color.fromARGB(255, 154, 155, 159),
                         fontSize: 12.sp,
@@ -130,7 +147,9 @@ class _StaffDailyDetailsState extends State<StaffDailyDetails> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      _makePhoneCall(widget.staff.phoneNumber!);
+                    },
                     child: Icon(
                       IconsaxPlusBold.call,
                       size: 20.sp,

@@ -19,6 +19,7 @@ import 'package:mate_project/enums/failure_enum.dart';
 import 'package:mate_project/events/customer_event.dart';
 import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/models/staff.dart';
+import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
 import 'package:mate_project/screens/profile_management/widgets/account_edit_date_field.dart';
 import 'package:mate_project/screens/profile_management/widgets/account_edit_selection_field.dart';
@@ -42,42 +43,43 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  // ignore: prefer_final_fields
   TextEditingController _nameController = TextEditingController();
-  // ignore: prefer_final_fields
   TextEditingController _emailController = TextEditingController();
-  // ignore: prefer_final_fields
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _birthdayController = TextEditingController();
   TextEditingController _genderController = TextEditingController();
   CustomerResponse customer;
 
-  List<String> genders = [
-    "Male",
-    "Female",
-    "Other",
-  ];
+  List<String> genders = ["Male", "Female", "Other"];
   late String genderOption;
   File? _selectedImage;
   late String avatar;
+  late CustomerBloc _customerBloc;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _customerBloc = BlocProvider.of<CustomerBloc>(context);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   _EditProfileScreenState({required this.customer});
 
   String convertDateFormat(String dateString) {
-    // Định dạng ban đầu
     DateFormat inputFormat = DateFormat("dd/MM/yyyy");
-    // Định dạng mong muốn
     DateFormat outputFormat = DateFormat("yyyy-MM-dd");
 
     try {
-      // Phân tích chuỗi ngày tháng theo định dạng ban đầu
       DateTime dateTime = inputFormat.parse(dateString);
-      // Chuyển đổi sang định dạng mong muốn
       String formattedDate = outputFormat.format(dateTime);
       return formattedDate;
     } catch (e) {
       print("Error: $e");
-      return ""; // hoặc trả về giá trị mặc định nào đó
+      return "";
     }
   }
 
@@ -110,25 +112,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     } else {
       return;
     }
-
-    // print(response);
   }
-
-  // Future uploadFile(File? image) async {
-  //   if (image == null) return;
-
-  //   final storageRef = FirebaseStorage.instance
-  //       .ref()
-  //       .child('uploads/${DateTime.now().millisecondsSinceEpoch}.png');
-  //   final uploadTask = storageRef.putFile(image);
-
-  //   final snapshot = await uploadTask.whenComplete(() => null);
-  //   final downloadURL = await snapshot.ref.getDownloadURL();
-
-  //   avatar = downloadURL;
-
-  //   print(avatar);
-  // }
 
   NormalDialogCustom dialogCustom = const NormalDialogCustom();
 
@@ -232,13 +216,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           isBordered: false,
           isBack: true,
           back: () {
-            Navigator.pushReplacement(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return const CustomerAccountMainScreen();
+                  return const MainScreen(
+                    inputScreen: CustomerAccountMainScreen(),
+                    screenIndex: 3,
+                  );
                 },
               ),
+              (route) => false,
             );
           },
         ),
@@ -265,7 +253,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               const Color.fromARGB(255, 68, 60, 172),
             );
             await Future.delayed(const Duration(seconds: 1));
-            // ignore: use_build_context_synchronously
             Navigator.of(context).pop();
           }
           if (state is UpdateCustomerFailure) {
@@ -328,8 +315,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         customer.avatar!.isEmpty))
                                 ? const AssetImage("assets/pics/no_ava.png")
                                 : (_selectedImage != null
-                                    ? FileImage(_selectedImage!)
-                                    : NetworkImage(customer.avatar!)),
+                                        ? FileImage(_selectedImage!)
+                                        : NetworkImage(customer.avatar!))
+                                    as ImageProvider,
                             fit: BoxFit.cover,
                           ),
                           borderRadius: BorderRadius.circular(30),
@@ -421,7 +409,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   NormalButtonCustom(
                     name: "Save",
                     action: () async {
-                      // await uploadFile(_selectedImage);
                       UpdateCustomerRequest reuqest = UpdateCustomerRequest(
                         avatar: avatar,
                         fullname: _nameController.text,
@@ -433,12 +420,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         favorite: customer.address!,
                         note: customer.note!,
                       );
-                      BlocProvider.of<CustomerBloc>(context).add(
-                        SaveUpdatePressed(
-                            avatar: _selectedImage,
-                            customerId: customer.customerId,
-                            customerRequest: reuqest),
-                      );
+                      if (!_customerBloc.isClosed) {
+                        BlocProvider.of<CustomerBloc>(context).add(
+                          SaveUpdatePressed(
+                              avatar: _selectedImage,
+                              customerId: customer.customerId,
+                              customerRequest: reuqest),
+                        );
+                      } else {
+                        print('CustomerBloc is closed');
+                      }
                     },
                     background: const Color.fromARGB(255, 84, 110, 255),
                   ),

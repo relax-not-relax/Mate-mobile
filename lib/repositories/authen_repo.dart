@@ -6,6 +6,7 @@ import 'package:mate_project/helper/config.dart';
 import 'package:mate_project/helper/custom_exception.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/customer.dart';
+import 'package:mate_project/models/pack.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
 
 class Authenrepository {
@@ -46,6 +47,7 @@ class Authenrepository {
     if (response.statusCode == 200) {
       print('ok');
       final jsonData = json.decode(response.body);
+      print(CustomerResponse.fromJson(jsonData).toJson().toString());
       return CustomerResponse.fromJson(jsonData);
     } else {
       throw Exception('Failed to register');
@@ -137,13 +139,13 @@ class Authenrepository {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonBody);
+
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-      CustomerResponse.fromJson(jsonData);
-      print(jsonData);
-      await SharedPreferencesHelper.setCustomer(
-          CustomerResponse.fromJson(jsonData));
-      return CustomerResponse.fromJson(jsonData);
+      CustomerResponse customer = CustomerResponse.fromJson(jsonData);
+      print(customer.toJson());
+      await SharedPreferencesHelper.setCustomer(customer);
+      return customer;
     } else if (response.statusCode == 400) {
       final jsonData = json.decode(response.body);
       throw Exception(jsonData['error']);

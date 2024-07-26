@@ -29,7 +29,7 @@ class Pack {
   factory Pack.fromJson(Map<String, dynamic> json) {
     return Pack(
       packId: json['packId'] as int,
-      price: json['price'] as double,
+      price: double.parse(json['price'].toString()),
       packName: json['packName'],
       description: json['description'],
       duration: json['duration'] as int,

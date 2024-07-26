@@ -8,6 +8,7 @@ import 'package:mate_project/blocs/customer_bloc.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/rememberme.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/repositories/attendance_repo.dart';
 import 'package:mate_project/screens/chat/admin/messages_list_screen.dart';
 import 'package:mate_project/screens/home/admin/admin_home_screen.dart';
 import 'package:mate_project/screens/home/admin/admin_main_screen.dart';
@@ -24,6 +25,7 @@ import 'package:mate_project/blocs/authen_bloc.dart';
 import 'package:mate_project/repositories/authen_repo.dart';
 import 'package:mate_project/screens/management/staff/staff_schedule_screen.dart';
 import 'package:mate_project/screens/profile_management/staff/staff_account_main_screen.dart';
+import 'package:mate_project/screens/subscription/room_subscription_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,6 +59,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   final Authenrepository authenrepository = Authenrepository();
   final CustomerRepository customerRepository = CustomerRepository();
+  final AttendanceRepo attendanceRepo = AttendanceRepo();
   final CustomerResponse? customer;
 
   MyApp({super.key, required this.customer});
@@ -71,8 +74,10 @@ class MyApp extends StatelessWidget {
               AuthenticationBloc(authenticationRepository: authenrepository),
         ),
         BlocProvider(
-          create: (context) =>
-              CustomerBloc(customerRepository: customerRepository),
+          create: (context) => CustomerBloc(
+              customer: customer,
+              customerRepository: customerRepository,
+              attendanceRepository: attendanceRepo),
         ),
       ],
       child: ScreenUtilInit(
@@ -84,14 +89,28 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
+          initialRoute: '/',
+          routes: {
+            '/paymentdone': (context) => const MainScreen(
+                  inputScreen: HomeScreen(),
+                  screenIndex: 0,
+                ), // Trang đích sau khi thanh toán thành công
+            '/paymentcancel': (context) => RoomSubscriptionScreen(
+                  customer: customer!,
+                ), // Trang đích sau khi thanh toán bị hủy
+          },
           home: customer == null
               ? const OnboardScreen(
                   index: 0,
                 )
-              : const MainScreen(
-                  inputScreen: HomeScreen(),
-                  screenIndex: 0,
-                ),
+              : customer!.packs.isEmpty
+                  ? RoomSubscriptionScreen(
+                      customer: customer!,
+                    )
+                  : const MainScreen(
+                      inputScreen: HomeScreen(),
+                      screenIndex: 0,
+                    ),
 
           // home: AdminMainScreen(
           //   inputScreen: AdminHomeScreen(),

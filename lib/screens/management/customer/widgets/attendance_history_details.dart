@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:mate_project/models/attendance.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AttendanceHistoryDetails extends StatefulWidget {
   const AttendanceHistoryDetails({
@@ -41,6 +42,18 @@ class _AttendanceHistoryDetailsState extends State<AttendanceHistoryDetails> {
     isWithinRange = (hour >= 0 && hour <= 12) &&
         (minute >= 0 && minute < 60) &&
         (second >= 0 && second < 60);
+  }
+
+  void _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunch(launchUri.toString())) {
+      await launch(launchUri.toString());
+    } else {
+      throw 'Could not launch $phoneNumber';
+    }
   }
 
   @override
@@ -98,7 +111,7 @@ class _AttendanceHistoryDetailsState extends State<AttendanceHistoryDetails> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                splittedDate[0],
+                                widget.details.checkDate.day.toString(),
                                 style: GoogleFonts.inter(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w600,
@@ -106,7 +119,8 @@ class _AttendanceHistoryDetailsState extends State<AttendanceHistoryDetails> {
                                 ),
                               ),
                               Text(
-                                splittedDate[1],
+                                DateFormat.MMM()
+                                    .format(widget.details.checkDate),
                                 style: GoogleFonts.inter(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w400,
@@ -161,7 +175,9 @@ class _AttendanceHistoryDetailsState extends State<AttendanceHistoryDetails> {
                   CircleAvatar(
                     radius: 20.w,
                     // Lay thong tin Staff tu API
-                    backgroundImage: AssetImage("assets/pics/nurse.png"),
+                    backgroundImage: widget.details.staff!.avatar == null
+                        ? const AssetImage("assets/pics/nurse.png")
+                        : NetworkImage(widget.details.staff!.avatar!),
                   ),
                 ],
               ),
@@ -176,7 +192,9 @@ class _AttendanceHistoryDetailsState extends State<AttendanceHistoryDetails> {
                 height: 16.h,
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  _makePhoneCall(widget.details.staff!.phoneNumber!);
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,

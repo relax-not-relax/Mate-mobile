@@ -7,5 +7,6 @@ enum Failure {
   ConfirmMail,
   LoginFail,
   PhoneNumber,
-  Birthday
+  Birthday,
+  RoomFull
 }
