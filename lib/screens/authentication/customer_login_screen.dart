@@ -10,6 +10,7 @@ import 'package:mate_project/screens/authentication/customer_register_screen.dar
 import 'package:mate_project/screens/home/customer/home_screen.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/information/get_information_screen.dart';
+import 'package:mate_project/screens/subscription/room_subscription_screen.dart';
 import 'package:mate_project/states/authen_state.dart';
 import 'package:mate_project/widgets/form/edit_pass_field.dart';
 import 'package:mate_project/widgets/form/edit_text_field.dart';
@@ -86,6 +87,15 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => const GetInformationScreen()),
+                (Route<dynamic> route) => false,
+              );
+            } else if (state.customerResponse.packs.isEmpty) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => RoomSubscriptionScreen(
+                          customer: state.customerResponse,
+                        )),
                 (Route<dynamic> route) => false,
               );
             } else {

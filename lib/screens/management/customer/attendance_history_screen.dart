@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
+import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/attendance.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/models/room.dart';
+import 'package:mate_project/repositories/attendance_repo.dart';
 import 'package:mate_project/screens/management/customer/my_room_screen.dart';
 import 'package:mate_project/screens/management/customer/widgets/attendance_history_details.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
@@ -20,6 +23,11 @@ class AttendanceHistoryScreen extends StatefulWidget {
 class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
   //Test data (Thay đổi khi call API để lấy dữ liệu)
   List<Attendance> attendanceList = [];
+  CustomerResponse? customer = null;
+  AttendanceRepo attendanceRepository = AttendanceRepo();
+  List<Attendance> myAttendance = [];
+  late ScrollController _scrollController;
+  List<Attendance> myAttendanceOrigin = [];
 
   late int selectedYear;
   late String filterOption;
@@ -30,52 +38,132 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
     "All time",
   ];
 
+  int page = 1;
+  final int size = 20;
+  Future getAttend() async {
+    customer = await SharedPreferencesHelper.getCustomer();
+    myAttendanceOrigin = await attendanceRepository.GetAttendanceOfCustomer(
+        filterType: 0,
+        pageSize: size,
+        page: page,
+        customerId: customer!.customerId);
+    page++;
+    setState(() {
+      myAttendance = myAttendanceOrigin;
+    });
+  }
+
+  void resetSearch() async {
+    page = 1;
+    myAttendanceOrigin = await attendanceRepository.GetAttendanceOfCustomer(
+        filterType: 0,
+        pageSize: size,
+        page: page,
+        customerId: customer!.customerId);
+    page++;
+    setState(() {
+      myAttendance = myAttendanceOrigin;
+    });
+  }
+
+  void _onScroll() async {
+    print('hihi');
+    if (_scrollController.position.atEdge && filterOption == 'All time') {
+      print('hihi');
+      bool isBottom = _scrollController.position.pixels != 0;
+      if (isBottom) {
+        List<Attendance> listAdd =
+            await attendanceRepository.GetAttendanceOfCustomer(
+                filterType: 0,
+                pageSize: size,
+                page: page,
+                customerId: customer!.customerId);
+        setState(() {
+          myAttendanceOrigin.addAll(listAdd);
+          myAttendance.addAll(listAdd);
+        });
+        page++;
+      }
+    }
+  }
+
+  void filter(String filter) async {
+    page = 1;
+    int sortType = 0;
+    switch (filter) {
+      case 'This week':
+        sortType = 1;
+        break;
+      case 'This month':
+        sortType = 2;
+        break;
+      case 'This year':
+        sortType = 3;
+        break;
+    }
+    print("okee");
+    myAttendanceOrigin = await attendanceRepository.GetAttendanceOfCustomer(
+        filterType: sortType,
+        pageSize: 0,
+        page: 1,
+        customerId: customer!.customerId);
+    setState(() {
+      myAttendance = myAttendanceOrigin;
+    });
+    for (var element in myAttendance) {
+      print(element.toJson().toString());
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+    getAttend();
     attendanceList = [
       Attendance(
-        attendanceId: 1,
-        customerId: 1,
-        staffId: 1,
-        checkDate: DateTime.parse("2024-06-22 07:30:20"),
-        status: 1,
-      ),
+          attendanceId: 1,
+          customerId: 1,
+          staffId: 1,
+          checkDate: DateTime.parse("2024-06-22 07:30:20"),
+          status: 1,
+          staff: null),
       Attendance(
-        attendanceId: 2,
-        customerId: 1,
-        staffId: 1,
-        checkDate: DateTime.parse("2024-06-22 17:00:20"),
-        status: 2,
-      ),
+          attendanceId: 2,
+          customerId: 1,
+          staffId: 1,
+          checkDate: DateTime.parse("2024-06-22 17:00:20"),
+          status: 2,
+          staff: null),
       Attendance(
-        attendanceId: 3,
-        customerId: 1,
-        staffId: 1,
-        checkDate: DateTime.parse("2024-06-21 07:30:20"),
-        status: 1,
-      ),
+          attendanceId: 3,
+          customerId: 1,
+          staffId: 1,
+          checkDate: DateTime.parse("2024-06-21 07:30:20"),
+          status: 1,
+          staff: null),
       Attendance(
-        attendanceId: 4,
-        customerId: 1,
-        staffId: 1,
-        checkDate: DateTime.parse("2024-06-21 17:00:20"),
-        status: 1,
-      ),
+          attendanceId: 4,
+          customerId: 1,
+          staffId: 1,
+          checkDate: DateTime.parse("2024-06-21 17:00:20"),
+          status: 1,
+          staff: null),
       Attendance(
-        attendanceId: 5,
-        customerId: 1,
-        staffId: 1,
-        checkDate: DateTime.parse("2024-06-20 07:30:20"),
-        status: 1,
-      ),
+          attendanceId: 5,
+          customerId: 1,
+          staffId: 1,
+          checkDate: DateTime.parse("2024-06-20 07:30:20"),
+          status: 1,
+          staff: null),
       Attendance(
-        attendanceId: 6,
-        customerId: 1,
-        staffId: 1,
-        checkDate: DateTime.parse("2024-06-20 17:00:20"),
-        status: 1,
-      ),
+          attendanceId: 6,
+          customerId: 1,
+          staffId: 1,
+          checkDate: DateTime.parse("2024-06-20 17:00:20"),
+          status: 1,
+          staff: null),
     ];
     selectedYear = DateTime.now().year;
     filterOption = filters[3];
@@ -176,7 +264,13 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                       ),
                       NormalButtonCustom(
                         name: "Confirm",
-                        action: () {},
+                        action: () {
+                          if (filterOption == 'All time') {
+                            resetSearch();
+                          } else {
+                            filter(filterOption);
+                          }
+                        },
                         background: const Color.fromARGB(255, 84, 110, 255),
                       ),
                     ],
@@ -235,9 +329,12 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
           horizontal: 24.w,
         ),
         child: SingleChildScrollView(
+          controller: _scrollController,
           child: Column(
-            children: attendanceList.map(
+            children: myAttendance.map(
               (e) {
+                print(e.checkDate);
+
                 return AttendanceHistoryDetails(
                   details: e,
                 );

@@ -1,13 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:mate_project/blocs/customer_bloc.dart';
+import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/customer.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
 import 'package:mate_project/screens/profile_management/edit_address_screen.dart';
 import 'package:mate_project/screens/profile_management/widgets/account_edit_selection_field.dart';
+import 'package:mate_project/states/customer_state.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
 
@@ -24,126 +29,140 @@ class _AccountAddressScreenState extends State<AccountAddressScreen> {
 
   //Test data (Thay đổi khi call API để lấy dữ liệu)
   //Check xem account đăng nhập đang là role nào (customer hay staff) và sử dụng tương ứng
-  late Customer? customer;
+  CustomerResponse? customer;
   //late Staff staff;
+
+  Future getAddress() async {
+    customer = await SharedPreferencesHelper.getCustomer();
+    setState(() {
+      customer;
+    });
+    print(customer!.address);
+  }
 
   @override
   void initState() {
     super.initState();
-    customer = Customer(
-      customerId: 1,
-      email: "loremispum@gmail.com",
-      fullName: "Lorem Ispum",
-      address: "12 Nguyen Hue Street, District 1, Ho Chi Minh City",
+    getAddress().then(
+      (value) {
+        _addressController.text =
+            customer == null ? "Loading..." : customer!.address ?? "";
+      },
     );
-    _addressController.text = customer!.address ?? "";
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: false,
-      backgroundColor: Colors.white,
-      appBar: TNormalAppBar(
-        title: "My Address",
-        isBordered: false,
-        isBack: true,
-        back: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                // Thay đổi theo role
-                // Nếu là Customer thì back về CustomerAccountMainScreen()
-                return const CustomerAccountMainScreen();
+        extendBodyBehindAppBar: false,
+        backgroundColor: Colors.white,
+        appBar: TNormalAppBar(
+          title: "My Address",
+          isBordered: false,
+          isBack: true,
+          back: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  // Thay đổi theo role
+                  // Nếu là Customer thì back về CustomerAccountMainScreen()
+                  return const CustomerAccountMainScreen();
 
-                // Nếu là Staff thì back về StaffAccountMainScreen()
-                // return const StaffAccountMainScreen();
-              },
-            ),
-          );
-        },
-      ),
-      body: Stack(
-        children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              width: 360.w,
-              height: 710.h,
-              padding: EdgeInsets.symmetric(
-                horizontal: 24.w,
+                  // Nếu là Staff thì back về StaffAccountMainScreen()
+                  // return const StaffAccountMainScreen();
+                },
               ),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 8.h,
+            );
+          },
+        ),
+        body: BlocListener<CustomerBloc, CustomerState>(
+          listener: (context, state) async {},
+          child: BlocBuilder<CustomerBloc, CustomerState>(
+              builder: (context, state) {
+            return Stack(
+              children: [
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    width: 360.w,
+                    height: 710.h,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 24.w,
                     ),
-                    AccountEditSelectionField(
-                      controller: _addressController,
-                      onPressed: () {},
-                      title: "Saved address",
-                      iconData: IconlyBold.location,
-                    ),
-                    SizedBox(
-                      height: 24.h,
-                    ),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return EditAddressScreen(
-                                  controller: _addressController,
-                                  savedAddress: customer!.address ?? "",
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 8.h,
+                          ),
+                          AccountEditSelectionField(
+                            controller: _addressController,
+                            onPressed: () {},
+                            title: "Saved address",
+                            iconData: IconlyBold.location,
+                          ),
+                          SizedBox(
+                            height: 24.h,
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return EditAddressScreen(
+                                        controller: _addressController,
+                                        savedAddress: customer!.address ?? "",
+                                      );
+                                    },
+                                  ),
                                 );
                               },
-                            ),
-                          );
-                        },
-                        child: Wrap(
-                          alignment: WrapAlignment.start,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          spacing: 8.w,
-                          children: [
-                            Icon(
-                              IconsaxPlusLinear.edit,
-                              size: 20.sp,
-                              color: const Color.fromARGB(255, 67, 90, 204),
-                            ),
-                            Text(
-                              "Edit my address",
-                              style: GoogleFonts.inter(
-                                color: const Color.fromARGB(255, 67, 90, 204),
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
+                              child: Wrap(
+                                alignment: WrapAlignment.start,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 8.w,
+                                children: [
+                                  Icon(
+                                    IconsaxPlusLinear.edit,
+                                    size: 20.sp,
+                                    color:
+                                        const Color.fromARGB(255, 67, 90, 204),
+                                  ),
+                                  Text(
+                                    "Edit my address",
+                                    style: GoogleFonts.inter(
+                                      color: const Color.fromARGB(
+                                          255, 67, 90, 204),
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  )
+                                ],
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          )
+                        ],
                       ),
-                    )
-                  ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 32.h,
-            left: 0,
-            right: 0,
-            child: Container(),
-          ),
-        ],
-      ),
-    );
+                Positioned(
+                  bottom: 32.h,
+                  left: 0,
+                  right: 0,
+                  child: Container(),
+                ),
+              ],
+            );
+          }),
+        ));
   }
 }

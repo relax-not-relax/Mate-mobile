@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:mate_project/models/request/add_customer_to_room_request.dart';
+import 'package:mate_project/models/request/buy_pack_request.dart';
+import 'package:mate_project/models/request/password_request.dart';
 import 'package:mate_project/models/request/update_customer_request.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
 
@@ -14,4 +17,27 @@ class SaveUpdatePressed extends CustomerEvent {
       {required this.avatar,
       required this.customerRequest,
       required this.customerId});
+}
+
+class BuyPackPressed extends CustomerEvent {
+  final BuyPackRequest buyPackRequest;
+  final AddToRoomRequest addToRoomRequest;
+
+  BuyPackPressed(
+      {required this.buyPackRequest, required this.addToRoomRequest});
+}
+
+class ViewAttendanceScroll extends CustomerEvent {
+  final int page;
+  final int pageSize;
+  final int customerId;
+
+  ViewAttendanceScroll(
+      {required this.page, required this.pageSize, required this.customerId});
+}
+
+class SaveChangePasswordPressed extends CustomerEvent {
+  final PasswordRequest passwordRequest;
+
+  SaveChangePasswordPressed({required this.passwordRequest});
 }

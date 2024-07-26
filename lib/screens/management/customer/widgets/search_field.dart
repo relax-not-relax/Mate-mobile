@@ -12,7 +12,7 @@ class SearchField extends StatefulWidget {
   });
 
   final TextEditingController controller;
-  final void Function(String) search;
+  final void Function() search;
   final void Function() filter;
 
   @override
@@ -60,9 +60,12 @@ class _SearchFieldState extends State<SearchField> {
         FocusScope.of(context).unfocus();
       },
       decoration: InputDecoration(
-        prefixIcon: const Icon(
-          IconlyLight.search,
-          color: Color.fromARGB(255, 79, 81, 89),
+        prefixIcon: InkWell(
+          onTap: widget.search,
+          child: const Icon(
+            IconlyLight.search,
+            color: Color.fromARGB(255, 79, 81, 89),
+          ),
         ),
         suffixIcon: Container(
           margin: EdgeInsets.all(4.w),

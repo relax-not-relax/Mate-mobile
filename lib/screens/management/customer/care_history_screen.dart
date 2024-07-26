@@ -1,8 +1,13 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mate_project/helper/sharedpreferenceshelper.dart';
+import 'package:mate_project/models/attendance.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/models/room.dart';
 import 'package:mate_project/models/staff.dart';
+import 'package:mate_project/repositories/attendance_repo.dart';
 import 'package:mate_project/screens/management/customer/my_room_screen.dart';
 import 'package:mate_project/screens/management/customer/widgets/search_field.dart';
 import 'package:mate_project/screens/management/customer/widgets/staff_daily_details.dart';
@@ -18,68 +23,113 @@ class CareHistoryScreen extends StatefulWidget {
 
 class _CareHistoryScreenState extends State<CareHistoryScreen> {
   TextEditingController _controller = TextEditingController();
-  //Test data (Thay đổi khi call API để lấy dữ liệu)
-  List<Staff> staffList = [];
-
   late int selectedYear;
   late String filterOption;
+  CustomerResponse? customer = null;
+  AttendanceRepo attendanceRepository = AttendanceRepo();
+  List<Attendance> myAttendance = [];
+  late ScrollController _scrollController;
+  List<Attendance> myAttendanceOrigin = [];
+  int page = 1;
+  final int size = 20;
+  Future getAttend() async {
+    customer = await SharedPreferencesHelper.getCustomer();
+    myAttendanceOrigin = await attendanceRepository.GetAttendanceOfCustomer(
+        filterType: 0,
+        pageSize: size,
+        page: page,
+        customerId: customer!.customerId);
+    page++;
+    setState(() {
+      myAttendance = myAttendanceOrigin;
+    });
+  }
+
+  void resetSearch() async {
+    page = 1;
+    myAttendanceOrigin = await attendanceRepository.GetAttendanceOfCustomer(
+        filterType: 0,
+        pageSize: size,
+        page: page,
+        customerId: customer!.customerId);
+    page++;
+    setState(() {
+      myAttendance = myAttendanceOrigin;
+    });
+  }
+
   List<String> filters = [
     "This week",
     "This month",
     "This year",
     "All time",
   ];
+  void _onScroll() async {
+    print('hihi');
+    if (_scrollController.position.atEdge && filterOption == 'All time') {
+      print('hihi');
+      bool isBottom = _scrollController.position.pixels != 0;
+      if (isBottom) {
+        List<Attendance> listAdd =
+            await attendanceRepository.GetAttendanceOfCustomer(
+                filterType: 0,
+                pageSize: size,
+                page: page,
+                customerId: customer!.customerId);
+        setState(() {
+          myAttendanceOrigin.addAll(listAdd);
+          myAttendance.addAll(listAdd);
+        });
+        page++;
+      }
+    }
+  }
 
   @override
   void initState() {
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
     _controller.text = "";
     super.initState();
-    staffList = [
-      Staff(
-        staffId: 1,
-        email: "lorem@staff.com",
-        fullName: "Lorem ispum",
-        avatar: "assets/pics/nurse.png",
-        status: true,
-      ),
-      Staff(
-        staffId: 2,
-        email: "lorem@staff.com",
-        fullName: "Lorem ispum",
-        avatar: "assets/pics/nurse.png",
-        status: false,
-      ),
-      Staff(
-        staffId: 3,
-        email: "lorem@staff.com",
-        fullName: "Lorem ispum",
-        avatar: "assets/pics/nurse.png",
-        status: true,
-      ),
-      Staff(
-        staffId: 4,
-        email: "lorem@staff.com",
-        fullName: "Lorem ispum",
-        avatar: "assets/pics/nurse.png",
-        status: true,
-      ),
-      Staff(
-        staffId: 5,
-        email: "lorem@staff.com",
-        fullName: "Lorem ispum",
-        avatar: "assets/pics/nurse.png",
-        status: true,
-      ),
-      Staff(
-        staffId: 6,
-        email: "lorem@staff.com",
-        fullName: "Lorem ispum",
-        avatar: "assets/pics/nurse.png",
-        status: true,
-      ),
-    ];
     selectedYear = DateTime.now().year;
     filterOption = filters[3];
+    getAttend();
+  }
+
+  void search(String search) {
+    print(myAttendanceOrigin.length);
+    myAttendance = myAttendanceOrigin
+        .where((attendance) => attendance.staff!.fullName
+            .toLowerCase()
+            .contains(search.toLowerCase()))
+        .toList();
+    setState(() {
+      myAttendance;
+    });
+  }
+
+  void filter(String filter) async {
+    int sortType = 0;
+    switch (filter) {
+      case 'This week':
+        sortType = 1;
+        break;
+      case 'This month':
+        sortType = 2;
+        break;
+      case 'This year':
+        sortType = 3;
+        break;
+    }
+    print("okee");
+    myAttendanceOrigin = await attendanceRepository.GetAttendanceOfCustomer(
+        filterType: sortType,
+        pageSize: 0,
+        page: 1,
+        customerId: customer!.customerId);
+    setState(() {
+      myAttendance = myAttendanceOrigin;
+    });
   }
 
   @override
@@ -177,7 +227,13 @@ class _CareHistoryScreenState extends State<CareHistoryScreen> {
                       ),
                       NormalButtonCustom(
                         name: "Confirm",
-                        action: () {},
+                        action: () {
+                          if (filterOption == 'All time') {
+                            resetSearch();
+                          } else {
+                            filter(filterOption);
+                          }
+                        },
                         background: const Color.fromARGB(255, 84, 110, 255),
                       ),
                     ],
@@ -227,11 +283,13 @@ class _CareHistoryScreenState extends State<CareHistoryScreen> {
                 horizontal: 24.w,
               ),
               child: SingleChildScrollView(
+                controller: _scrollController,
                 child: Column(
-                  children: staffList.map(
+                  children: myAttendance.map(
                     (e) {
                       return StaffDailyDetails(
-                        staff: e,
+                        dateCare: e.checkDate,
+                        staff: e.staff!,
                       );
                     },
                   ).toList(),
@@ -251,7 +309,9 @@ class _CareHistoryScreenState extends State<CareHistoryScreen> {
               ),
               child: SearchField(
                 controller: _controller,
-                search: (p0) {},
+                search: () {
+                  search(_controller.text);
+                },
                 filter: () {
                   displayBottomSheet(context);
                 },
