@@ -42,6 +42,19 @@ class LoginPressed extends AuthenticationEvent {
       required this.rememberCheck});
 }
 
+class LoginStaffOrAdminPressed extends AuthenticationEvent {
+  final String email;
+  final String password;
+  final String fcm;
+  final bool rememberCheck;
+
+  LoginStaffOrAdminPressed(
+      {required this.email,
+      required this.password,
+      required this.fcm,
+      required this.rememberCheck});
+}
+
 class LogoutPressed extends AuthenticationEvent {
   final int customerId;
 

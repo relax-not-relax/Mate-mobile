@@ -18,7 +18,6 @@ class CustomerInRoomResponse {
   // fromJson method
   factory CustomerInRoomResponse.fromJson(Map<String, dynamic> json) {
     final DateFormat formatter = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS");
-    print("messiii");
     return CustomerInRoomResponse(
       roomId: json['roomId'],
       customerId: json['customerId'],

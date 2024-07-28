@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:mate_project/models/pack.dart';
 import 'package:mate_project/models/rememberme.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/models/staff.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
@@ -12,7 +13,9 @@ class SharedPreferencesHelper {
   static const String pack = 'pack';
   static const String REGISTER_KEY = "register";
   static const String CUSTOMER_KEY = "customer";
+  static const String STAFF_KEY = "staff";
   static const String REMEMBER_KEY = "rememberme";
+  static const String REMEMBER_STAFF_ADMIN_KEY = "rememberstaffadmin";
 
   static Future<void> setRememberMe(String password, String email) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -25,6 +28,26 @@ class SharedPreferencesHelper {
   static Future<Rememberme?> getRememberMe() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? jsonS = prefs.getString(REMEMBER_KEY);
+    if (jsonS != null) {
+      final jsonData = json.decode(jsonS);
+      return Rememberme.fromJson(jsonData);
+    } else {
+      return null;
+    }
+  }
+
+  static Future<void> setRememberStaffAdmin(
+      String password, String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Map<String, String> data = {"email": email, "password": password};
+
+    String jsonBody = jsonEncode(data);
+    prefs.setString(REMEMBER_STAFF_ADMIN_KEY, jsonBody);
+  }
+
+  static Future<Rememberme?> getRememberStaffAdmin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonS = prefs.getString(REMEMBER_STAFF_ADMIN_KEY);
     if (jsonS != null) {
       final jsonData = json.decode(jsonS);
       return Rememberme.fromJson(jsonData);
@@ -82,6 +105,28 @@ class SharedPreferencesHelper {
 
     if (json != null) {
       CustomerResponse rs = CustomerResponse.fromJson(jsonDecode(json));
+      return rs;
+    } else {
+      return null;
+    }
+  }
+
+  static Future<void> setStaff(Staff staff) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String jsonBody = jsonEncode(staff);
+      prefs.setString(STAFF_KEY, jsonBody);
+    } catch (error) {
+      print(error.toString());
+    }
+  }
+
+  static Future<Staff?> getStaff() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? json = prefs.getString(STAFF_KEY);
+
+    if (json != null) {
+      Staff rs = Staff.fromJson(jsonDecode(json));
       return rs;
     } else {
       return null;

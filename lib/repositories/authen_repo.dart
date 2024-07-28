@@ -8,6 +8,7 @@ import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/models/pack.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/models/staff.dart';
 
 class Authenrepository {
   bool isValidEmail(String email) {
@@ -102,6 +103,50 @@ class Authenrepository {
     if (response.statusCode == 200) {
       SharedPreferencesHelper.setRegisterInformation(password, fullName, email);
       return response.body;
+    } else if (response.statusCode == 400) {
+      final jsonData = json.decode(response.body);
+      throw Exception(jsonData['error']);
+    } else {
+      throw Exception('System failure');
+    }
+  }
+
+  Future<Staff> authenStaff(
+      {required String email,
+      required String password,
+      required String fcm}) async {
+    if ((email.trim().isEmpty)) {
+      throw CustomException(type: Failure.Email, content: 'Please enter email');
+    }
+    if ((password.trim().isEmpty)) {
+      throw CustomException(
+          type: Failure.Password, content: 'Please enter password');
+    }
+    if (!isValidEmail(email)) {
+      throw CustomException(type: Failure.Email, content: 'Invalid email');
+    }
+
+    Map<String, String> data = {
+      "email": email,
+      "password": password,
+      "fcm": fcm
+    };
+
+    String jsonBody = jsonEncode(data);
+
+    final response = await http.post(
+        Uri.parse('${Config.apiRoot}api/authen/Authentication-Staff'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonBody);
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      Staff staff = Staff.fromJson(jsonData);
+      print(staff.toJson());
+      await SharedPreferencesHelper.setStaff(staff);
+      return staff;
     } else if (response.statusCode == 400) {
       final jsonData = json.decode(response.body);
       throw Exception(jsonData['error']);

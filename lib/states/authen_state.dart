@@ -1,5 +1,6 @@
 import 'package:mate_project/helper/custom_exception.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/models/staff.dart';
 
 abstract class AuthenticationState {}
 
@@ -53,6 +54,12 @@ class LoginSuccess extends AuthenticationState {
   final CustomerResponse customerResponse;
 
   LoginSuccess({required this.customerResponse});
+}
+
+class LoginSuccessStaffAdmin extends AuthenticationState {
+  final Staff staff;
+
+  LoginSuccessStaffAdmin({required this.staff});
 }
 
 class LoginSuccessNotPack extends AuthenticationState {
