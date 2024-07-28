@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mate_project/models/attendance.dart';
-import 'package:mate_project/models/customer.dart';
+import 'package:mate_project/models/day_attendance.dart';
 import 'package:mate_project/models/pack.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/models/room.dart';
+import 'package:mate_project/repositories/room_repo.dart';
 import 'package:mate_project/screens/management/staff/room_attendance_screen.dart';
 
 class RoomAssignItem extends StatefulWidget {
@@ -13,7 +14,7 @@ class RoomAssignItem extends StatefulWidget {
     required this.attendance,
   });
 
-  final Attendance attendance;
+  final DayAttendance attendance;
 
   @override
   State<RoomAssignItem> createState() => _RoomAssignItemState();
@@ -21,48 +22,68 @@ class RoomAssignItem extends StatefulWidget {
 
 class _RoomAssignItemState extends State<RoomAssignItem> {
   // Lấy dữ liệu về phòng, loại gói và người ở trong phòng
-  late Room room;
-  late Customer customer;
-  late Pack pack;
+  Room? room;
+  CustomerResponse? customer;
+  Pack? pack;
+  RoomRepository roomRepository = RoomRepository();
+
+  Future getData() async {
+    room =
+        (await roomRepository.GetRoomStaff(roomId: widget.attendance.roomId))!;
+    customer = widget.attendance.customer!;
+    if (room!.roomId == 1 || room!.roomId == 2) {
+      pack = Pack(
+        packId: 1,
+        price: 1500,
+        packName: "Gold Room",
+        description: "",
+        duration: 0,
+        status: true,
+      );
+    } else if (room!.roomId == 3 || room!.roomId == 4) {
+      pack = Pack(
+        packId: 2,
+        price: 1000,
+        packName: "Silver Room",
+        description: "",
+        duration: 0,
+        status: true,
+      );
+    } else {
+      pack = Pack(
+        packId: 3,
+        price: 500,
+        packName: "Bronze Room",
+        description: "",
+        duration: 0,
+        status: true,
+      );
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // Test data, gọi API lấy dữ liệu về room, pack của widget.attendance.customerId
-    room = Room(
-      roomId: 1,
-      managerId: 1,
-      roomName: '“Sunflower” Room',
-    );
-    customer = Customer(
-      customerId: 1,
-      email: "test@gmail.com",
-      fullName: "Lorem ispum",
-      avatar: "assets/pics/user_test.png",
-    );
-    pack = Pack(
-      packId: 1,
-      price: 200.0,
-      packName: "Gold",
-      description: "",
-      duration: 1,
-      status: true,
-    );
+    getData().then((value) {
+      setState(() {});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     Color roomColor = Colors.white;
-    switch (pack.packId) {
-      case 1:
-        roomColor = const Color.fromARGB(255, 251, 189, 5);
-        break;
-      case 2:
-        roomColor = const Color.fromARGB(255, 170, 170, 206);
-        break;
-      case 3:
-        roomColor = const Color.fromARGB(255, 250, 108, 37);
-        break;
+    if (pack != null) {
+      switch (pack!.packId) {
+        case 1:
+          roomColor = const Color.fromARGB(255, 251, 189, 5);
+          break;
+        case 2:
+          roomColor = const Color.fromARGB(255, 170, 170, 206);
+          break;
+        case 3:
+          roomColor = const Color.fromARGB(255, 250, 108, 37);
+          break;
+      }
     }
 
     return InkWell(
@@ -72,6 +93,9 @@ class _RoomAssignItemState extends State<RoomAssignItem> {
           MaterialPageRoute(
             builder: (context) {
               return RoomAttendanceScreen(
+                customer: customer!,
+                pack: pack!,
+                room: room!,
                 attendance: widget.attendance,
               );
             },
@@ -99,7 +123,7 @@ class _RoomAssignItemState extends State<RoomAssignItem> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    room.roomName,
+                    room != null ? room!.roomName : "",
                     style: GoogleFonts.inter(
                       color: const Color.fromARGB(255, 35, 38, 47),
                       fontSize: 14.sp,
@@ -109,7 +133,7 @@ class _RoomAssignItemState extends State<RoomAssignItem> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    "${pack.packName} room",
+                    pack != null ? "${pack!.packName} room" : "",
                     style: GoogleFonts.inter(
                       color: roomColor,
                       fontSize: 12.sp,
@@ -125,13 +149,15 @@ class _RoomAssignItemState extends State<RoomAssignItem> {
                     children: [
                       CircleAvatar(
                         radius: 20.w,
-                        backgroundImage: AssetImage(customer.avatar!),
+                        backgroundImage: customer != null
+                            ? NetworkImage(customer!.avatar!)
+                            : const AssetImage("assets/pics/man.png"),
                       ),
                       SizedBox(
                         width: 8.w,
                       ),
                       Text(
-                        customer.fullName,
+                        customer != null ? customer!.fullname : "",
                         style: GoogleFonts.inter(
                           color: const Color.fromARGB(255, 79, 81, 89),
                           fontSize: 10.sp,
@@ -156,9 +182,7 @@ class _RoomAssignItemState extends State<RoomAssignItem> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                widget.attendance.status == 1
-                    ? "Attendance taken"
-                    : "Not taken",
+                widget.attendance.status == 1 ? "Taken" : "Not taken",
                 style: GoogleFonts.inter(
                   color: Colors.white,
                   fontSize: 10.sp,

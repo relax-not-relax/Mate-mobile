@@ -4,8 +4,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:intl/intl.dart';
 import 'package:mate_project/data/project_data.dart';
+import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/attendance.dart';
 import 'package:mate_project/models/date_weekday.dart';
+import 'package:mate_project/models/day_attendance.dart';
+import 'package:mate_project/models/staff.dart';
+import 'package:mate_project/repositories/attendance_repo.dart';
 import 'package:mate_project/screens/management/staff/widgets/day_item.dart';
 import 'package:mate_project/screens/management/staff/widgets/room_assign_item.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
@@ -22,12 +26,124 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
   late int selectedMonth;
   late int selectedYear;
   List<DateWeekday> daysList = [];
+  Staff? staff = null;
   final ScrollController _scrollController = ScrollController();
   String dateTitle = "";
   // Biến roomAssign để đếm số phòng được giao trong ngày được chọn (Gọi API)
   int roomAssign = 0;
   // List<Attendance> để lấy những phòng nhân viên này sẽ phải điểm danh trong ngày được chọn (Gọi API)
   List<Attendance> attendanceList = [];
+  List<DayAttendance> dayAttendanceList = [];
+  AttendanceRepo attendanceRepository = AttendanceRepo();
+
+  Future getStaff() async {
+    staff = await SharedPreferencesHelper.getStaff();
+  }
+
+  Future<void> getAttendance(DateTime startDate, DateTime endDate) async {
+    dayAttendanceList = [];
+    attendanceList = await attendanceRepository.GetAttendanceByDay(
+        startDate: startDate, endDate: endDate, staffId: staff!.staffId);
+    for (var element in attendanceList) {
+      int index = isInDayAttendance(element, dayAttendanceList);
+      if (index == -1) {
+        if (element.checkDate.hour < 12) {
+          Attendance eveningAttendance = Attendance(
+              attendanceId: 0,
+              customerId: element.customerId,
+              staffId: element.staffId,
+              checkDate: DateTime(element.checkDate.year,
+                  element.checkDate.month, element.checkDate.day, 13, 0, 0),
+              status: 3,
+              staff: staff,
+              roomId: element.roomId,
+              customer: element.customer);
+          DayAttendance dayAttendance = DayAttendance(
+              element, eveningAttendance,
+              customerId: element.customerId,
+              staffId: element.staffId,
+              status: element.staffId,
+              staff: staff,
+              roomId: element.roomId,
+              customer: element.customer);
+          if (dayAttendance.eveningAttendance.status == 3 ||
+              dayAttendance.morningAttendance.status == 3) {
+            dayAttendance.status = 2;
+          } else {
+            dayAttendance.status = 1;
+          }
+          dayAttendanceList.add(dayAttendance);
+        } else {
+          Attendance morningAttendance = Attendance(
+              attendanceId: 0,
+              customerId: element.customerId,
+              staffId: element.staffId,
+              checkDate: DateTime(element.checkDate.year,
+                  element.checkDate.month, element.checkDate.day, 9, 0, 0),
+              status: 3,
+              staff: staff,
+              roomId: element.roomId,
+              customer: element.customer);
+          DayAttendance dayAttendance = DayAttendance(
+              morningAttendance, element,
+              customerId: element.customerId,
+              staffId: element.staffId,
+              status: element.staffId,
+              staff: staff,
+              roomId: element.roomId,
+              customer: element.customer);
+          dayAttendanceList.add(dayAttendance);
+          if (dayAttendance.eveningAttendance.status == 3 ||
+              dayAttendance.morningAttendance.status == 3) {
+            dayAttendance.status = 2;
+          } else {
+            dayAttendance.status = 1;
+          }
+        }
+      } else {
+        if (element.checkDate.hour < 12) {
+          dayAttendanceList[index].morningAttendance = element;
+          if (dayAttendanceList[index].eveningAttendance.status == 3 ||
+              dayAttendanceList[index].morningAttendance.status == 3) {
+            dayAttendanceList[index].status = 2;
+          } else {
+            dayAttendanceList[index].status = 1;
+          }
+        } else {
+          dayAttendanceList[index].eveningAttendance = element;
+          if (dayAttendanceList[index].eveningAttendance.status == 3 ||
+              dayAttendanceList[index].morningAttendance.status == 3) {
+            dayAttendanceList[index].status = 2;
+          } else {
+            dayAttendanceList[index].status = 1;
+          }
+        }
+      }
+    }
+  }
+
+  int isInDayAttendance(Attendance attendance, List<DayAttendance> list) {
+    if (list.isEmpty) return -1;
+    for (var element in list) {
+      if ((element.morningAttendance.checkDate.day ==
+                  attendance.checkDate.day &&
+              element.morningAttendance.checkDate.month ==
+                  attendance.checkDate.month &&
+              element.morningAttendance.checkDate.year ==
+                  attendance.checkDate.year &&
+              element.customerId == attendance.customerId) ||
+          (element.eveningAttendance.checkDate.day ==
+                  attendance.checkDate.day &&
+              element.eveningAttendance.checkDate.month ==
+                  attendance.checkDate.month &&
+              element.eveningAttendance.checkDate.year ==
+                  attendance.checkDate.year &&
+              element.customerId == attendance.customerId)) {
+        return list.indexOf(element);
+      }
+    }
+    return -1;
+  }
 
   List<DateWeekday> generateDays(int year, int month) {
     List<DateWeekday> days = [];
@@ -68,9 +184,101 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
     );
   }
 
+  Future<void> setDate(DateTime date) async {
+    print('ok');
+    DateTime startDate = DateTime(date.year, date.month, date.day, 0, 0, 0);
+    DateTime endDate = DateTime(date.year, date.month, date.day, 23, 59, 59);
+    dayAttendanceList = [];
+    attendanceList = await attendanceRepository.GetAttendanceByDay(
+        startDate: startDate, endDate: endDate, staffId: staff!.staffId);
+    for (var element in attendanceList) {
+      int index = isInDayAttendance(element, dayAttendanceList);
+      if (index == -1) {
+        if (element.checkDate.hour < 12) {
+          Attendance eveningAttendance = Attendance(
+              attendanceId: 0,
+              customerId: element.customerId,
+              staffId: element.staffId,
+              checkDate: DateTime(element.checkDate.year,
+                  element.checkDate.month, element.checkDate.day, 13, 0, 0),
+              status: 3,
+              staff: staff,
+              roomId: element.roomId,
+              customer: element.customer);
+          DayAttendance dayAttendance = DayAttendance(
+              element, eveningAttendance,
+              customerId: element.customerId,
+              staffId: element.staffId,
+              status: element.staffId,
+              staff: staff,
+              roomId: element.roomId,
+              customer: element.customer);
+          if (dayAttendance.eveningAttendance.status == 3 ||
+              dayAttendance.morningAttendance.status == 3) {
+            dayAttendance.status = 2;
+          } else {
+            dayAttendance.status = 1;
+          }
+          dayAttendanceList.add(dayAttendance);
+        } else {
+          Attendance morningAttendance = Attendance(
+              attendanceId: 0,
+              customerId: element.customerId,
+              staffId: element.staffId,
+              checkDate: DateTime(element.checkDate.year,
+                  element.checkDate.month, element.checkDate.day, 9, 0, 0),
+              status: 3,
+              staff: staff,
+              roomId: element.roomId,
+              customer: element.customer);
+          DayAttendance dayAttendance = DayAttendance(
+              morningAttendance, element,
+              customerId: element.customerId,
+              staffId: element.staffId,
+              status: element.staffId,
+              staff: staff,
+              roomId: element.roomId,
+              customer: element.customer);
+          dayAttendanceList.add(dayAttendance);
+          if (dayAttendance.eveningAttendance.status == 3 ||
+              dayAttendance.morningAttendance.status == 3) {
+            dayAttendance.status = 2;
+          } else {
+            dayAttendance.status = 1;
+          }
+        }
+      } else {
+        if (element.checkDate.hour < 12) {
+          dayAttendanceList[index].morningAttendance = element;
+          if (dayAttendanceList[index].eveningAttendance.status == 3 ||
+              dayAttendanceList[index].morningAttendance.status == 3) {
+            dayAttendanceList[index].status = 2;
+          } else {
+            dayAttendanceList[index].status = 1;
+          }
+        } else {
+          dayAttendanceList[index].eveningAttendance = element;
+          if (dayAttendanceList[index].eveningAttendance.status == 3 ||
+              dayAttendanceList[index].morningAttendance.status == 3) {
+            dayAttendanceList[index].status = 2;
+          } else {
+            dayAttendanceList[index].status = 1;
+          }
+        }
+      }
+    }
+    for (var element in dayAttendanceList) {
+      print(element.status);
+    }
+    setState(() {
+      dayAttendanceList;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+
     selectedMonth = DateTime.now().month;
     selectedYear = DateTime.now().year;
     daysList = generateDays(selectedYear, selectedMonth);
@@ -81,6 +289,21 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
         .first
         .dateTime;
     dateTitle = DateFormat.MMMMd().format(selected);
+    getStaff().then(
+      (value) async {
+        DateTime startDate =
+            DateTime(selected.year, selected.month, selected.day, 0, 0, 0);
+        DateTime endDate =
+            DateTime(selected.year, selected.month, selected.day, 23, 59, 59);
+        getAttendance(startDate, endDate).then(
+          (value) {
+            setState(() {
+              dayAttendanceList;
+            });
+          },
+        );
+      },
+    );
     roomAssign = 10;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Scroll to current day after build completes
@@ -89,18 +312,6 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
         _scrollToCurrentDay(selectedDayIndex);
       }
     });
-
-    // Test data, lấy những phòng nhân viên này sẽ phải điểm danh trong ngày được chọn (Gọi API)
-    attendanceList = [
-      Attendance(
-        staff: null,
-        attendanceId: 1,
-        customerId: 1,
-        staffId: 1,
-        checkDate: selected,
-        status: 1,
-      ),
-    ];
   }
 
   @override
@@ -289,7 +500,7 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
                     itemBuilder: (context, index) {
                       return DayItem(
                         day: daysList[index],
-                        onTap: () {
+                        onTap: () async {
                           setState(() {
                             // ignore: avoid_function_literals_in_foreach_calls
                             daysList.forEach(
@@ -302,6 +513,8 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
 
                             _scrollToCurrentDay(index);
                           });
+                          DateTime date = daysList[index].dateTime;
+                          await setDate(date);
                         },
                       );
                     },
@@ -333,7 +546,7 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: attendanceList.map(
+                      children: dayAttendanceList.map(
                         (e) {
                           return RoomAssignItem(
                             attendance: e,

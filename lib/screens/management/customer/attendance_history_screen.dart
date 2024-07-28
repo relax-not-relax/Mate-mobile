@@ -123,6 +123,8 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
     getAttend();
     attendanceList = [
       Attendance(
+          roomId: 0,
+          customer: null,
           attendanceId: 1,
           customerId: 1,
           staffId: 1,
@@ -130,6 +132,8 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
           status: 1,
           staff: null),
       Attendance(
+          roomId: 0,
+          customer: null,
           attendanceId: 2,
           customerId: 1,
           staffId: 1,
@@ -137,6 +141,8 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
           status: 2,
           staff: null),
       Attendance(
+          roomId: 0,
+          customer: null,
           attendanceId: 3,
           customerId: 1,
           staffId: 1,
@@ -144,6 +150,8 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
           status: 1,
           staff: null),
       Attendance(
+          roomId: 0,
+          customer: null,
           attendanceId: 4,
           customerId: 1,
           staffId: 1,
@@ -151,6 +159,8 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
           status: 1,
           staff: null),
       Attendance(
+          roomId: 0,
+          customer: null,
           attendanceId: 5,
           customerId: 1,
           staffId: 1,
@@ -158,6 +168,8 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
           status: 1,
           staff: null),
       Attendance(
+          roomId: 0,
+          customer: null,
           attendanceId: 6,
           customerId: 1,
           staffId: 1,

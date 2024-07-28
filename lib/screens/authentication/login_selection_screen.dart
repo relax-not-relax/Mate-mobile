@@ -94,12 +94,16 @@ class LoginSelectionScreen extends StatelessWidget {
                   ),
                   OutlineButtonCustom(
                     name: 'LOGIN AS STAFF',
-                    action: () {
+                    action: () async {
+                      Rememberme? rm =
+                          await SharedPreferencesHelper.getRememberStaffAdmin();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return StaffLoginScreen();
+                            return StaffLoginScreen(
+                              rememberme: rm,
+                            );
                           },
                         ),
                       );

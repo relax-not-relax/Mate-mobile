@@ -54,6 +54,40 @@ class AttendanceRepo {
     }
   }
 
+  Future<List<Attendance>> GetAttendanceByDay(
+      {required DateTime startDate,
+      required DateTime endDate,
+      required int staffId}) async {
+    String end = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS").format(endDate);
+    String start = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS").format(startDate);
+    var account = await SharedPreferencesHelper.getStaff();
+
+    final response = await http.get(
+      Uri.parse(
+          "${Config.apiRoot}api/attendance?Page=1&PageSize=100&&EndDate=$end&SortType=1&StartDate=$start&StaffId=$staffId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ${account!.accessToken}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      List<dynamic> listJson = jsonData['results'] as List<dynamic>? ?? [];
+      List<Attendance> listAttendance = [];
+      for (var element in listJson) {
+        Attendance attendance = Attendance.fromJson(element);
+        listAttendance.add(attendance);
+      }
+      return listAttendance;
+    } else if (response.statusCode == 400) {
+      final jsonData = json.decode(response.body);
+      throw Exception(jsonData['error']);
+    } else {
+      throw Exception('System failure');
+    }
+  }
+
   Future<List<Attendance>> GetAttendanceOfCustomer(
       {required int pageSize,
       required int page,
@@ -126,6 +160,8 @@ class AttendanceRepo {
         Attendance attendance;
         if (listJson.isEmpty || idJson >= listJson.length) {
           attendance = Attendance(
+              customer: null,
+              roomId: 0,
               staff: Staff(
                   phoneNumber: "0929828328",
                   staffId: 0,
@@ -151,6 +187,8 @@ class AttendanceRepo {
           DateTime checkDate = startDate.add(const Duration(hours: 1));
           // checkDate.add(const Duration(hours: 1));
           Attendance attendanceAdd = Attendance(
+              customer: null,
+              roomId: 0,
               staff: Staff(
                   phoneNumber: "0929828328",
                   staffId: 0,

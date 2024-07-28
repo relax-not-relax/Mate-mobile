@@ -125,6 +125,9 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
             },
           );
         }
+        if (state is LoginFail && state.error.type != Failure.System) {
+          Navigator.of(context).pop();
+        }
       }, child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           return Container(

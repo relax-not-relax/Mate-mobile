@@ -5,7 +5,9 @@ import 'package:mate_project/data/project_data.dart';
 import 'package:mate_project/models/attendance.dart';
 import 'package:mate_project/models/attendance_type.dart';
 import 'package:mate_project/models/customer.dart';
+import 'package:mate_project/models/day_attendance.dart';
 import 'package:mate_project/models/pack.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/models/room.dart';
 import 'package:mate_project/screens/home/staff/staff_main_screen.dart';
 import 'package:mate_project/screens/management/staff/staff_schedule_screen.dart';
@@ -19,9 +21,15 @@ class RoomAttendanceScreen extends StatefulWidget {
   const RoomAttendanceScreen({
     super.key,
     required this.attendance,
+    required this.room,
+    required this.customer,
+    required this.pack,
   });
 
-  final Attendance attendance;
+  final DayAttendance attendance;
+  final Room room;
+  final CustomerResponse customer;
+  final Pack pack;
 
   @override
   State<RoomAttendanceScreen> createState() => _RoomAttendanceScreenState();
@@ -30,7 +38,7 @@ class RoomAttendanceScreen extends StatefulWidget {
 class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
   // Lấy dữ liệu về phòng, loại gói và người ở trong phòng
   late Room room;
-  late Customer customer;
+  late CustomerResponse customer;
   late Pack pack;
 
   bool isSelecting = false;
@@ -40,28 +48,47 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
   @override
   void initState() {
     super.initState();
+    room = widget.room;
+    customer = widget.customer;
+    pack = widget.pack;
+    print(widget.attendance.morningAttendance.toJson().toString());
+    print(widget.attendance.eveningAttendance.toJson().toString());
     // Test data, gọi API lấy dữ liệu về room, pack của widget.attendance.customerId
-    room = Room(
-      roomId: 1,
-      managerId: 1,
-      roomName: '“Sunflower” Room',
-    );
-    customer = Customer(
-      customerId: 1,
-      email: "test@gmail.com",
-      fullName: "Lorem ispum",
-      avatar: "assets/pics/user_test.png",
-    );
-    pack = Pack(
-      packId: 1,
-      price: 200.0,
-      packName: "Gold",
-      description: "",
-      duration: 1,
-      status: true,
-    );
+    // room = Room(
+    //   roomId: 1,
+    //   managerId: 1,
+    //   roomName: '“Sunflower” Room',
+    // );
+    // customer = Customer(
+    //   customerId: 1,
+    //   email: "test@gmail.com",
+    //   fullName: "Lorem ispum",
+    //   avatar: "assets/pics/user_test.png",
+    // );
+    // pack = Pack(
+    //   packId: 1,
+    //   price: 200.0,
+    //   packName: "Gold",
+    //   description: "",
+    //   duration: 1,
+    //   status: true,
+    // );
 
     type = ProjectData.attendanceType[0];
+    switch (widget.attendance.morningAttendance.status) {
+      case 1:
+        attendStatus = "Present";
+        break;
+      case 2:
+        attendStatus = "Absent";
+        break;
+      case 3:
+        attendStatus = "";
+        break;
+    }
+    setState(() {
+      attendStatus;
+    });
   }
 
   void waitingForSelection() {
@@ -78,10 +105,41 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
 
   void onSelectAttendanceSession(AttendanceType aType) {
     waitingForSelection();
-    setState(() {
-      type = aType;
-      attendStatus = "";
-    });
+
+    if (aType.session == "Morning") {
+      switch (widget.attendance.morningAttendance.status) {
+        case 1:
+          attendStatus = "Present";
+          break;
+        case 2:
+          attendStatus = "Absent";
+          break;
+        case 3:
+          attendStatus = "";
+          break;
+      }
+      setState(() {
+        type = aType;
+        attendStatus;
+      });
+    } else {
+      switch (widget.attendance.eveningAttendance.status) {
+        case 1:
+          attendStatus = "Present";
+          break;
+        case 2:
+          attendStatus = "Absent";
+          break;
+        case 3:
+          attendStatus = "";
+          break;
+      }
+      setState(() {
+        type = aType;
+        attendStatus;
+      });
+    }
+
     finishedSelection();
   }
 
@@ -146,7 +204,7 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          customer.fullName,
+                          customer.fullname,
                           style: GoogleFonts.inter(
                             color: Colors.white,
                             fontSize: 14.sp,
