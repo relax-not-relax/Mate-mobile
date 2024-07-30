@@ -45,9 +45,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
         activePage = const AdminHomeScreen();
         break;
       case 1:
-        activePage = const UserDataScreen(
-          tabIndex: 0,
-        );
+        activePage = const UserDataScreen();
         break;
       case 2:
         activePage = AdminAssignScreen();

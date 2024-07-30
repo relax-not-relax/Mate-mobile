@@ -80,7 +80,7 @@ class _CustomerElementState extends State<CustomerElement> {
                   radius: 25.w,
                   backgroundImage: widget.customer.avatar != null
                       ? NetworkImage(widget.customer.avatar!)
-                      : AssetImage("assets/pics/no_ava.png"),
+                      : const AssetImage("assets/pics/no_ava.png"),
                 ),
                 SizedBox(
                   width: 16.w,

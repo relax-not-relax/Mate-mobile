@@ -49,10 +49,18 @@ class _MainScreenState extends State<MainScreen> {
         activePage = HomeScreen();
         break;
       case 1:
-        activePage = ChatScreen(
-          isAdmin: false,
-          customerResponse: widget.customerResponse,
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return ChatScreen(
+                isAdmin: false,
+                customerResponse: widget.customerResponse,
+              );
+            },
+          ),
         );
+
         break;
       case 2:
         activePage = MyRoomScreen(

@@ -12,10 +12,7 @@ import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 class UserDataScreen extends StatefulWidget {
   const UserDataScreen({
     super.key,
-    required this.tabIndex,
   });
-
-  final int tabIndex;
 
   @override
   State<UserDataScreen> createState() => _UserDataScreenState();
@@ -74,7 +71,6 @@ class _UserDataScreenState extends State<UserDataScreen>
         });
       },
     );
-    tIndex = widget.tabIndex;
     tabController = TabController(length: 2, vsync: this);
     // Test data (Call API để lấy dữ liệu)
     customerAmount = 100;
