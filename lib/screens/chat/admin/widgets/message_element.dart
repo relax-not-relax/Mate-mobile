@@ -40,9 +40,11 @@ class MessageElement extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 25.w,
-                  backgroundImage: AssetImage(
-                    element.avatar,
-                  ),
+                  backgroundImage: element.avatar == ""
+                      ? AssetImage(
+                          element.avatar,
+                        )
+                      : NetworkImage(element.avatar),
                 ),
                 SizedBox(
                   width: 16.w,

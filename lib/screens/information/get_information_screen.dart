@@ -227,8 +227,9 @@ class _GetInformationScreenState extends State<GetInformationScreen> {
                   // ignore: use_build_context_synchronously
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const MainScreen(
-                            inputScreen: HomeScreen(),
+                      builder: (context) => MainScreen(
+                            customerResponse: customer,
+                            inputScreen: const HomeScreen(),
                             screenIndex: 0,
                           )),
                   (Route<dynamic> route) => false,

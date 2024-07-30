@@ -1,4 +1,5 @@
 import 'package:mate_project/helper/custom_exception.dart';
+import 'package:mate_project/models/admin.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/models/staff.dart';
 
@@ -60,6 +61,12 @@ class LoginSuccessStaffAdmin extends AuthenticationState {
   final Staff staff;
 
   LoginSuccessStaffAdmin({required this.staff});
+}
+
+class LoginSuccessAdmin extends AuthenticationState {
+  final Admin admin;
+
+  LoginSuccessAdmin({required this.admin});
 }
 
 class LoginSuccessNotPack extends AuthenticationState {

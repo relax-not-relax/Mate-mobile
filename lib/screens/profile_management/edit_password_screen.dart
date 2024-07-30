@@ -7,7 +7,9 @@ import 'package:mate_project/enums/failure_enum.dart';
 import 'package:mate_project/events/customer_event.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/request/password_request.dart';
+import 'package:mate_project/screens/home/staff/staff_main_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
+import 'package:mate_project/screens/profile_management/staff/staff_account_main_screen.dart';
 import 'package:mate_project/screens/profile_management/widgets/edit_password.dart';
 import 'package:mate_project/states/customer_state.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
@@ -15,7 +17,8 @@ import 'package:mate_project/widgets/form/normal_button_custom.dart';
 import 'package:mate_project/widgets/form/normal_dialog_custom.dart';
 
 class EditPasswordScreen extends StatefulWidget {
-  const EditPasswordScreen({super.key});
+  const EditPasswordScreen({super.key, required this.isStaff});
+  final bool isStaff;
 
   @override
   State<EditPasswordScreen> createState() => _EditPasswordScreenState();
@@ -49,7 +52,12 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
   String passCheck = "";
 
   Future getPass() async {
-    if (await SharedPreferencesHelper.getRememberMe() != null) {
+    if (widget.isStaff &&
+        await SharedPreferencesHelper.getRememberStaffAdmin() != null) {
+      passCheck =
+          (await SharedPreferencesHelper.getRememberStaffAdmin())!.password;
+    }
+    if (!widget.isStaff && SharedPreferencesHelper.getRememberMe() != null) {
       passCheck = (await SharedPreferencesHelper.getRememberMe())!.password;
     }
   }
@@ -124,8 +132,14 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
     }
 
     print(2222);
-    if (!_isPasswordMismatch && !_isUnChecked && _isValid) {
+    if (!_isPasswordMismatch && !_isUnChecked && _isValid && !widget.isStaff) {
       _customerBloc.add(SaveChangePasswordPressed(
+          passwordRequest: PasswordRequest(
+              oldPassword: _passwordController.text,
+              newPassword: _newPasswordController.text)));
+    }
+    if (!_isPasswordMismatch && !_isUnChecked && _isValid && widget.isStaff) {
+      _customerBloc.add(SaveChangePasswordStaffPressed(
           passwordRequest: PasswordRequest(
               oldPassword: _passwordController.text,
               newPassword: _newPasswordController.text)));
@@ -142,14 +156,29 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
           isBordered: false,
           isBack: true,
           back: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return const CustomerAccountMainScreen();
-                },
-              ),
-            );
+            if (widget.isStaff) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const StaffMainScreen(
+                      inputScreen: StaffAccountMainScreen(),
+                      screenIndex: 3,
+                    );
+                  },
+                ),
+                (route) => false,
+              );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const CustomerAccountMainScreen();
+                  },
+                ),
+              );
+            }
           },
         ),
         body: BlocListener<CustomerBloc, CustomerState>(

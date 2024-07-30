@@ -30,7 +30,10 @@ class _ChatDetailsState extends State<ChatDetails> {
                 widget.chatElement.isShowAvatar
                     ? CircleAvatar(
                         radius: 20,
-                        backgroundImage: AssetImage(widget.chatElement.avatar),
+                        backgroundImage: widget.chatElement.avatar ==
+                                "assets/pics/admin_avatar.png"
+                            ? AssetImage(widget.chatElement.avatar)
+                            : NetworkImage(widget.chatElement.avatar),
                       )
                     : const CircleAvatar(
                         radius: 20,
@@ -108,7 +111,10 @@ class _ChatDetailsState extends State<ChatDetails> {
                 widget.chatElement.isShowAvatar
                     ? CircleAvatar(
                         radius: 20,
-                        backgroundImage: AssetImage(widget.chatElement.avatar),
+                        backgroundImage: widget.chatElement.avatar ==
+                                "assets/pics/admin_avatar.png"
+                            ? AssetImage(widget.chatElement.avatar)
+                            : NetworkImage(widget.chatElement.avatar),
                       )
                     : const CircleAvatar(
                         radius: 20,

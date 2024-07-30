@@ -5,7 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_project/blocs/authen_bloc.dart';
 import 'package:mate_project/enums/failure_enum.dart';
 import 'package:mate_project/events/authen_event.dart';
+import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/rememberme.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/screens/authentication/customer_register_screen.dart';
 import 'package:mate_project/screens/home/customer/home_screen.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
@@ -80,7 +82,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
             const Color.fromARGB(255, 68, 60, 172),
           );
 
-          await Future.delayed(Duration(seconds: 2), () {
+          await Future.delayed(Duration(seconds: 2), () async {
             if (state.customerResponse.gender == null ||
                 state.customerResponse.gender == "") {
               Navigator.pushAndRemoveUntil(
@@ -99,11 +101,14 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                 (Route<dynamic> route) => false,
               );
             } else {
+              CustomerResponse? customer =
+                  await SharedPreferencesHelper.getCustomer();
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const MainScreen(
-                          inputScreen: HomeScreen(),
+                    builder: (context) => MainScreen(
+                          customerResponse: customer!,
+                          inputScreen: const HomeScreen(),
                           screenIndex: 0,
                         )),
                 (Route<dynamic> route) => false,

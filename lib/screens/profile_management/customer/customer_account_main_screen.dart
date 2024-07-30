@@ -11,6 +11,7 @@ import 'package:mate_project/data/project_data.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/screens/authentication/login_selection_screen.dart';
 import 'package:mate_project/screens/home/customer/home_screen.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/profile_management/account_address_screen.dart';
@@ -261,7 +262,9 @@ class _CustomerAccountMainScreenState extends State<CustomerAccountMainScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) {
-                              return const EditPasswordScreen();
+                              return const EditPasswordScreen(
+                                isStaff: false,
+                              );
                             },
                           ),
                         );
@@ -343,7 +346,21 @@ class _CustomerAccountMainScreenState extends State<CustomerAccountMainScreen> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    SharedPreferencesHelper.removeCustomer().then(
+                      (value) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const LoginSelectionScreen();
+                            },
+                          ),
+                          (route) => false,
+                        );
+                      },
+                    );
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,

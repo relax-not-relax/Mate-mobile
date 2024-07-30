@@ -55,6 +55,59 @@ class CustomerRepository {
     }
   }
 
+  Future<List<CustomerResponse>> GetCustomerByAdmin(
+      {required int page, required int pageSize}) async {
+    var account = await SharedPreferencesHelper.getAdmin();
+
+    final response = await http.get(
+      Uri.parse("${Config.apiRoot}api/customer?Page=$page&PageSize=$pageSize"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ${account!.accessToken}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      List<dynamic> listJson = jsonData['results'] as List<dynamic>? ?? [];
+      List<CustomerResponse> listCustomer = [];
+      for (var element in listJson) {
+        CustomerResponse customer = CustomerResponse.fromJson(element);
+        listCustomer.add(customer);
+      }
+      return listCustomer;
+    } else if (response.statusCode == 400) {
+      final jsonData = json.decode(response.body);
+      throw Exception(jsonData['error']);
+    } else {
+      throw Exception('System failure');
+    }
+  }
+
+  Future<CustomerResponse> GetCustomerWithIdByAdmin(
+      {required int customerId}) async {
+    var account = await SharedPreferencesHelper.getAdmin();
+
+    final response = await http.get(
+      Uri.parse("${Config.apiRoot}api/customer/$customerId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ${account!.accessToken}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      CustomerResponse customerResponse = CustomerResponse.fromJson(jsonData);
+      return customerResponse;
+    } else if (response.statusCode == 400) {
+      final jsonData = json.decode(response.body);
+      throw Exception(jsonData['error']);
+    } else {
+      throw Exception('System failure');
+    }
+  }
+
   Future<void> BuyPack({required BuyPackRequest data}) async {
     var account = await SharedPreferencesHelper.getCustomer();
     String jsonBody = jsonEncode(data);

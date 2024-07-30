@@ -6,6 +6,8 @@ import 'package:mate_project/blocs/authen_bloc.dart';
 import 'package:mate_project/enums/failure_enum.dart';
 import 'package:mate_project/events/authen_event.dart';
 import 'package:mate_project/models/rememberme.dart';
+import 'package:mate_project/screens/home/admin/admin_home_screen.dart';
+import 'package:mate_project/screens/home/admin/admin_main_screen.dart';
 import 'package:mate_project/screens/home/staff/staff_home_screen.dart';
 import 'package:mate_project/screens/home/staff/staff_main_screen.dart';
 import 'package:mate_project/states/authen_state.dart';
@@ -82,6 +84,29 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
                   MaterialPageRoute(
                       builder: (context) => const StaffMainScreen(
                             inputScreen: StaffHomeScreen(),
+                            screenIndex: 0,
+                          )),
+                  (Route<dynamic> route) => false,
+                );
+              });
+            }
+            if (state is LoginSuccessAdmin) {
+              Navigator.of(context).pop();
+              dialogCustom.showWaitingDialog(
+                context,
+                'assets/pics/oldpeople.png',
+                "Have a nice day",
+                "Togetherness - Companion - Sharing",
+                true,
+                const Color.fromARGB(255, 68, 60, 172),
+              );
+
+              await Future.delayed(Duration(seconds: 2), () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AdminMainScreen(
+                            inputScreen: AdminHomeScreen(),
                             screenIndex: 0,
                           )),
                   (Route<dynamic> route) => false,

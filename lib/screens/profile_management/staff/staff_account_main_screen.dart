@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/models/staff.dart';
+import 'package:mate_project/screens/authentication/login_selection_screen.dart';
+import 'package:mate_project/screens/edit_staff_profile_screen.dart';
 import 'package:mate_project/screens/profile_management/account_address_screen.dart';
 import 'package:mate_project/screens/profile_management/edit_language_screen.dart';
 import 'package:mate_project/screens/profile_management/edit_password_screen.dart';
@@ -13,7 +16,6 @@ import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 
 class StaffAccountMainScreen extends StatefulWidget {
   const StaffAccountMainScreen({super.key});
-
   @override
   State<StaffAccountMainScreen> createState() => _StaffAccountMainScreenState();
 }
@@ -23,14 +25,19 @@ class _StaffAccountMainScreenState extends State<StaffAccountMainScreen> {
   Staff? staff;
   CustomerResponse? customerResponse;
 
+  Future<Staff?> getStaff() async {
+    return await SharedPreferencesHelper.getStaff();
+  }
+
   @override
   void initState() {
     super.initState();
-    staff = Staff(
-      staffId: 1,
-      email: "staff@mate.org",
-      fullName: "Lorem Ipsum",
-      avatar: "assets/pics/nurse.png",
+    getStaff().then(
+      (value) {
+        setState(() {
+          staff = value;
+        });
+      },
     );
   }
 
@@ -61,8 +68,8 @@ class _StaffAccountMainScreenState extends State<StaffAccountMainScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return EditProfileScreen(
-                          customer: customerResponse!,
+                        return EditStaffProfileScreen(
+                          staff: staff!,
                         );
                       },
                     ),
@@ -91,7 +98,9 @@ class _StaffAccountMainScreenState extends State<StaffAccountMainScreen> {
                             height: 50.w,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: AssetImage(staff!.avatar!),
+                                image: staff != null
+                                    ? NetworkImage(staff!.avatar ?? "")
+                                    : AssetImage("assets/pics/nurse-1.png"),
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.circular(50),
@@ -102,7 +111,7 @@ class _StaffAccountMainScreenState extends State<StaffAccountMainScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                staff!.fullName,
+                                staff == null ? "Loading" : staff!.fullName,
                                 style: GoogleFonts.inter(
                                   color: const Color.fromARGB(255, 32, 35, 43),
                                   fontSize: 14.sp,
@@ -112,7 +121,7 @@ class _StaffAccountMainScreenState extends State<StaffAccountMainScreen> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
-                                staff!.email,
+                                staff == null ? "Loading" : staff!.email,
                                 style: GoogleFonts.inter(
                                   color: const Color.fromARGB(255, 32, 35, 43),
                                   fontSize: 12.sp,
@@ -194,7 +203,9 @@ class _StaffAccountMainScreenState extends State<StaffAccountMainScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) {
-                              return const EditPasswordScreen();
+                              return const EditPasswordScreen(
+                                isStaff: true,
+                              );
                             },
                           ),
                         );
@@ -261,7 +272,21 @@ class _StaffAccountMainScreenState extends State<StaffAccountMainScreen> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    SharedPreferencesHelper.removeStaff().then(
+                      (value) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const LoginSelectionScreen();
+                            },
+                          ),
+                          (route) => false,
+                        );
+                      },
+                    );
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,

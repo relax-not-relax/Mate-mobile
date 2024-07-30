@@ -7,16 +7,18 @@ import 'package:mate_project/screens/management/admin/widgets/staff_element.dart
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
 
 class StaffList extends StatefulWidget {
-  const StaffList({super.key});
+  const StaffList({super.key, required this.staffs});
+  final List<Staff> staffs;
 
   @override
-  State<StaffList> createState() => _StaffListState();
+  // ignore: no_logic_in_create_state
+  State<StaffList> createState() => _StaffListState(staffList: staffs);
 }
 
 class _StaffListState extends State<StaffList> {
   TextEditingController _controller = TextEditingController();
   // Test data, gọi API để lấy danh sách khách hàng của hệ thống
-  List<Staff> staffList = [];
+  List<Staff> staffList;
   List<String> filters = [
     "A - Z",
     "Z - A",
@@ -26,31 +28,13 @@ class _StaffListState extends State<StaffList> {
     false,
   ];
 
+  _StaffListState({required this.staffList});
+
   @override
   void initState() {
     super.initState();
     _controller.text = "";
     // Call API to get staffs
-    staffList = [
-      Staff(
-        staffId: 1,
-        email: "staff1@mate.org",
-        fullName: "Lorem ispum",
-        avatar: "assets/pics/nurse.png",
-      ),
-      Staff(
-        staffId: 2,
-        email: "staff2@mate.org",
-        fullName: "Lorem ispum",
-        avatar: "assets/pics/nurse.png",
-      ),
-      Staff(
-        staffId: 3,
-        email: "staff3@mate.org",
-        fullName: "Lorem ispum",
-        avatar: "assets/pics/nurse.png",
-      ),
-    ];
   }
 
   @override

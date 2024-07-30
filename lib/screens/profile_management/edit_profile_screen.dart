@@ -220,8 +220,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return const MainScreen(
-                    inputScreen: CustomerAccountMainScreen(),
+                  return MainScreen(
+                    customerResponse: customer,
+                    inputScreen: const CustomerAccountMainScreen(),
                     screenIndex: 3,
                   );
                 },

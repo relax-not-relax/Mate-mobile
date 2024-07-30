@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_project/models/message.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/repositories/customer_repo.dart';
+import 'package:mate_project/repositories/message_repo.dart';
 import 'package:mate_project/screens/chat/admin/widgets/message_element.dart';
 import 'package:mate_project/screens/chat/admin/widgets/search_field.dart';
+import 'package:mate_project/screens/chat/chat_screen.dart';
 import 'package:mate_project/screens/home/admin/admin_home_screen.dart';
 import 'package:mate_project/screens/home/admin/admin_main_screen.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
@@ -20,40 +24,23 @@ class _MessagesListScreenState extends State<MessagesListScreen> {
   TextEditingController _controller = TextEditingController();
   //Test data (Thay đổi khi call API để lấy dữ liệu)
   List<Message> messages = [];
+  MessageRepository messageRepository = MessageRepository();
+  CustomerRepository customerRepository = CustomerRepository();
+
+  Future<List<Message>> getListMessgae() async {
+    return await messageRepository.getListMessage();
+  }
 
   @override
   void initState() {
     super.initState();
-    messages = [
-      // Với những tin nhắn chưa được đọc status sẽ là false, update thành true khi nhấn vào tin nhắn
-      // Note: Nhớ check tin nhắn cuối cùng là của khách hàng hay là admin
-      Message(
-        avatar: "assets/pics/user_test_1.png",
-        name: "James Hill",
-        lastMessage: "Hello, I need some help!",
-        time: DateTime(2024, 7, 16, 9, 30),
-        isAdmin: false,
-        status: false,
-      ),
-      // Đây là trường hợp đã đọc
-      Message(
-        avatar: "assets/pics/user_test_2.png",
-        name: "Phuong Nguyen",
-        lastMessage: "Ok, got it!",
-        time: DateTime(2024, 7, 15, 9, 30),
-        isAdmin: false,
-        status: true,
-      ),
-      // Đây là trường hợp tin nhắn cuối cùng là của admin
-      Message(
-        avatar: "assets/pics/user_test_3.png",
-        name: "Thomas Le",
-        lastMessage: "Oke, Have a nice day mate!",
-        time: DateTime(2024, 7, 15, 9, 20),
-        isAdmin: true,
-        status: true,
-      ),
-    ];
+    getListMessgae().then(
+      (value) {
+        setState(() {
+          messages = value;
+        });
+      },
+    );
   }
 
   @override
@@ -70,7 +57,7 @@ class _MessagesListScreenState extends State<MessagesListScreen> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return AdminMainScreen(
+                return const AdminMainScreen(
                   inputScreen: AdminHomeScreen(),
                   screenIndex: 0,
                 );
@@ -115,7 +102,21 @@ class _MessagesListScreenState extends State<MessagesListScreen> {
                   (e) {
                     return MessageElement(
                       element: e,
-                      onTap: () {
+                      onTap: () async {
+                        CustomerResponse customerResponse =
+                            await customerRepository.GetCustomerWithIdByAdmin(
+                                customerId: e.customerId);
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ChatScreen(
+                                  isAdmin: true,
+                                  customerResponse: customerResponse);
+                            },
+                          ),
+                          (route) => false,
+                        );
                         setState(() {
                           e.status = true;
                         });
