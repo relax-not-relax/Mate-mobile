@@ -85,16 +85,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               builder: (context) {
                 if (widget.isStaff) {
                   return const AdminMainScreen(
-                    inputScreen: UserDataScreen(
-                      tabIndex: 1,
-                    ),
+                    inputScreen: UserDataScreen(),
                     screenIndex: 1,
                   );
                 } else {
                   return const AdminMainScreen(
-                    inputScreen: UserDataScreen(
-                      tabIndex: 0,
-                    ),
+                    inputScreen: UserDataScreen(),
                     screenIndex: 1,
                   );
                 }

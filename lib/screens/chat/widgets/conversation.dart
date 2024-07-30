@@ -74,9 +74,6 @@ class _ConversationState extends State<Conversation> {
                             chatElement: e,
                             isAnswer: false,
                           ),
-                          SizedBox(
-                            height: 16.h,
-                          ),
                         ],
                       );
                     } else {
@@ -85,9 +82,6 @@ class _ConversationState extends State<Conversation> {
                           ChatDetails(
                             chatElement: e,
                             isAnswer: true,
-                          ),
-                          SizedBox(
-                            height: 16.h,
                           ),
                         ],
                       );
