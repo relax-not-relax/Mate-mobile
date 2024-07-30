@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_project/models/customer.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/screens/management/admin/widgets/customer_element.dart';
 import 'package:mate_project/screens/management/admin/widgets/search_field.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
 
 class CustomerList extends StatefulWidget {
-  const CustomerList({super.key});
+  const CustomerList({super.key, required this.customers});
+  final List<CustomerResponse> customers;
 
   @override
-  State<CustomerList> createState() => _CustomerListState();
+  State<CustomerList> createState() => _CustomerListState(customers: customers);
 }
 
 class _CustomerListState extends State<CustomerList> {
   TextEditingController _controller = TextEditingController();
   // Test data, gọi API để lấy danh sách khách hàng của hệ thống
-  List<Customer> customers = [];
+  List<CustomerResponse> customers;
   List<String> filters = [
     "A - Z",
     "Z - A",
@@ -34,52 +36,18 @@ class _CustomerListState extends State<CustomerList> {
     false,
   ];
 
+  _CustomerListState({required this.customers});
+
   @override
   void initState() {
     super.initState();
     _controller.text = "";
     // Call API to get customers
-    customers = [
-      Customer(
-          customerId: 1,
-          email: "test@gmail.com",
-          fullName: "Lorem ispum",
-          avatar: "assets/pics/user_test.png",
-          dateOfBirth: "1975-01-01 17:00:20",
-          gender: "Male",
-          favorite: "Music, dolor sit amet",
-          note:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."),
-      Customer(
-        customerId: 2,
-        email: "test1@gmail.com",
-        fullName: "Lorem ispum",
-        avatar: "assets/pics/user_test_1.png",
-        dateOfBirth: "1975-01-01 17:00:20",
-        gender: "Male",
-      ),
-      Customer(
-        customerId: 3,
-        email: "test2@gmail.com",
-        fullName: "Lorem ispum",
-        avatar: "assets/pics/user_test_2.png",
-        dateOfBirth: "1975-01-01 17:00:20",
-        gender: "Female",
-      ),
-      Customer(
-        customerId: 4,
-        email: "test3@gmail.com",
-        fullName: "Lorem ispum",
-        avatar: "assets/pics/user_test_3.png",
-        dateOfBirth: "1975-01-01 17:00:20",
-        gender: "Male",
-      ),
-    ];
   }
 
   @override
   Widget build(BuildContext context) {
-    Future displayUserAction(BuildContext context, Customer customer) {
+    Future displayUserAction(BuildContext context, CustomerResponse customer) {
       return showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -107,7 +75,7 @@ class _CustomerListState extends State<CustomerList> {
                 ),
                 Flexible(
                   child: Text(
-                    customer.fullName,
+                    customer.fullname,
                     style: GoogleFonts.inter(
                       color: Colors.white,
                       fontSize: 14.sp,

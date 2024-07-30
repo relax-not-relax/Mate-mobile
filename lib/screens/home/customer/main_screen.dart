@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconly/iconly.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/models/room.dart';
 import 'package:mate_project/screens/chat/chat_screen.dart';
 import 'package:mate_project/screens/home/customer/home_screen.dart';
@@ -13,10 +14,12 @@ class MainScreen extends StatefulWidget {
     super.key,
     required this.inputScreen,
     required this.screenIndex,
+    required this.customerResponse,
   });
 
   final Widget inputScreen;
   final int screenIndex;
+  final CustomerResponse customerResponse;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -46,7 +49,10 @@ class _MainScreenState extends State<MainScreen> {
         activePage = HomeScreen();
         break;
       case 1:
-        activePage = ChatScreen();
+        activePage = ChatScreen(
+          isAdmin: false,
+          customerResponse: widget.customerResponse,
+        );
         break;
       case 2:
         activePage = MyRoomScreen(

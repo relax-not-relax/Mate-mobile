@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:mate_project/helper/helper.dart';
 import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/models/pack.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/screens/management/admin/user_profile_screen.dart';
 import 'package:unicons/unicons.dart';
 
@@ -14,28 +16,18 @@ class CustomerElement extends StatefulWidget {
     required this.action,
   });
 
-  final Customer customer;
-  final void Function(Customer) action;
+  final CustomerResponse customer;
+  final void Function(CustomerResponse) action;
 
   @override
   State<CustomerElement> createState() => _CustomerElementState();
 }
 
 class _CustomerElementState extends State<CustomerElement> {
-  late Pack pack;
-
   @override
   void initState() {
     super.initState();
     // Test data, gọi API để lấy dữ liệu gói đăng ký từ widget.customer
-    pack = Pack(
-      packId: 1,
-      price: 200.0,
-      packName: "Gold",
-      description: "",
-      duration: 1,
-      status: true,
-    );
   }
 
   @override
@@ -55,24 +47,25 @@ class _CustomerElementState extends State<CustomerElement> {
         children: [
           InkWell(
             onTap: () {
-              DateTime format = DateTime.parse(widget.customer.dateOfBirth!);
-
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) {
                     return UserProfileScreen(
-                      fullName: widget.customer.fullName,
+                      fullName: widget.customer.fullname,
                       email: widget.customer.email,
                       phone: widget.customer.phoneNumber ?? "",
-                      avatar:
-                          widget.customer.avatar ?? "assets/pics/no_ava.png",
-                      birthday: DateFormat("dd/MM/yyyy").format(format),
+                      avatar: widget.customer.avatar ?? "",
+                      birthday: DateFormat("dd/MM/yyyy").format(
+                          widget.customer.dateOfBirth ?? DateTime.now()),
                       gender: widget.customer.gender ?? "",
                       address: widget.customer.address ?? "",
                       favorites: widget.customer.favorite ?? "",
                       note: widget.customer.note ?? "",
-                      packName: pack.packName,
+                      packName: Helper.convertRoomToPackName(
+                          widget.customer.customerInRooms.isEmpty
+                              ? 0
+                              : widget.customer.customerInRooms.first.roomId),
                       isStaff: false,
                     );
                   },
@@ -85,7 +78,9 @@ class _CustomerElementState extends State<CustomerElement> {
               children: [
                 CircleAvatar(
                   radius: 25.w,
-                  backgroundImage: AssetImage(widget.customer.avatar!),
+                  backgroundImage: widget.customer.avatar != null
+                      ? NetworkImage(widget.customer.avatar!)
+                      : AssetImage("assets/pics/no_ava.png"),
                 ),
                 SizedBox(
                   width: 16.w,
@@ -99,7 +94,7 @@ class _CustomerElementState extends State<CustomerElement> {
                     children: [
                       Flexible(
                         child: Text(
-                          widget.customer.fullName,
+                          widget.customer.fullname,
                           style: GoogleFonts.inter(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
@@ -114,7 +109,7 @@ class _CustomerElementState extends State<CustomerElement> {
                       ),
                       Flexible(
                         child: Text(
-                          "${pack.packName} Membership",
+                          "${Helper.convertRoomToPackName(widget.customer.customerInRooms.isEmpty ? 0 : widget.customer.customerInRooms.first.roomId)} Membership",
                           style: GoogleFonts.inter(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w400,

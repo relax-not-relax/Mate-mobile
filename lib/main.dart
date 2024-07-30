@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mate_project/blocs/customer_bloc.dart';
+import 'package:mate_project/blocs/staff_bloc.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/rememberme.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/repositories/attendance_repo.dart';
+import 'package:mate_project/repositories/staff_repo.dart';
 import 'package:mate_project/screens/chat/admin/messages_list_screen.dart';
 import 'package:mate_project/screens/home/admin/admin_home_screen.dart';
 import 'package:mate_project/screens/home/admin/admin_main_screen.dart';
@@ -39,6 +41,7 @@ void main() async {
               projectId: 'mate-ccd5e'),
         )
       : await Firebase.initializeApp();
+  await Firebase.initializeApp();
   Rememberme? rememberme = await SharedPreferencesHelper.getRememberMe();
   if (rememberme != null) {
     Authenrepository authenrepository = Authenrepository();
@@ -60,6 +63,7 @@ class MyApp extends StatelessWidget {
   final Authenrepository authenrepository = Authenrepository();
   final CustomerRepository customerRepository = CustomerRepository();
   final AttendanceRepo attendanceRepo = AttendanceRepo();
+  final StaffRepository staffRepository = StaffRepository();
   final CustomerResponse? customer;
 
   MyApp({super.key, required this.customer});
@@ -74,7 +78,13 @@ class MyApp extends StatelessWidget {
               AuthenticationBloc(authenticationRepository: authenrepository),
         ),
         BlocProvider(
+          create: (context) => StaffBloc(
+              attendanceRepository: attendanceRepo,
+              staffRepository: staffRepository),
+        ),
+        BlocProvider(
           create: (context) => CustomerBloc(
+              staffRepository: staffRepository,
               customer: customer,
               customerRepository: customerRepository,
               attendanceRepository: attendanceRepo),
@@ -91,8 +101,9 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: '/',
           routes: {
-            '/paymentdone': (context) => const MainScreen(
-                  inputScreen: HomeScreen(),
+            '/paymentdone': (context) => MainScreen(
+                  customerResponse: customer!,
+                  inputScreen: const HomeScreen(),
                   screenIndex: 0,
                 ), // Trang đích sau khi thanh toán thành công
             '/paymentcancel': (context) => RoomSubscriptionScreen(
@@ -107,8 +118,9 @@ class MyApp extends StatelessWidget {
                   ? RoomSubscriptionScreen(
                       customer: customer!,
                     )
-                  : const MainScreen(
-                      inputScreen: HomeScreen(),
+                  : MainScreen(
+                      customerResponse: customer!,
+                      inputScreen: const HomeScreen(),
                       screenIndex: 0,
                     ),
 

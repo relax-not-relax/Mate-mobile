@@ -121,7 +121,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 height: 100.w,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(widget.avatar!),
+                    image: widget.avatar == ""
+                        ? const AssetImage("assets/pics/no_ava.png")
+                        : NetworkImage(widget.avatar),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(30),

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:mate_project/helper/config.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/attendance.dart';
+import 'package:mate_project/models/check_attendance.dart';
 import 'package:mate_project/models/response/TotalAttendance.dart';
 import 'package:mate_project/models/room.dart';
 import 'package:mate_project/models/staff.dart';
@@ -51,6 +52,28 @@ class AttendanceRepo {
       return totalAttendanceResponse;
     } else {
       return null;
+    }
+  }
+
+  Future<void> CheckAttendanceStaff(
+      {required List<CheckAttendance> listCheck}) async {
+    List<Map<String, dynamic>> jsonList =
+        listCheck.map((item) => item.toJson()).toList();
+    String jsonString = jsonEncode(jsonList);
+    print(jsonString);
+    var account = await SharedPreferencesHelper.getStaff();
+
+    final response = await http.post(
+        Uri.parse("${Config.apiRoot}api/attendance/Check-Attendance"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${account!.accessToken}',
+        },
+        body: jsonString);
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('System failure');
     }
   }
 

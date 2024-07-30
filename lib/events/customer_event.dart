@@ -41,3 +41,9 @@ class SaveChangePasswordPressed extends CustomerEvent {
 
   SaveChangePasswordPressed({required this.passwordRequest});
 }
+
+class SaveChangePasswordStaffPressed extends CustomerEvent {
+  final PasswordRequest passwordRequest;
+
+  SaveChangePasswordStaffPressed({required this.passwordRequest});
+}

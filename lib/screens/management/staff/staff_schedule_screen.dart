@@ -40,6 +40,17 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
     staff = await SharedPreferencesHelper.getStaff();
   }
 
+  int countRoom() {
+    if (dayAttendanceList.isEmpty) return 0;
+    List<int> listRoom = [];
+    for (var element in dayAttendanceList) {
+      if (!listRoom.contains(element.roomId)) {
+        listRoom.add(element.roomId);
+      }
+    }
+    return listRoom.length;
+  }
+
   Future<void> getAttendance(DateTime startDate, DateTime endDate) async {
     dayAttendanceList = [];
     attendanceList = await attendanceRepository.GetAttendanceByDay(
@@ -272,6 +283,7 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
     }
     setState(() {
       dayAttendanceList;
+      roomAssign = countRoom();
     });
   }
 
@@ -299,12 +311,13 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
           (value) {
             setState(() {
               dayAttendanceList;
+              roomAssign = countRoom();
             });
           },
         );
       },
     );
-    roomAssign = 10;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Scroll to current day after build completes
       final selectedDayIndex = daysList.indexWhere((day) => day.isSelected!);

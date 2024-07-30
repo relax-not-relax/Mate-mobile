@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/models/staff.dart';
+import 'package:mate_project/repositories/customer_repo.dart';
+import 'package:mate_project/repositories/staff_repo.dart';
 import 'package:mate_project/screens/management/admin/widgets/customer_list.dart';
 import 'package:mate_project/screens/management/admin/widgets/staff_list.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
@@ -25,10 +29,51 @@ class _UserDataScreenState extends State<UserDataScreen>
   late int customerAmount;
   // Số lượng nhân viên
   late int staffAmount;
+  CustomerRepository customerRepository = CustomerRepository();
+  StaffRepository staffRepository = StaffRepository();
+
+  List<CustomerResponse> listCustomer = [];
+  List<Staff> listStaff = [];
+
+  Future<List<CustomerResponse>> getCustomers() async {
+    List<CustomerResponse> rs =
+        (await customerRepository.GetCustomerByAdmin(page: 1, pageSize: 1000));
+
+    return rs;
+  }
+
+  Future<List<Staff>> getStaff() async {
+    List<Staff> rs =
+        (await staffRepository.GetStaffByAdmin(page: 1, pageSize: 1000));
+
+    return rs;
+  }
 
   @override
   void initState() {
     super.initState();
+    getCustomers().then(
+      (value) {
+        setState(() {
+          listCustomer = value;
+          content = CustomerList(
+            customers: listCustomer,
+          );
+          customerAmount = listCustomer.length;
+        });
+      },
+    );
+    getStaff().then(
+      (value) {
+        setState(() {
+          listStaff = value;
+          content = StaffList(
+            staffs: listStaff,
+          );
+          staffAmount = listStaff.length;
+        });
+      },
+    );
     tIndex = widget.tabIndex;
     tabController = TabController(length: 2, vsync: this);
     // Test data (Call API để lấy dữ liệu)
@@ -42,19 +87,10 @@ class _UserDataScreenState extends State<UserDataScreen>
     super.dispose();
   }
 
+  Widget content = Container();
+
   @override
   Widget build(BuildContext context) {
-    Widget content = Container();
-
-    switch (tIndex) {
-      case 0:
-        content = CustomerList();
-        break;
-      case 1:
-        content = StaffList();
-        break;
-    }
-
     return Scaffold(
       extendBodyBehindAppBar: false,
       backgroundColor: const Color.fromARGB(255, 15, 16, 20),
@@ -82,6 +118,16 @@ class _UserDataScreenState extends State<UserDataScreen>
                 setState(() {
                   tIndex = value;
                 });
+                switch (tIndex) {
+                  case 0:
+                    content = CustomerList(customers: listCustomer);
+                    break;
+                  case 1:
+                    content = StaffList(
+                      staffs: listStaff,
+                    );
+                    break;
+                }
               },
               tabs: [
                 Tab(

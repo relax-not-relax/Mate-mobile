@@ -1,8 +1,16 @@
+import 'dart:convert';
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:mate_project/helper/realtime_helper.dart';
+import 'package:mate_project/models/admin.dart';
 import 'package:mate_project/models/chat.dart';
+import 'package:mate_project/models/chat_message.dart';
+import 'package:mate_project/models/message.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/screens/chat/widgets/chat_details.dart';
 import 'package:mate_project/screens/chat/widgets/chat_text_field.dart';
 import 'package:mate_project/screens/chat/widgets/conversation.dart';
@@ -12,27 +20,98 @@ import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  const ChatScreen(
+      {super.key, required this.isAdmin, required this.customerResponse});
+  final bool isAdmin;
+  final CustomerResponse customerResponse;
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<ChatScreen> createState() =>
+      _ChatScreenState(customerRespone: customerResponse);
 }
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
   Widget? content;
+  CustomerResponse customerRespone;
+  _ChatScreenState({required this.customerRespone});
   final data = ValueNotifier<List<Chat>>([]);
+  DatabaseReference? messagesRef;
 
   String askChat = "";
 
   @override
   void initState() {
     super.initState();
+    messagesRef = FirebaseDatabase.instance
+        .ref()
+        .child('chats/customer${customerRespone.customerId}');
     _controller.text = "";
     //Widget này sẽ được hiển thị khi người dùng lần đầu tiên nhắn tin với hệ thống Mate
     content = FirstChat(
       ask: askChoice,
     );
+    if (widget.isAdmin) {
+      data.value.add(
+        Chat(
+          avatar: widget.customerResponse.avatar ?? "",
+          text: "",
+          id_1: 1,
+          id_2: 2,
+          isShowAvatar: false,
+        ),
+      );
+    }
+    messagesRef!.onChildAdded.listen((event) {
+      if (event.snapshot.value != null &&
+          event.snapshot.child('isAdmin').value == false) {
+        bool showAvata = true;
+        if (data.value.isNotEmpty &&
+            data.value.last.id_1 == (widget.isAdmin ? 2 : 1)) showAvata = false;
+        if (mounted) {
+          setState(() {
+            data.value.add(
+              Chat(
+                avatar: widget.customerResponse.avatar ?? "",
+                text: event.snapshot.child('lastMessage').value.toString(),
+                id_1: widget.isAdmin ? 2 : 1,
+                id_2: widget.isAdmin ? 1 : 2,
+                isShowAvatar: showAvata,
+              ),
+            );
+            content = Conversation(
+              messages: data.value,
+              ask: askChoice,
+            );
+          });
+        }
+      }
+      if (event.snapshot.value != null &&
+          event.snapshot.child('isAdmin').value == true) {
+        bool showAvata = true;
+        if (data.value.isNotEmpty &&
+            data.value.last.id_1 == (widget.isAdmin ? 1 : 2)) {
+          showAvata = false;
+        }
+        if (mounted) {
+          setState(() {
+            data.value.add(
+              Chat(
+                avatar: "assets/pics/admin_avatar.png",
+                text: event.snapshot.child('lastMessage').value.toString(),
+                id_1: widget.isAdmin ? 1 : 2,
+                id_2: widget.isAdmin ? 2 : 1,
+                isShowAvatar: showAvata,
+              ),
+            );
+            content = Conversation(
+              messages: data.value,
+              ask: askChoice,
+            );
+          });
+        }
+      }
+    });
   }
 
   void askChoice(String question) {
@@ -68,32 +147,20 @@ class _ChatScreenState extends State<ChatScreen> {
   void addChat(String chat) {
     if (chat.isEmpty || chat.trim().isEmpty) return;
     setState(() {
-      data.value.add(
-        Chat(
-          avatar: "assets/pics/user_test.png",
-          text: chat,
-          id_1: 1,
-          id_2: 2,
-          isShowAvatar: false,
-        ),
-      );
-
-      // data.value.add(
-      //   Chat(
-      //     avatar: "assets/pics/admin_avatar.png",
-      //     text: "You're welcome!",
-      //     id_1: 2,
-      //     id_2: 1,
-      //     isShowAvatar: true,
-      //   ),
-      // );
-
       _controller.clear();
       content = Conversation(
         messages: data.value,
         ask: askChoice,
       );
     });
+    Message chatMessage = Message(
+        time: DateTime.now(),
+        name: widget.customerResponse.fullname,
+        avatar: widget.customerResponse.avatar ?? "",
+        isAdmin: widget.isAdmin,
+        lastMessage: chat,
+        customerId: widget.customerResponse.customerId);
+    RealTimeHelper.sendMessage(chatMessage);
   }
 
   @override

@@ -1,7 +1,7 @@
 class Staff {
   final int staffId;
   final String email;
-  final String fullName;
+  String fullName;
   String? dateOfBirth;
   String? gender;
   String? phoneNumber;

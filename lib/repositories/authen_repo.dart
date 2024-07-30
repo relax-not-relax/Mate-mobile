@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:mate_project/helper/config.dart';
 import 'package:mate_project/helper/custom_exception.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
+import 'package:mate_project/models/admin.dart';
 import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/models/pack.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
@@ -103,6 +104,50 @@ class Authenrepository {
     if (response.statusCode == 200) {
       SharedPreferencesHelper.setRegisterInformation(password, fullName, email);
       return response.body;
+    } else if (response.statusCode == 400) {
+      final jsonData = json.decode(response.body);
+      throw Exception(jsonData['error']);
+    } else {
+      throw Exception('System failure');
+    }
+  }
+
+  Future<Admin> authenAdmin(
+      {required String email,
+      required String password,
+      required String fcm}) async {
+    if ((email.trim().isEmpty)) {
+      throw CustomException(type: Failure.Email, content: 'Please enter email');
+    }
+    if ((password.trim().isEmpty)) {
+      throw CustomException(
+          type: Failure.Password, content: 'Please enter password');
+    }
+    if (!isValidEmail(email)) {
+      throw CustomException(type: Failure.Email, content: 'Invalid email');
+    }
+
+    Map<String, String> data = {
+      "email": email,
+      "password": password,
+      "fcm": fcm
+    };
+
+    String jsonBody = jsonEncode(data);
+
+    final response = await http.post(
+        Uri.parse('${Config.apiRoot}api/authen/Authentication-Admin'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonBody);
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      Admin admin = Admin.fromJson(jsonData);
+      print(admin.toJson());
+      await SharedPreferencesHelper.setAdmin(admin);
+      return admin;
     } else if (response.statusCode == 400) {
       final jsonData = json.decode(response.body);
       throw Exception(jsonData['error']);

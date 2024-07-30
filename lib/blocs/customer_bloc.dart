@@ -13,6 +13,7 @@ import 'package:mate_project/repositories/attendance_repo.dart';
 import 'package:mate_project/repositories/authen_repo.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/repositories/customer_repo.dart';
+import 'package:mate_project/repositories/staff_repo.dart';
 import 'package:mate_project/states/authen_state.dart';
 import 'package:mate_project/states/customer_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,16 +22,36 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
   final CustomerRepository customerRepository;
   final AttendanceRepo attendanceRepository;
   final CustomerResponse? customer;
+  final StaffRepository staffRepository;
 
   CustomerBloc(
       {required this.customerRepository,
       required this.attendanceRepository,
-      required this.customer})
+      required this.customer,
+      required this.staffRepository})
       : super(UpdateCustomerInital()) {
     on<SaveUpdatePressed>(_onSaveUpdatePressed);
     on<BuyPackPressed>(_onBuyPackPresses);
     on<ViewAttendanceScroll>(_onViewAttendanceScroll);
     on<SaveChangePasswordPressed>(_onChangePasswordPressed);
+    on<SaveChangePasswordStaffPressed>(_onChangePasswordStaffPressed);
+  }
+
+  Future<void> _onChangePasswordStaffPressed(
+      SaveChangePasswordStaffPressed event, Emitter<CustomerState> emit) async {
+    emit(UpdateCustomerLoading());
+    try {
+      await staffRepository.changePassword(data: event.passwordRequest);
+      emit(UpdateCustomerSuccess());
+    } catch (er) {
+      if (er is CustomException) {
+        emit(UpdateCustomerFailure(error: er));
+      } else {
+        emit(UpdateCustomerFailure(
+            error:
+                CustomException(type: Failure.System, content: er.toString())));
+      }
+    }
   }
 
   Future<void> _onChangePasswordPressed(

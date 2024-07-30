@@ -5,6 +5,7 @@ import 'package:mate_project/enums/failure_enum.dart';
 import 'package:mate_project/events/authen_event.dart';
 import 'package:mate_project/helper/custom_exception.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
+import 'package:mate_project/models/admin.dart';
 import 'package:mate_project/models/staff.dart';
 import 'package:mate_project/repositories/authen_repo.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
@@ -29,13 +30,28 @@ class AuthenticationBloc
       LoginStaffOrAdminPressed event, Emitter<AuthenticationState> emit) async {
     emit(LoginLoading());
     try {
-      Staff staff = await authenticationRepository.authenStaff(
-          email: event.email, password: event.password, fcm: event.fcm);
-      if (event.rememberCheck) {
-        await SharedPreferencesHelper.setRememberStaffAdmin(
-            event.password, event.email);
+      Admin? admin = null;
+      try {
+        admin = await authenticationRepository.authenAdmin(
+            email: event.email, password: event.password, fcm: event.fcm);
+      } catch (error) {
+        admin = null;
       }
-      emit(LoginSuccessStaffAdmin(staff: staff));
+      if (admin != null) {
+        if (event.rememberCheck) {
+          await SharedPreferencesHelper.setRememberStaffAdmin(
+              event.password, event.email);
+        }
+        emit(LoginSuccessAdmin(admin: admin));
+      } else {
+        Staff staff = await authenticationRepository.authenStaff(
+            email: event.email, password: event.password, fcm: event.fcm);
+        if (event.rememberCheck) {
+          await SharedPreferencesHelper.setRememberStaffAdmin(
+              event.password, event.email);
+        }
+        emit(LoginSuccessStaffAdmin(staff: staff));
+      }
     } catch (error) {
       if (error is CustomException) {
         emit(LoginFail(error: error));

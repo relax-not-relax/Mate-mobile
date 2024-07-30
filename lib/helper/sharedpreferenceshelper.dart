@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:mate_project/models/admin.dart';
 import 'package:mate_project/models/pack.dart';
 import 'package:mate_project/models/rememberme.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
@@ -14,6 +15,7 @@ class SharedPreferencesHelper {
   static const String REGISTER_KEY = "register";
   static const String CUSTOMER_KEY = "customer";
   static const String STAFF_KEY = "staff";
+  static const String ADMIN_KEY = "admin";
   static const String REMEMBER_KEY = "rememberme";
   static const String REMEMBER_STAFF_ADMIN_KEY = "rememberstaffadmin";
 
@@ -133,9 +135,41 @@ class SharedPreferencesHelper {
     }
   }
 
+  static Future<void> setAdmin(Admin admin) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String jsonBody = jsonEncode(admin);
+      prefs.setString(ADMIN_KEY, jsonBody);
+    } catch (error) {
+      print(error.toString());
+    }
+  }
+
+  static Future<Admin?> getAdmin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? json = prefs.getString(ADMIN_KEY);
+
+    if (json != null) {
+      Admin rs = Admin.fromJson(jsonDecode(json));
+      return rs;
+    } else {
+      return null;
+    }
+  }
+
   static Future<void> removeCustomer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(CUSTOMER_KEY);
+  }
+
+  static Future<void> removeStaff() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(STAFF_KEY);
+  }
+
+  static Future<void> removeAdmin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(ADMIN_KEY);
   }
 
   static Future<void> setGender(String genderSelection) async {

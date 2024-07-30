@@ -56,7 +56,7 @@ class _StaffElementState extends State<StaffElement> {
                         fullName: widget.staff.fullName,
                         email: widget.staff.email,
                         phone: widget.staff.phoneNumber ?? "",
-                        avatar: widget.staff.avatar ?? "assets/pics/no_ava.png",
+                        avatar: widget.staff.avatar ?? "",
                         birthday: date,
                         gender: widget.staff.gender ?? "",
                         address: widget.staff.address ?? "",
@@ -73,7 +73,9 @@ class _StaffElementState extends State<StaffElement> {
               children: [
                 CircleAvatar(
                   radius: 25.w,
-                  backgroundImage: AssetImage(widget.staff.avatar!),
+                  backgroundImage: widget.staff.avatar == null
+                      ? AssetImage("assets/pics/no_ava.png")
+                      : NetworkImage(widget.staff.avatar!),
                 ),
                 SizedBox(
                   width: 16.w,
