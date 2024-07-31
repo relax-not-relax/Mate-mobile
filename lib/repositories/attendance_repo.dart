@@ -77,6 +77,46 @@ class AttendanceRepo {
     }
   }
 
+  Future<void> AssingAttendance(
+      {required int roomId,
+      required DateTime inDate,
+      required int staffId,
+      required List<int> customerIds}) async {
+    List<CheckAttendance> listCheck = [];
+    for (var customerId in customerIds) {
+      CheckAttendance checkMorning = CheckAttendance(
+          customerId: customerId,
+          staffId: staffId,
+          status: "3",
+          checkDate: DateTime(inDate.year, inDate.month, inDate.day, 1, 0, 0));
+      CheckAttendance checkEvening = CheckAttendance(
+          customerId: customerId,
+          staffId: staffId,
+          status: "3",
+          checkDate: DateTime(inDate.year, inDate.month, inDate.day, 13, 0, 0));
+      listCheck.add(checkMorning);
+      listCheck.add(checkEvening);
+    }
+
+    List<Map<String, dynamic>> jsonList =
+        listCheck.map((item) => item.toJson()).toList();
+    String jsonString = jsonEncode(jsonList);
+    var account = await SharedPreferencesHelper.getAdmin();
+
+    final response = await http.post(
+        Uri.parse("${Config.apiRoot}api/attendance/Check-Attendance"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${account!.accessToken}',
+        },
+        body: jsonString);
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('System failure');
+    }
+  }
+
   Future<List<Attendance>> GetAttendanceByDay(
       {required DateTime startDate,
       required DateTime endDate,
@@ -101,6 +141,37 @@ class AttendanceRepo {
       for (var element in listJson) {
         Attendance attendance = Attendance.fromJson(element);
         listAttendance.add(attendance);
+      }
+      return listAttendance;
+    } else if (response.statusCode == 400) {
+      final jsonData = json.decode(response.body);
+      throw Exception(jsonData['error']);
+    } else {
+      throw Exception('System failure');
+    }
+  }
+
+  Future<List<Attendance>> GetAttendanceByRoom(
+      {required DateTime inDate, required int roomId}) async {
+    String inD = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS").format(inDate);
+    var account = await SharedPreferencesHelper.getAdmin();
+    final response = await http.get(
+      Uri.parse(
+          "${Config.apiRoot}api/attendance/getByAdmin?inDate=$inD&roomId=$roomId&Page=1&PageSize=111"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ${account!.accessToken}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      List<dynamic> listJson = jsonData['results'] as List<dynamic>? ?? [];
+      List<Attendance> listAttendance = [];
+      for (var element in listJson) {
+        Attendance attendance = Attendance.fromJson(element);
+        listAttendance.add(attendance);
+        print(attendance.toJson().toString());
       }
       return listAttendance;
     } else if (response.statusCode == 400) {

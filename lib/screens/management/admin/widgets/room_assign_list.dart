@@ -9,8 +9,11 @@ class RoomAssignList extends StatefulWidget {
     super.key,
     required this.assignList,
     required this.filter,
+    required this.roomId,
+    required this.inDate,
   });
-
+  final int roomId;
+  final DateTime inDate;
   final List<RoomAssign> assignList;
   final void Function() filter;
 
@@ -54,6 +57,8 @@ class _RoomAssignListState extends State<RoomAssignList> {
               children: widget.assignList.map(
                 (e) {
                   return RoomAssignElement(
+                    inDate: widget.inDate,
+                    roomId: widget.roomId,
                     room: e,
                   );
                 },

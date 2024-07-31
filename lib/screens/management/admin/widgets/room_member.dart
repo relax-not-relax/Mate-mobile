@@ -45,9 +45,9 @@ class _RoomMemberState extends State<RoomMember> {
                 children: [
                   CircleAvatar(
                     radius: 20.w,
-                    backgroundImage: AssetImage(
-                      widget.member.customer.avatar!,
-                    ),
+                    backgroundImage: widget.member.customer.avatar == null
+                        ? const AssetImage("assets/pics/no_ava.png")
+                        : NetworkImage(widget.member.customer.avatar!),
                   ),
                   SizedBox(
                     width: 16.w,
@@ -55,7 +55,7 @@ class _RoomMemberState extends State<RoomMember> {
                   SizedBox(
                     width: 150.w,
                     child: Text(
-                      widget.member.customer.fullName,
+                      widget.member.customer.fullname,
                       style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: 12.sp,

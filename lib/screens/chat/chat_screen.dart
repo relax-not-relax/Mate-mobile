@@ -45,6 +45,11 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   String askChat = "";
+  bool isApart(DateTime first, DateTime second) {
+    // Tính chênh lệch thời gian giữa hai DateTime
+    Duration difference = first.difference(second).abs();
+    return difference.inMinutes >= 3;
+  }
 
   @override
   void initState() {
@@ -60,12 +65,12 @@ class _ChatScreenState extends State<ChatScreen> {
     if (widget.isAdmin) {
       data.value.add(
         Chat(
-          avatar: widget.customerResponse.avatar ?? "",
-          text: "",
-          id_1: 1,
-          id_2: 2,
-          isShowAvatar: false,
-        ),
+            avatar: widget.customerResponse.avatar ?? "",
+            text: "",
+            id_1: 1,
+            id_2: 2,
+            isShowAvatar: false,
+            time: DateTime(1999, 1, 1, 0, 0, 0)),
       );
     }
     messagesRef!.onChildAdded.listen((event) {
@@ -74,16 +79,28 @@ class _ChatScreenState extends State<ChatScreen> {
         bool showAvata = true;
         if (data.value.isNotEmpty &&
             data.value.last.id_1 == (widget.isAdmin ? 2 : 1)) showAvata = false;
+        if (data.value.isNotEmpty &&
+            isApart(
+                DateTime.parse(event.snapshot.child('time').value.toString()),
+                data.value.last.time)) {
+          showAvata = true;
+        }
+        if (data.value.isNotEmpty) {
+          print(DateTime.parse(event.snapshot.child('time').value.toString()));
+          print(data.value.last.time.toString());
+        }
+
         if (mounted) {
           setState(() {
             data.value.add(
               Chat(
-                avatar: widget.customerResponse.avatar ?? "",
-                text: event.snapshot.child('lastMessage').value.toString(),
-                id_1: widget.isAdmin ? 2 : 1,
-                id_2: widget.isAdmin ? 1 : 2,
-                isShowAvatar: showAvata,
-              ),
+                  avatar: widget.customerResponse.avatar ?? "",
+                  text: event.snapshot.child('lastMessage').value.toString(),
+                  id_1: widget.isAdmin ? 2 : 1,
+                  id_2: widget.isAdmin ? 1 : 2,
+                  isShowAvatar: showAvata,
+                  time: DateTime.parse(
+                      event.snapshot.child('time').value.toString())),
             );
             content = Conversation(
               messages: data.value,
@@ -99,16 +116,21 @@ class _ChatScreenState extends State<ChatScreen> {
             data.value.last.id_1 == (widget.isAdmin ? 1 : 2)) {
           showAvata = false;
         }
+        if (data.value.isNotEmpty &&
+            isApart(
+                DateTime.parse(event.snapshot.child('time').value.toString()),
+                data.value.last.time)) showAvata = true;
         if (mounted) {
           setState(() {
             data.value.add(
               Chat(
-                avatar: "assets/pics/admin_avatar.png",
-                text: event.snapshot.child('lastMessage').value.toString(),
-                id_1: widget.isAdmin ? 1 : 2,
-                id_2: widget.isAdmin ? 2 : 1,
-                isShowAvatar: showAvata,
-              ),
+                  avatar: "assets/pics/admin_avatar.png",
+                  text: event.snapshot.child('lastMessage').value.toString(),
+                  id_1: widget.isAdmin ? 1 : 2,
+                  id_2: widget.isAdmin ? 2 : 1,
+                  isShowAvatar: showAvata,
+                  time: DateTime.parse(
+                      event.snapshot.child('time').value.toString())),
             );
             content = Conversation(
               messages: data.value,
@@ -124,12 +146,12 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() {
       data.value.add(
         Chat(
-          avatar: "assets/pics/user_test.png",
-          text: question,
-          id_1: 1,
-          id_2: 2,
-          isShowAvatar: true,
-        ),
+            avatar: "assets/pics/user_test.png",
+            text: question,
+            id_1: 1,
+            id_2: 2,
+            isShowAvatar: true,
+            time: DateTime.now()),
       );
 
       // data.value.add(

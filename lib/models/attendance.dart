@@ -31,9 +31,9 @@ class Attendance {
         customerId: json['customerId'],
         staffId: json['staffId'],
         roomId: json['roomId'],
-        checkDate: formatter.parse(json['checkDate']),
+        checkDate: DateTime.parse(json['checkDate']),
         status: int.parse(json['status'].toString()),
-        staff: Staff.fromJson(json['staff']));
+        staff: json['staff'] == null ? null : Staff.fromJson(json['staff']));
   }
 
   // toJson method

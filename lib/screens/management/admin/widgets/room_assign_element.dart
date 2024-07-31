@@ -9,9 +9,13 @@ class RoomAssignElement extends StatelessWidget {
   const RoomAssignElement({
     super.key,
     required this.room,
+    required this.inDate,
+    required this.roomId,
   });
 
   final RoomAssign room;
+  final DateTime inDate;
+  final int roomId;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +26,8 @@ class RoomAssignElement extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) {
               return RoomAssignScreen(
+                inDate: inDate,
+                roomId: roomId,
                 roomAssign: room,
               );
             },
@@ -100,7 +106,10 @@ class RoomAssignElement extends StatelessWidget {
                         height: 35.w,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage(e.customer.avatar!),
+                            image: e.customer.avatar == null
+                                ? const AssetImage("assets/pics/no_ava.png")
+                                : NetworkImage(e.customer.avatar!),
+                            fit: BoxFit.cover,
                           ),
                           borderRadius: BorderRadius.circular(50.w),
                           border: Border.all(
