@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -27,28 +29,14 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedPageIndex = 0;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     _selectedPageIndex = widget.screenIndex;
-  }
-
-  void _selectPage(int index) {
-    setState(() {
-      _selectedPageIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    Widget activePage = widget.inputScreen;
-
-    switch (_selectedPageIndex) {
-      case 0:
-        activePage = HomeScreen();
-        break;
-      case 1:
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_selectedPageIndex == 1) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -60,7 +48,38 @@ class _MainScreenState extends State<MainScreen> {
             },
           ),
         );
+      }
+    });
+  }
 
+  void _selectPage(int index) {
+    if (!mounted) return;
+    setState(() {
+      _selectedPageIndex = index;
+    });
+
+    if (index == 1) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return ChatScreen(
+              isAdmin: false,
+              customerResponse: widget.customerResponse,
+            );
+          },
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget activePage = widget.inputScreen;
+
+    switch (_selectedPageIndex) {
+      case 0:
+        activePage = HomeScreen();
         break;
       case 2:
         activePage = MyRoomScreen(

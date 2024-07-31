@@ -6,9 +6,11 @@ class ChatTextField extends StatefulWidget {
   const ChatTextField({
     super.key,
     required this.controller,
+    required this.focusNode,
   });
 
   final TextEditingController controller;
+  final FocusNode focusNode;
 
   @override
   State<ChatTextField> createState() => _ChatTextFieldState();
@@ -24,6 +26,7 @@ class _ChatTextFieldState extends State<ChatTextField> {
     super.initState();
     _focusNode = FocusNode();
     textColor = const Color.fromARGB(255, 150, 150, 150);
+    _focusNode = widget.focusNode;
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {

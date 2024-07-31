@@ -11,6 +11,7 @@ import 'package:mate_project/models/chat.dart';
 import 'package:mate_project/models/chat_message.dart';
 import 'package:mate_project/models/message.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/screens/chat/admin/messages_list_screen.dart';
 import 'package:mate_project/screens/chat/widgets/chat_details.dart';
 import 'package:mate_project/screens/chat/widgets/chat_text_field.dart';
 import 'package:mate_project/screens/chat/widgets/conversation.dart';
@@ -37,6 +38,11 @@ class _ChatScreenState extends State<ChatScreen> {
   _ChatScreenState({required this.customerRespone});
   final data = ValueNotifier<List<Chat>>([]);
   DatabaseReference? messagesRef;
+  final FocusNode _focusNode = FocusNode();
+
+  void _dismissKeyboard() {
+    FocusScope.of(context).unfocus(); // This will dismiss the keyboard
+  }
 
   String askChat = "";
 
@@ -171,7 +177,34 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: TNormalAppBar(
         title: "Mate's Assistant",
         isBordered: true,
-        isBack: false,
+        isBack: true,
+        back: () {
+          if (widget.isAdmin) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return MessagesListScreen();
+                },
+              ),
+              (route) => false,
+            );
+          } else {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return MainScreen(
+                    inputScreen: HomeScreen(),
+                    screenIndex: 0,
+                    customerResponse: widget.customerResponse,
+                  );
+                },
+              ),
+              (route) => false,
+            );
+          }
+        },
       ),
       body: Stack(
         children: [
@@ -214,11 +247,13 @@ class _ChatScreenState extends State<ChatScreen> {
                         height: 50.h,
                         child: ChatTextField(
                           controller: _controller,
+                          focusNode: _focusNode,
                         ),
                       ),
                       IconButton(
                         onPressed: () {
                           addChat(_controller.text);
+                          _dismissKeyboard();
                         },
                         style: ButtonStyle(
                           backgroundColor: const WidgetStatePropertyAll(

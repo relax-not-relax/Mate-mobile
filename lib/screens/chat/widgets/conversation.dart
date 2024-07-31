@@ -20,6 +20,31 @@ class Conversation extends StatefulWidget {
 }
 
 class _ConversationState extends State<Conversation> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void didUpdateWidget(covariant Conversation oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,6 +54,7 @@ class _ConversationState extends State<Conversation> {
         horizontal: 24.w,
       ),
       child: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           children: widget.messages.map(
             (e) {
