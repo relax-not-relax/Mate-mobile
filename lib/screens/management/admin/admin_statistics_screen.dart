@@ -218,10 +218,11 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
                             );
                           }).toList(),
                           onChanged: (int? newValue) {
-                            setState(() {
-                              // Gọi setState trong StatefulBuilder
-                              selectedMonth = newValue!;
-                            });
+                            if (mounted)
+                              setState(() {
+                                // Gọi     setState trong StatefulBuilder
+                                selectedMonth = newValue!;
+                              });
                           },
                           dropdownColor: const Color.fromARGB(255, 35, 38, 47),
                         ),
@@ -244,9 +245,10 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
                             );
                           }),
                           onChanged: (int? newValue) {
-                            setState(() {
-                              selectedYear = newValue!;
-                            });
+                            if (mounted)
+                              setState(() {
+                                selectedYear = newValue!;
+                              });
                           },
                           dropdownColor: const Color.fromARGB(255, 35, 38, 47),
                         ),

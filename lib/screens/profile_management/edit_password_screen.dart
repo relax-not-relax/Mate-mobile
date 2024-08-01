@@ -77,7 +77,7 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
         RegExp(r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,12}$');
 
     // if (_passwordController.text != passCheck) {
-    //   setState(() {
+    //           if (mounted) setState(() {
     //     _isInCorrectOldPassword = true;
     //   });
     // } else {
@@ -85,44 +85,50 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
     // }
 
     if (_newPasswordController.text != _confirmPasswordController.text) {
-      setState(() {
-        _isPasswordMismatch = true;
-      });
+      if (mounted)
+        setState(() {
+          _isPasswordMismatch = true;
+        });
     } else {
-      setState(() {
-        _isPasswordMismatch = false;
-      });
+      if (mounted)
+        setState(() {
+          _isPasswordMismatch = false;
+        });
     }
 
     if (_newPasswordController.text != "") {
       if (_newPasswordController.text.contains(' ')) {
-        setState(() {
-          _isUnChecked = true;
-          errorText = "Password must not contain spaces!";
-        });
+        if (mounted)
+          setState(() {
+            _isUnChecked = true;
+            errorText = "Password must not contain spaces!";
+          });
       } else {
         _isUnChecked = false;
       }
 
       _isValid = passwordRegex.hasMatch(_newPasswordController.text);
       if (_isValid) {
-        setState(() {
-          _isUnChecked = false;
-        });
+        if (mounted)
+          setState(() {
+            _isUnChecked = false;
+          });
       } else {
-        setState(() {
-          _isUnChecked = true;
-          errorText =
-              "Password must have at least one number, one lowercase letter, one uppercase letter, and be between 8 and 12 characters long";
-        });
+        if (mounted)
+          setState(() {
+            _isUnChecked = true;
+            errorText =
+                "Password must have at least one number, one lowercase letter, one uppercase letter, and be between 8 and 12 characters long";
+          });
       }
     }
 
     if (_isInCorrectOldPassword == false && _isPasswordMismatch == false) {
       if (_newPasswordController.text == "") {
-        setState(() {
-          _newPasswordController.text = _passwordController.text;
-        });
+        if (mounted)
+          setState(() {
+            _newPasswordController.text = _passwordController.text;
+          });
         //Navigator.pop(context, _newPasswordController.text);
       } else if (_newPasswordController.text != "" &&
           _isUnChecked == false &&

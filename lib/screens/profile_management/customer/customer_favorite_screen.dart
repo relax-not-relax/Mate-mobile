@@ -82,17 +82,18 @@ class _CustomerFavoriteScreenState extends State<CustomerFavoriteScreen> {
 
   void handleHobbiesChange(List<String> newHobbies, bool checked, String hobby,
       TextEditingController textController) {
-    setState(() {
-      if (checked) {
-        newHobbies.add(hobby);
-        textController.text = newHobbies.join(", ");
-        fieldHeight += 16.h;
-      } else {
-        newHobbies.remove(hobby);
-        textController.text = newHobbies.join(", ");
-        fieldHeight -= 16.h;
-      }
-    });
+    if (mounted)
+      setState(() {
+        if (checked) {
+          newHobbies.add(hobby);
+          textController.text = newHobbies.join(", ");
+          fieldHeight += 16.h;
+        } else {
+          newHobbies.remove(hobby);
+          textController.text = newHobbies.join(", ");
+          fieldHeight -= 16.h;
+        }
+      });
   }
 
   @override

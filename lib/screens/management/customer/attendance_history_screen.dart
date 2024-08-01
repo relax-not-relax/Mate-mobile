@@ -48,9 +48,11 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
         page: page,
         customerId: customer!.customerId);
     page++;
-    setState(() {
-      myAttendance = myAttendanceOrigin;
-    });
+
+    if (mounted)
+      setState(() {
+        myAttendance = myAttendanceOrigin;
+      });
   }
 
   void resetSearch() async {
@@ -61,9 +63,11 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
         page: page,
         customerId: customer!.customerId);
     page++;
-    setState(() {
-      myAttendance = myAttendanceOrigin;
-    });
+
+    if (mounted)
+      setState(() {
+        myAttendance = myAttendanceOrigin;
+      });
   }
 
   void _onScroll() async {
@@ -78,10 +82,12 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                 pageSize: size,
                 page: page,
                 customerId: customer!.customerId);
-        setState(() {
-          myAttendanceOrigin.addAll(listAdd);
-          myAttendance.addAll(listAdd);
-        });
+
+        if (mounted)
+          setState(() {
+            myAttendanceOrigin.addAll(listAdd);
+            myAttendance.addAll(listAdd);
+          });
         page++;
       }
     }
@@ -107,9 +113,11 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
         pageSize: 0,
         page: 1,
         customerId: customer!.customerId);
-    setState(() {
-      myAttendance = myAttendanceOrigin;
-    });
+
+    if (mounted)
+      setState(() {
+        myAttendance = myAttendanceOrigin;
+      });
     for (var element in myAttendance) {
       print(element.toJson().toString());
     }
@@ -225,9 +233,10 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                             );
                           }),
                           onChanged: (int? newValue) {
-                            setState(() {
-                              selectedYear = newValue!;
-                            });
+                            if (mounted)
+                              setState(() {
+                                selectedYear = newValue!;
+                              });
                           },
                           dropdownColor: Colors.white,
                         ),
@@ -252,9 +261,10 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
                                     value: e,
                                     groupValue: filterOption,
                                     onChanged: (String? value) {
-                                      setState(() {
-                                        filterOption = value!;
-                                      });
+                                      if (mounted)
+                                        setState(() {
+                                          filterOption = value!;
+                                        });
                                     },
                                   ),
                                   Text(

@@ -67,9 +67,10 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
   }
 
   void waitingForSelection() {
-    setState(() {
-      isSelecting = true;
-    });
+    if (mounted)
+      setState(() {
+        isSelecting = true;
+      });
   }
 
   void payment() async {
@@ -155,18 +156,21 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
   }
 
   void finishedSelection() {
-    setState(() {
-      isSelecting = false;
-    });
+    if (mounted)
+      setState(() {
+        isSelecting = false;
+      });
   }
 
   Future<void> handlePackChange(Pack pack) async {
     waitingForSelection();
     await SharedPreferencesHelper.setPack(pack);
     Pack? _pack = await SharedPreferencesHelper.getPack();
-    setState(() {
-      selectedPack = _pack!;
-    });
+
+    if (mounted)
+      setState(() {
+        selectedPack = _pack!;
+      });
     print(selectedPack.packName);
     finishedSelection();
   }

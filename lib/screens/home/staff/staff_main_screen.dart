@@ -32,9 +32,10 @@ class _StaffMainScreenState extends State<StaffMainScreen> {
   }
 
   void _selectPage(int index) {
-    setState(() {
-      _selectedPageIndex = index;
-    });
+    if (mounted)
+      setState(() {
+        _selectedPageIndex = index;
+      });
   }
 
   @override

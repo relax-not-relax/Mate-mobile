@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -38,6 +39,7 @@ class _ChatScreenState extends State<ChatScreen> {
   _ChatScreenState({required this.customerRespone});
   final data = ValueNotifier<List<Chat>>([]);
   DatabaseReference? messagesRef;
+  List<StreamSubscription> listStream = [];
   final FocusNode _focusNode = FocusNode();
 
   void _dismissKeyboard() {
@@ -45,6 +47,11 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   String askChat = "";
+  bool isApart(DateTime first, DateTime second) {
+    // Tính chênh lệch thời gian giữa hai DateTime
+    Duration difference = first.difference(second).abs();
+    return difference.inMinutes >= 3;
+  }
 
   @override
   void initState() {
@@ -60,36 +67,50 @@ class _ChatScreenState extends State<ChatScreen> {
     if (widget.isAdmin) {
       data.value.add(
         Chat(
-          avatar: widget.customerResponse.avatar ?? "",
-          text: "",
-          id_1: 1,
-          id_2: 2,
-          isShowAvatar: false,
-        ),
+            avatar: widget.customerResponse.avatar ?? "",
+            text: "",
+            id_1: 1,
+            id_2: 2,
+            isShowAvatar: false,
+            time: DateTime(1999, 1, 1, 0, 0, 0)),
       );
     }
-    messagesRef!.onChildAdded.listen((event) {
+    listStream.add(messagesRef!.onChildAdded.listen((event) {
       if (event.snapshot.value != null &&
           event.snapshot.child('isAdmin').value == false) {
         bool showAvata = true;
         if (data.value.isNotEmpty &&
             data.value.last.id_1 == (widget.isAdmin ? 2 : 1)) showAvata = false;
-        if (mounted) {
-          setState(() {
-            data.value.add(
-              Chat(
-                avatar: widget.customerResponse.avatar ?? "",
-                text: event.snapshot.child('lastMessage').value.toString(),
-                id_1: widget.isAdmin ? 2 : 1,
-                id_2: widget.isAdmin ? 1 : 2,
-                isShowAvatar: showAvata,
-              ),
-            );
-            content = Conversation(
-              messages: data.value,
-              ask: askChoice,
-            );
-          });
+        if (data.value.isNotEmpty &&
+            isApart(
+                DateTime.parse(event.snapshot.child('time').value.toString()),
+                data.value.last.time)) {
+          showAvata = true;
+        }
+        if (data.value.isNotEmpty) {
+          print(DateTime.parse(event.snapshot.child('time').value.toString()));
+          print(data.value.last.time.toString());
+        }
+
+        {
+          if (mounted) {
+            setState(() {
+              data.value.add(
+                Chat(
+                    avatar: widget.customerResponse.avatar ?? "",
+                    text: event.snapshot.child('lastMessage').value.toString(),
+                    id_1: widget.isAdmin ? 2 : 1,
+                    id_2: widget.isAdmin ? 1 : 2,
+                    isShowAvatar: showAvata,
+                    time: DateTime.parse(
+                        event.snapshot.child('time').value.toString())),
+              );
+              content = Conversation(
+                messages: data.value,
+                ask: askChoice,
+              );
+            });
+          }
         }
       }
       if (event.snapshot.value != null &&
@@ -99,66 +120,87 @@ class _ChatScreenState extends State<ChatScreen> {
             data.value.last.id_1 == (widget.isAdmin ? 1 : 2)) {
           showAvata = false;
         }
-        if (mounted) {
-          setState(() {
-            data.value.add(
-              Chat(
-                avatar: "assets/pics/admin_avatar.png",
-                text: event.snapshot.child('lastMessage').value.toString(),
-                id_1: widget.isAdmin ? 1 : 2,
-                id_2: widget.isAdmin ? 2 : 1,
-                isShowAvatar: showAvata,
-              ),
-            );
-            content = Conversation(
-              messages: data.value,
-              ask: askChoice,
-            );
-          });
+        if (data.value.isNotEmpty &&
+            isApart(
+                DateTime.parse(event.snapshot.child('time').value.toString()),
+                data.value.last.time)) showAvata = true;
+        {
+          if (mounted) {
+            setState(() {
+              data.value.add(
+                Chat(
+                    avatar: "assets/pics/admin_avatar.png",
+                    text: event.snapshot.child('lastMessage').value.toString(),
+                    id_1: widget.isAdmin ? 1 : 2,
+                    id_2: widget.isAdmin ? 2 : 1,
+                    isShowAvatar: showAvata,
+                    time: DateTime.parse(
+                        event.snapshot.child('time').value.toString())),
+              );
+              content = Conversation(
+                messages: data.value,
+                ask: askChoice,
+              );
+            });
+          }
         }
       }
-    });
+    }));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    for (var element in listStream) {
+      element.cancel();
+      print("oke");
+    }
   }
 
   void askChoice(String question) {
-    setState(() {
-      data.value.add(
-        Chat(
-          avatar: "assets/pics/user_test.png",
-          text: question,
-          id_1: 1,
-          id_2: 2,
-          isShowAvatar: true,
-        ),
-      );
+    if (mounted) {
+      setState(() {
+        data.value.add(
+          Chat(
+              avatar: "assets/pics/user_test.png",
+              text: question,
+              id_1: 1,
+              id_2: 2,
+              isShowAvatar: true,
+              time: DateTime.now()),
+        );
 
-      // data.value.add(
-      //   Chat(
-      //     avatar: "assets/pics/admin_avatar.png",
-      //     text:
-      //         "Howdy, friends! That’s a good question though. We often have a music concert annually. This activities will be contributed by the elder to a larger community. We are gonna send out the invitation a month before the concert starts! Remember to check the information daily on our Fanpage!",
-      //     id_1: 2,
-      //     id_2: 1,
-      //     isShowAvatar: true,
-      //   ),
-      // );
+        // data.value.add(
+        //   Chat(
+        //     avatar: "assets/pics/admin_avatar.png",
+        //     text:
+        //         "Howdy, friends! That’s a good question though. We often have a music concert annually. This activities will be contributed by the elder to a larger community. We are gonna send out the invitation a month before the concert starts! Remember to check the information daily on our Fanpage!",
+        //     id_1: 2,
+        //     id_2: 1,
+        //     isShowAvatar: true,
+        //   ),
+        // );
 
-      content = Conversation(
-        messages: data.value,
-        ask: askChoice,
-      );
-    });
+        content = Conversation(
+          messages: data.value,
+          ask: askChoice,
+        );
+      });
+    }
   }
 
   void addChat(String chat) {
     if (chat.isEmpty || chat.trim().isEmpty) return;
-    setState(() {
-      _controller.clear();
-      content = Conversation(
-        messages: data.value,
-        ask: askChoice,
-      );
-    });
+
+    if (mounted) {
+      setState(() {
+        _controller.clear();
+        content = Conversation(
+          messages: data.value,
+          ask: askChoice,
+        );
+      });
+    }
     Message chatMessage = Message(
         time: DateTime.now(),
         name: widget.customerResponse.fullname,

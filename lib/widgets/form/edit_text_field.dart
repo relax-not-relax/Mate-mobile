@@ -30,13 +30,15 @@ class _EditTextFieldState extends State<EditTextField> {
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        setState(() {
-          textColor = Colors.black;
-        });
+        if (mounted)
+          setState(() {
+            textColor = Colors.black;
+          });
       } else {
-        setState(() {
-          textColor = const Color.fromARGB(255, 187, 188, 191);
-        });
+        if (mounted)
+          setState(() {
+            textColor = const Color.fromARGB(255, 187, 188, 191);
+          });
       }
     });
   }

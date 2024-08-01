@@ -31,22 +31,26 @@ class _EditLanguageScreenState extends State<EditLanguageScreen> {
   }
 
   void waitingForSelection() {
-    setState(() {
-      isSelecting = true;
-    });
+    if (mounted)
+      setState(() {
+        isSelecting = true;
+      });
   }
 
   void finishedSelection() {
-    setState(() {
-      isSelecting = false;
-    });
+    if (mounted)
+      setState(() {
+        isSelecting = false;
+      });
   }
 
   void onSelectLanguage(Language language) {
     waitingForSelection();
-    setState(() {
-      defaultLanguage = language;
-    });
+
+    if (mounted)
+      setState(() {
+        defaultLanguage = language;
+      });
     finishedSelection();
   }
 

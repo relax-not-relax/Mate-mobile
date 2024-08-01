@@ -36,9 +36,10 @@ class _MessagesListScreenState extends State<MessagesListScreen> {
     super.initState();
     getListMessgae().then(
       (value) {
-        setState(() {
-          messages = value;
-        });
+        if (mounted)
+          setState(() {
+            messages = value;
+          });
       },
     );
   }
@@ -117,9 +118,11 @@ class _MessagesListScreenState extends State<MessagesListScreen> {
                           ),
                           (route) => false,
                         );
-                        setState(() {
-                          e.status = true;
-                        });
+
+                        if (mounted)
+                          setState(() {
+                            e.status = true;
+                          });
                       },
                     );
                   },

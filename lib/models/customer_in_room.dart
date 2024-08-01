@@ -1,9 +1,10 @@
 import 'package:mate_project/models/customer.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/models/room.dart';
 
 class CustomerInRoom {
   final Room room;
-  final Customer customer;
+  final CustomerResponse customer;
   final DateTime joinDate;
   DateTime? leaveDate;
   bool? status;

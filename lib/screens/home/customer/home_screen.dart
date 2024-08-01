@@ -40,9 +40,10 @@ class _HomeScreenState extends State<HomeScreen>
     getCustomer().then(
       (value) {
         if (mounted && value != null) {
-          setState(() {
-            customer = value;
-          });
+          if (mounted)
+            setState(() {
+              customer = value;
+            });
         }
       },
     );
@@ -178,9 +179,10 @@ class _HomeScreenState extends State<HomeScreen>
                         fontWeight: FontWeight.w500,
                       ),
                       onTap: (value) {
-                        setState(() {
-                          tabIndex = value;
-                        });
+                        if (mounted)
+                          setState(() {
+                            tabIndex = value;
+                          });
                       },
                       unselectedLabelColor:
                           const Color.fromARGB(255, 154, 155, 159),

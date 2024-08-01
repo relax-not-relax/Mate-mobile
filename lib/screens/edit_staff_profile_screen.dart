@@ -124,9 +124,10 @@ class _EditStaffProfileScreenState extends State<EditStaffProfileScreen> {
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (returnedImage != null) {
-      setState(() {
-        _selectedImage = File(returnedImage.path);
-      });
+      if (mounted)
+        setState(() {
+          _selectedImage = File(returnedImage.path);
+        });
     } else {
       return;
     }
@@ -186,9 +187,10 @@ class _EditStaffProfileScreenState extends State<EditStaffProfileScreen> {
                                     value: e,
                                     groupValue: genderOption,
                                     onChanged: (String? value) {
-                                      setState(() {
-                                        genderOption = value!;
-                                      });
+                                      if (mounted)
+                                        setState(() {
+                                          genderOption = value!;
+                                        });
                                     },
                                   ),
                                   Text(

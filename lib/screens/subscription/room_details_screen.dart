@@ -43,9 +43,10 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
   }
 
   void updateBigImg(String img) {
-    setState(() {
-      bigImg = img;
-    });
+    if (mounted)
+      setState(() {
+        bigImg = img;
+      });
   }
 
   @override

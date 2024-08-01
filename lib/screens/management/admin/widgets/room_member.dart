@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_project/models/customer_in_room.dart';
+import 'package:mate_project/models/response/TotalAttendance.dart';
+import 'package:mate_project/repositories/attendance_repo.dart';
 import 'package:unicons/unicons.dart';
 
 class RoomMember extends StatefulWidget {
@@ -20,12 +22,25 @@ class _RoomMemberState extends State<RoomMember> {
   //Test data, gọi API lấy số lần hiện diện và vắng mặt của người trong phòng
   int present = 0;
   int absent = 0;
+  AttendanceRepo attendanceRepository = AttendanceRepo();
+  Future<TotalAttendanceResponse?> getTotalAttendances() async {
+    return await attendanceRepository.GetTotalAttendance(
+        customerId: widget.member.customer.customerId);
+  }
 
   @override
   void initState() {
     super.initState();
-    present = 150;
-    absent = 2;
+    getTotalAttendances().then(
+      (value) {
+        if (value != null) {
+          setState(() {
+            present = value.present;
+            absent = value.absent;
+          });
+        }
+      },
+    );
   }
 
   @override
@@ -45,9 +60,9 @@ class _RoomMemberState extends State<RoomMember> {
                 children: [
                   CircleAvatar(
                     radius: 20.w,
-                    backgroundImage: AssetImage(
-                      widget.member.customer.avatar!,
-                    ),
+                    backgroundImage: widget.member.customer.avatar == null
+                        ? const AssetImage("assets/pics/no_ava.png")
+                        : NetworkImage(widget.member.customer.avatar!),
                   ),
                   SizedBox(
                     width: 16.w,
@@ -55,7 +70,7 @@ class _RoomMemberState extends State<RoomMember> {
                   SizedBox(
                     width: 150.w,
                     child: Text(
-                      widget.member.customer.fullName,
+                      widget.member.customer.fullname,
                       style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: 12.sp,

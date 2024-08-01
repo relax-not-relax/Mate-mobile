@@ -65,7 +65,7 @@ class _RoomAssignItemState extends State<RoomAssignItem> {
   void initState() {
     super.initState();
     getData().then((value) {
-      setState(() {});
+      if (mounted) setState(() {});
     });
   }
 

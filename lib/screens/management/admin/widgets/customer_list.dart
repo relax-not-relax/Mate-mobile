@@ -170,10 +170,11 @@ class _CustomerListState extends State<CustomerList> {
                                 ),
                                 value: selectedOptions[filters.indexOf(e)],
                                 onChanged: (value) {
-                                  setState(() {
-                                    selectedOptions[filters.indexOf(e)] =
-                                        value!;
-                                  });
+                                  if (mounted)
+                                    setState(() {
+                                      selectedOptions[filters.indexOf(e)] =
+                                          value!;
+                                    });
                                 },
                               );
                             },

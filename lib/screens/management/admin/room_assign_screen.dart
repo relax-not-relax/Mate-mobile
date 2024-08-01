@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_project/models/room_assign.dart';
 import 'package:mate_project/models/staff.dart';
+import 'package:mate_project/repositories/attendance_repo.dart';
+import 'package:mate_project/repositories/staff_repo.dart';
 import 'package:mate_project/screens/home/admin/admin_main_screen.dart';
 import 'package:mate_project/screens/management/admin/admin_assign_screen.dart';
 import 'package:mate_project/screens/management/admin/widgets/room_member.dart';
@@ -15,9 +19,13 @@ class RoomAssignScreen extends StatefulWidget {
   const RoomAssignScreen({
     super.key,
     required this.roomAssign,
+    required this.roomId,
+    required this.inDate,
   });
 
   final RoomAssign roomAssign;
+  final int roomId;
+  final DateTime inDate;
 
   @override
   State<RoomAssignScreen> createState() => _RoomAssignScreenState();
@@ -28,6 +36,29 @@ class _RoomAssignScreenState extends State<RoomAssignScreen> {
   List<Staff> staffList = [];
   late Staff staffSelected;
   Widget? assignEl;
+  bool isAssign = false;
+  StaffRepository staffRepository = StaffRepository();
+  AttendanceRepo attendanceRepository = AttendanceRepo();
+  Future<List<Staff>> getStaffs() async {
+    return await staffRepository.GetStaffByAdmin(page: 1, pageSize: 100);
+  }
+
+  Future<void> assingToStaff() async {
+    List<int> customerIds = [];
+    for (var element in widget.roomAssign.customerInRoom) {
+      customerIds.add(element.customer.customerId);
+    }
+    await attendanceRepository.AssingAttendance(
+        roomId: widget.roomId,
+        inDate: widget.inDate,
+        staffId: staffSelected.staffId,
+        customerIds: customerIds);
+
+    if (mounted)
+      setState(() {
+        isAssign = true;
+      });
+  }
 
   Future displayBottomSheet(BuildContext context) {
     return showModalBottomSheet(
@@ -81,8 +112,12 @@ class _RoomAssignScreenState extends State<RoomAssignScreen> {
                                     children: [
                                       CircleAvatar(
                                         radius: 20.w,
-                                        backgroundImage: AssetImage(
-                                            staffList[index].avatar!),
+                                        backgroundImage:
+                                            staffList[index].avatar != null
+                                                ? NetworkImage(
+                                                    staffList[index].avatar!)
+                                                : const AssetImage(
+                                                    "assets/pics/no_ava.png"),
                                       ),
                                       SizedBox(
                                         width: 16.w,
@@ -105,9 +140,10 @@ class _RoomAssignScreenState extends State<RoomAssignScreen> {
                                     value: staffList[index],
                                     groupValue: staffSelected,
                                     onChanged: (value) {
-                                      setState(() {
-                                        staffSelected = value!;
-                                      });
+                                      if (mounted)
+                                        setState(() {
+                                          staffSelected = value!;
+                                        });
                                     },
                                   ),
                                 ],
@@ -142,61 +178,51 @@ class _RoomAssignScreenState extends State<RoomAssignScreen> {
   }
 
   void setStaff(Staff staff) {
-    setState(() {
-      assignEl = GestureDetector(
-        onLongPress: () {
-          displayBottomSheet(context);
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 20.w,
-              backgroundImage: AssetImage(staff.avatar!),
-            ),
-            SizedBox(
-              width: 16.w,
-            ),
-            Text(
-              staff.fullName,
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w400,
+    if (mounted)
+      setState(() {
+        assignEl = GestureDetector(
+          onLongPress: () {
+            displayBottomSheet(context);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 20.w,
+                backgroundImage: AssetImage(staff.avatar!),
               ),
-            ),
-          ],
-        ),
-      );
-    });
+              SizedBox(
+                width: 16.w,
+              ),
+              Text(
+                staff.fullName,
+                style: GoogleFonts.inter(
+                  color: Colors.white,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        );
+      });
   }
 
   @override
   void initState() {
     super.initState();
     // Call API to get staffs
-    staffList = [
-      Staff(
-        staffId: 1,
-        email: "staff1@mate.org",
-        fullName: "Staff 1",
-        avatar: "assets/pics/nurse.png",
-      ),
-      Staff(
-        staffId: 2,
-        email: "staff2@mate.org",
-        fullName: "staff 2",
-        avatar: "assets/pics/nurse.png",
-      ),
-      Staff(
-        staffId: 3,
-        email: "staff3@mate.org",
-        fullName: "Staff 3",
-        avatar: "assets/pics/nurse.png",
-      ),
-    ];
-    staffSelected = staffList[0];
+    getStaffs().then(
+      (value) {
+        if (mounted)
+          setState(() {
+            staffList = value;
+            staffSelected = staffList[0];
+          });
+      },
+    );
+
     assignEl = Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -315,10 +341,12 @@ class _RoomAssignScreenState extends State<RoomAssignScreen> {
                         children: [
                           CircleAvatar(
                             radius: 20.w,
-                            backgroundImage: AssetImage(
-                              widget.roomAssign.staff!.avatar ??
-                                  "assets/pics/no_ava.png",
-                            ),
+                            backgroundImage: widget.roomAssign.staff!.avatar !=
+                                    null
+                                ? NetworkImage(widget.roomAssign.staff!.avatar!)
+                                : const AssetImage(
+                                    "assets/pics/no_ava.png",
+                                  ),
                           ),
                           SizedBox(
                             width: 16.w,
@@ -336,13 +364,15 @@ class _RoomAssignScreenState extends State<RoomAssignScreen> {
                     : assignEl!,
               ],
             ),
-            widget.roomAssign.isAssigned
+            widget.roomAssign.isAssigned || isAssign
                 ? const DisabledButtonCustom(
                     name: "Assign",
                   )
                 : NormalButtonCustom(
                     name: "Assign",
-                    action: () {},
+                    action: () {
+                      assingToStaff();
+                    },
                     background: const Color.fromARGB(255, 84, 110, 255),
                   ),
           ],

@@ -32,13 +32,15 @@ class _EditPassFieldState extends State<EditPassField> {
     textColor = const Color.fromARGB(255, 187, 188, 191);
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        setState(() {
-          textColor = Colors.black;
-        });
+        if (mounted)
+          setState(() {
+            textColor = Colors.black;
+          });
       } else {
-        setState(() {
-          textColor = const Color.fromARGB(255, 187, 188, 191);
-        });
+        if (mounted)
+          setState(() {
+            textColor = const Color.fromARGB(255, 187, 188, 191);
+          });
       }
     });
   }
@@ -103,9 +105,10 @@ class _EditPassFieldState extends State<EditPassField> {
                 _isObscured ? Icons.visibility : Icons.visibility_off,
               ),
               onPressed: () {
-                setState(() {
-                  _isObscured = !_isObscured;
-                });
+                if (mounted)
+                  setState(() {
+                    _isObscured = !_isObscured;
+                  });
               },
             ),
           ),

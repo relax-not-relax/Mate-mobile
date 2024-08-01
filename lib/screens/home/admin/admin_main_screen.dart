@@ -31,9 +31,10 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
   }
 
   void _selectPage(int index) {
-    setState(() {
-      _selectedPageIndex = index;
-    });
+    if (mounted)
+      setState(() {
+        _selectedPageIndex = index;
+      });
   }
 
   @override

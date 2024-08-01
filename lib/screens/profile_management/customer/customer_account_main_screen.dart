@@ -46,20 +46,21 @@ class _CustomerAccountMainScreenState extends State<CustomerAccountMainScreen> {
     super.initState();
     getCustomer().then(
       (value) {
-        setState(() {
-          customerR = value;
-          customer = Customer(
-              customerId: value!.customerId,
-              email: value!.email,
-              fullName: value.fullname,
-              address: value.address,
-              avatar: "assets/pics/user_test.png",
-              dateOfBirth: value.dateOfBirth.toString(),
-              favorite: value.favorite,
-              gender: value.gender,
-              note: value.note,
-              phoneNumber: value.phoneNumber);
-        });
+        if (mounted)
+          setState(() {
+            customerR = value;
+            customer = Customer(
+                customerId: value!.customerId,
+                email: value!.email,
+                fullName: value.fullname,
+                address: value.address,
+                avatar: "assets/pics/user_test.png",
+                dateOfBirth: value.dateOfBirth.toString(),
+                favorite: value.favorite,
+                gender: value.gender,
+                note: value.note,
+                phoneNumber: value.phoneNumber);
+          });
       },
     );
     packId = 1;

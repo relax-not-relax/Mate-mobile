@@ -3,9 +3,11 @@ class News {
   final String title;
   final String description;
   final DateTime time;
-  final bool status;
+  bool status;
+  final String id;
 
-  const News({
+  News({
+    required this.id,
     required this.avatar,
     required this.title,
     required this.description,
