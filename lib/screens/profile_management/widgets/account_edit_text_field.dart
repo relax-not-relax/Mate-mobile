@@ -39,13 +39,15 @@ class _AccountEditTextFieldState extends State<AccountEditTextField> {
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        setState(() {
-          textColor = Colors.black;
-        });
+        if (mounted)
+          setState(() {
+            textColor = Colors.black;
+          });
       } else {
-        setState(() {
-          textColor = const Color.fromARGB(255, 108, 110, 116);
-        });
+        if (mounted)
+          setState(() {
+            textColor = const Color.fromARGB(255, 108, 110, 116);
+          });
       }
     });
   }

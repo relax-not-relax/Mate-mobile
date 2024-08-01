@@ -308,9 +308,10 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                                       ),
                                       value: rememberMeCheck,
                                       onChanged: (bool? value) {
-                                        setState(() {
-                                          rememberMeCheck = value!;
-                                        });
+                                        if (mounted)
+                                          setState(() {
+                                            rememberMeCheck = value!;
+                                          });
                                       },
                                     ),
                                   ),

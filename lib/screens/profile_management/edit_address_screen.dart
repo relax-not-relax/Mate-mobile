@@ -50,17 +50,22 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
   NormalDialogCustom dialogCustom = const NormalDialogCustom();
 
   Future<void> placeAutoComplete(String query) async {
-    setState(() {
-      isLoading = true;
-    });
+    if (mounted)
+      setState(() {
+        isLoading = true;
+      });
     locations = await LocationApi.getLocation(query);
-    setState(() {
-      locations;
-    });
+
+    if (mounted)
+      setState(() {
+        locations;
+      });
     print(locations);
-    setState(() {
-      isLoading = false;
-    });
+
+    if (mounted)
+      setState(() {
+        isLoading = false;
+      });
   }
 
   late CustomerBloc _customerBloc;
@@ -139,9 +144,10 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
               borderColor: const Color.fromARGB(255, 148, 141, 246),
               onSubmitted: (value) async {
                 if (isFirstSearch) {
-                  setState(() {
-                    isFirstSearch = false;
-                  });
+                  if (mounted)
+                    setState(() {
+                      isFirstSearch = false;
+                    });
                 }
 
                 await placeAutoComplete(
@@ -340,12 +346,13 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                         Switch(
                           value: isSwitch,
                           onChanged: (value) {
-                            setState(() {
-                              isSwitch = value;
-                              content = EditAddressManually(
-                                customerResponse: customer,
-                              );
-                            });
+                            if (mounted)
+                              setState(() {
+                                isSwitch = value;
+                                content = EditAddressManually(
+                                  customerResponse: customer,
+                                );
+                              });
                           },
                           activeColor: const Color.fromARGB(255, 67, 90, 204),
                         ),

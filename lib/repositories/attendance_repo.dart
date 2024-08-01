@@ -1,11 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
 
 import 'package:mate_project/helper/config.dart';
+import 'package:mate_project/helper/realtime_helper.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/attendance.dart';
 import 'package:mate_project/models/check_attendance.dart';
+import 'package:mate_project/models/notification.dart';
 import 'package:mate_project/models/response/TotalAttendance.dart';
 import 'package:mate_project/models/room.dart';
 import 'package:mate_project/models/staff.dart';
@@ -38,11 +41,13 @@ class AttendanceRepo {
   Future<TotalAttendanceResponse?> GetTotalAttendance(
       {required int customerId}) async {
     var account = await SharedPreferencesHelper.getCustomer();
+    var account2 = await SharedPreferencesHelper.getAdmin();
     final response = await http.get(
       Uri.parse("${Config.apiRoot}api/attendance/total/$customerId"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer ${account!.accessToken}',
+        'Authorization':
+            'Bearer ${account != null ? account.accessToken : account2!.accessToken}',
       },
     );
     if (response.statusCode == 200) {
@@ -111,6 +116,35 @@ class AttendanceRepo {
         },
         body: jsonString);
     if (response.statusCode == 200) {
+      String roomName = "";
+      switch (roomId) {
+        case 1:
+          roomName = "Sunflower";
+          break;
+        case 2:
+          roomName = "Lily";
+          break;
+        case 3:
+          roomName = "Soulmate";
+          break;
+        case 4:
+          roomName = "F4 plus";
+          break;
+        case 5:
+          roomName = "New Zone";
+          break;
+        case 6:
+          roomName = "New World";
+          break;
+      }
+      NotificationStaff notification = NotificationStaff(
+          time: DateTime.now(),
+          staffId: staffId,
+          title: "Assigned to $roomName Room",
+          content:
+              "You have been assigned to check in $roomName Room on ${inDate.day}/${inDate.month}/${inDate.year}",
+          isNew: true);
+      RealTimeHelper.sendNotification(notification);
       return;
     } else {
       throw Exception('System failure');

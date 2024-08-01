@@ -24,17 +24,18 @@ class _RoomAssignedState extends State<RoomAssigned> {
   }
 
   void updateTime() {
-    setState(() {
-      // Extract hours and minutes from current time
-      String timeString = DateTime.now().toString().split(' ')[1];
-      List<String> timeComponents = timeString.split(':');
-      String hours = timeComponents[0];
-      String minutes = timeComponents[1];
+    if (mounted)
+      setState(() {
+        // Extract hours and minutes from current time
+        String timeString = DateTime.now().toString().split(' ')[1];
+        List<String> timeComponents = timeString.split(':');
+        String hours = timeComponents[0];
+        String minutes = timeComponents[1];
 
-      // Format the time as "HH:mm"
-      _currentTime =
-          '${hours.padLeft(2, '0')}:$minutes'; // Pad hours to 2 digits
-    });
+        // Format the time as "HH:mm"
+        _currentTime =
+            '${hours.padLeft(2, '0')}:$minutes'; // Pad hours to 2 digits
+      });
     _timer = Timer(const Duration(seconds: 1), updateTime);
   }
 

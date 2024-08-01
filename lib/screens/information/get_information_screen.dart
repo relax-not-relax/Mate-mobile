@@ -82,42 +82,49 @@ class _GetInformationScreenState extends State<GetInformationScreen> {
   }
 
   void waitingForSelection() {
-    setState(() {
-      isSelecting = true;
-    });
+    if (mounted)
+      setState(() {
+        isSelecting = true;
+      });
   }
 
   void finishedSelection() {
-    setState(() {
-      isSelecting = false;
-    });
+    if (mounted)
+      setState(() {
+        isSelecting = false;
+      });
   }
 
   void onNext() {
-    setState(() {
-      pageIndex += 1;
-    });
+    if (mounted)
+      setState(() {
+        pageIndex += 1;
+      });
   }
 
   void onPrevious() {
-    setState(() {
-      pageIndex -= 1;
-    });
+    if (mounted)
+      setState(() {
+        pageIndex -= 1;
+      });
   }
 
   void handleDateChange(String newDate) {
-    setState(() {
-      birthday = newDate;
-    });
+    if (mounted)
+      setState(() {
+        birthday = newDate;
+      });
   }
 
   Future<void> handleGenderChange(String newGender) async {
     waitingForSelection();
     await SharedPreferencesHelper.setGender(newGender);
     String _gender = await SharedPreferencesHelper.getGender();
-    setState(() {
-      gender = _gender;
-    });
+
+    if (mounted)
+      setState(() {
+        gender = _gender;
+      });
     finishedSelection();
   }
 
@@ -128,28 +135,32 @@ class _GetInformationScreenState extends State<GetInformationScreen> {
     if (years >= 18) {
       await SharedPreferencesHelper.setAge(newAge);
       String _age = await SharedPreferencesHelper.getAge();
-      setState(() {
-        errorMessage = "";
-        birthday = _age;
-        pageIndex += 1;
-      });
+
+      if (mounted)
+        setState(() {
+          errorMessage = "";
+          birthday = _age;
+          pageIndex += 1;
+        });
     } else {
-      setState(() {
-        errorMessage =
-            "You must be at least 18 years old to be able to use our services.";
-      });
+      if (mounted)
+        setState(() {
+          errorMessage =
+              "You must be at least 18 years old to be able to use our services.";
+        });
     }
   }
 
   Future<void> handleHobbiesChange(
       List<String> newHobbies, bool checked, String hobby) async {
-    setState(() {
-      if (checked) {
-        newHobbies.add(hobby);
-      } else {
-        newHobbies.remove(hobby);
-      }
-    });
+    if (mounted)
+      setState(() {
+        if (checked) {
+          newHobbies.add(hobby);
+        } else {
+          newHobbies.remove(hobby);
+        }
+      });
   }
 
   @override

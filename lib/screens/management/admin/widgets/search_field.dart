@@ -33,13 +33,15 @@ class _SearchFieldState extends State<SearchField> {
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        setState(() {
-          textColor = Colors.white;
-        });
+        if (mounted)
+          setState(() {
+            textColor = Colors.white;
+          });
       } else {
-        setState(() {
-          textColor = const Color.fromARGB(255, 154, 155, 159);
-        });
+        if (mounted)
+          setState(() {
+            textColor = const Color.fromARGB(255, 154, 155, 159);
+          });
       }
     });
   }

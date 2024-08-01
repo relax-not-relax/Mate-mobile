@@ -106,9 +106,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (returnedImage != null) {
-      setState(() {
-        _selectedImage = File(returnedImage.path);
-      });
+      if (mounted)
+        setState(() {
+          _selectedImage = File(returnedImage.path);
+        });
     } else {
       return;
     }
@@ -168,9 +169,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     value: e,
                                     groupValue: genderOption,
                                     onChanged: (String? value) {
-                                      setState(() {
-                                        genderOption = value!;
-                                      });
+                                      if (mounted)
+                                        setState(() {
+                                          genderOption = value!;
+                                        });
                                     },
                                   ),
                                   Text(

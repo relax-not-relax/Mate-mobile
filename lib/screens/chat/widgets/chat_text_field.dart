@@ -30,15 +30,17 @@ class _ChatTextFieldState extends State<ChatTextField> {
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        setState(() {
-          textColor = Colors.black;
-          expands = true;
-        });
+        if (mounted)
+          setState(() {
+            textColor = Colors.black;
+            expands = true;
+          });
       } else {
-        setState(() {
-          textColor = const Color.fromARGB(255, 150, 150, 150);
-          expands = false;
-        });
+        if (mounted)
+          setState(() {
+            textColor = const Color.fromARGB(255, 150, 150, 150);
+            expands = false;
+          });
       }
     });
   }

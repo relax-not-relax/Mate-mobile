@@ -50,12 +50,13 @@ class _OnboardScreenState extends State<OnboardScreen> {
 
   void continueOnboard() {
     if (pageIndex < 2) {
-      setState(() {
-        pageIndex += 1;
-        url = imgUrl[pageIndex];
-        title = titles[pageIndex];
-        description = descriptions[pageIndex];
-      });
+      if (mounted)
+        setState(() {
+          pageIndex += 1;
+          url = imgUrl[pageIndex];
+          title = titles[pageIndex];
+          description = descriptions[pageIndex];
+        });
     } else if (pageIndex == 2) {
       Navigator.push(context, MaterialPageRoute(
         builder: (context) {

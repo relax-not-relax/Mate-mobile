@@ -166,17 +166,18 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
     super.initState();
     getRoomGold(1, DateTime.now()).then(
       (value) {
-        setState(() {
-          roomsList = value;
-          content = RoomAssignList(
-            inDate: DateTime.now(),
-            roomId: 1,
-            assignList: roomsList,
-            filter: () {
-              displayBottomSheet(context);
-            },
-          );
-        });
+        if (mounted)
+          setState(() {
+            roomsList = value;
+            content = RoomAssignList(
+              inDate: DateTime.now(),
+              roomId: 1,
+              assignList: roomsList,
+              filter: () {
+                displayBottomSheet(context);
+              },
+            );
+          });
       },
     );
     selectedMonth = DateTime.now().month;
@@ -257,9 +258,10 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                                   value: e,
                                   groupValue: filterOption,
                                   onChanged: (String? value) {
-                                    setState(() {
-                                      filterOption = value!;
-                                    });
+                                    if (mounted)
+                                      setState(() {
+                                        filterOption = value!;
+                                      });
                                   },
                                 ),
                                 Text(
@@ -366,10 +368,11 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                             );
                           }).toList(),
                           onChanged: (int? newValue) {
-                            setState(() {
-                              // Gọi setState trong StatefulBuilder
-                              selectedMonth = newValue!;
-                            });
+                            if (mounted)
+                              setState(() {
+                                // Gọi   setState trong StatefulBuilder
+                                selectedMonth = newValue!;
+                              });
                           },
                           dropdownColor: const Color.fromARGB(255, 35, 38, 47),
                         ),
@@ -392,9 +395,10 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                             );
                           }),
                           onChanged: (int? newValue) {
-                            setState(() {
-                              selectedYear = newValue!;
-                            });
+                            if (mounted)
+                              setState(() {
+                                selectedYear = newValue!;
+                              });
                           },
                           dropdownColor: const Color.fromARGB(255, 35, 38, 47),
                         ),
@@ -484,44 +488,46 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                   return DayItem(
                     day: daysList[index],
                     onTap: () {
-                      setState(() {
-                        // ignore: avoid_function_literals_in_foreach_calls
-                        daysList.forEach(
-                          (d) => d.isSelected = false,
-                        );
-                        daysList[index].isSelected = true;
-                        dateTitle = DateFormat.MMMMd().format(
-                          daysList[index].dateTime,
-                        );
+                      if (mounted)
+                        setState(() {
+                          // ignore: avoid_function_literals_in_foreach_calls
+                          daysList.forEach(
+                            (d) => d.isSelected = false,
+                          );
+                          daysList[index].isSelected = true;
+                          dateTitle = DateFormat.MMMMd().format(
+                            daysList[index].dateTime,
+                          );
 
-                        _scrollToCurrentDay(index);
-                        getRoomGold(
-                                tIndex + 1,
-                                daysList
-                                    .where(
-                                        (element) => element.isSelected == true)
-                                    .first
-                                    .dateTime)
-                            .then(
-                          (value) {
-                            setState(() {
-                              roomsList = value;
-                              content = RoomAssignList(
-                                inDate: daysList
-                                    .where(
-                                        (element) => element.isSelected == true)
-                                    .first
-                                    .dateTime,
-                                roomId: tIndex + 1,
-                                assignList: roomsList,
-                                filter: () {
-                                  displayBottomSheet(context);
-                                },
-                              );
-                            });
-                          },
-                        );
-                      });
+                          _scrollToCurrentDay(index);
+                          getRoomGold(
+                                  tIndex + 1,
+                                  daysList
+                                      .where((element) =>
+                                          element.isSelected == true)
+                                      .first
+                                      .dateTime)
+                              .then(
+                            (value) {
+                              if (mounted)
+                                setState(() {
+                                  roomsList = value;
+                                  content = RoomAssignList(
+                                    inDate: daysList
+                                        .where((element) =>
+                                            element.isSelected == true)
+                                        .first
+                                        .dateTime,
+                                    roomId: tIndex + 1,
+                                    assignList: roomsList,
+                                    filter: () {
+                                      displayBottomSheet(context);
+                                    },
+                                  );
+                                });
+                            },
+                          );
+                        });
                     },
                   );
                 },
@@ -542,89 +548,99 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
             indicatorColor: const Color.fromARGB(255, 182, 177, 249),
             dividerColor: const Color.fromARGB(255, 41, 45, 50),
             onTap: (value) {
-              setState(() {
-                tIndex = value;
-                switch (tIndex) {
-                  case 0:
-                    getRoomGold(
-                            1,
-                            daysList
-                                .where((element) => element.isSelected == true)
-                                .first
-                                .dateTime)
-                        .then(
-                      (value) {
-                        setState(() {
-                          roomsList = value;
-                          content = RoomAssignList(
-                            inDate: daysList
-                                .where((element) => element.isSelected == true)
-                                .first
-                                .dateTime,
-                            roomId: tIndex + 1,
-                            assignList: roomsList,
-                            filter: () {
-                              displayBottomSheet(context);
-                            },
-                          );
-                        });
-                      },
-                    );
-                    break;
-                  case 1:
-                    getRoomGold(
-                            2,
-                            daysList
-                                .where((element) => element.isSelected == true)
-                                .first
-                                .dateTime)
-                        .then(
-                      (value) {
-                        setState(() {
-                          roomsList = value;
-                          content = RoomAssignList(
-                            inDate: daysList
-                                .where((element) => element.isSelected == true)
-                                .first
-                                .dateTime,
-                            roomId: tIndex + 1,
-                            assignList: roomsList,
-                            filter: () {
-                              displayBottomSheet(context);
-                            },
-                          );
-                        });
-                      },
-                    );
-                    break;
-                  case 2:
-                    getRoomGold(
-                            3,
-                            daysList
-                                .where((element) => element.isSelected == true)
-                                .first
-                                .dateTime)
-                        .then(
-                      (value) {
-                        setState(() {
-                          roomsList = value;
-                          content = RoomAssignList(
-                            inDate: daysList
-                                .where((element) => element.isSelected == true)
-                                .first
-                                .dateTime,
-                            roomId: tIndex + 1,
-                            assignList: roomsList,
-                            filter: () {
-                              displayBottomSheet(context);
-                            },
-                          );
-                        });
-                      },
-                    );
-                    break;
-                }
-              });
+              if (mounted)
+                setState(() {
+                  tIndex = value;
+                  switch (tIndex) {
+                    case 0:
+                      getRoomGold(
+                              1,
+                              daysList
+                                  .where(
+                                      (element) => element.isSelected == true)
+                                  .first
+                                  .dateTime)
+                          .then(
+                        (value) {
+                          if (mounted)
+                            setState(() {
+                              roomsList = value;
+                              content = RoomAssignList(
+                                inDate: daysList
+                                    .where(
+                                        (element) => element.isSelected == true)
+                                    .first
+                                    .dateTime,
+                                roomId: tIndex + 1,
+                                assignList: roomsList,
+                                filter: () {
+                                  displayBottomSheet(context);
+                                },
+                              );
+                            });
+                        },
+                      );
+                      break;
+                    case 1:
+                      getRoomGold(
+                              2,
+                              daysList
+                                  .where(
+                                      (element) => element.isSelected == true)
+                                  .first
+                                  .dateTime)
+                          .then(
+                        (value) {
+                          if (mounted)
+                            setState(() {
+                              roomsList = value;
+                              content = RoomAssignList(
+                                inDate: daysList
+                                    .where(
+                                        (element) => element.isSelected == true)
+                                    .first
+                                    .dateTime,
+                                roomId: tIndex + 1,
+                                assignList: roomsList,
+                                filter: () {
+                                  displayBottomSheet(context);
+                                },
+                              );
+                            });
+                        },
+                      );
+                      break;
+                    case 2:
+                      getRoomGold(
+                              3,
+                              daysList
+                                  .where(
+                                      (element) => element.isSelected == true)
+                                  .first
+                                  .dateTime)
+                          .then(
+                        (value) {
+                          if (mounted)
+                            setState(() {
+                              roomsList = value;
+                              content = RoomAssignList(
+                                inDate: daysList
+                                    .where(
+                                        (element) => element.isSelected == true)
+                                    .first
+                                    .dateTime,
+                                roomId: tIndex + 1,
+                                assignList: roomsList,
+                                filter: () {
+                                  displayBottomSheet(context);
+                                },
+                              );
+                            });
+                        },
+                      );
+                      break;
+                  }
+                });
             },
             tabs: const [
               Tab(

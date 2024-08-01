@@ -34,9 +34,11 @@ class _AccountAddressScreenState extends State<AccountAddressScreen> {
 
   Future getAddress() async {
     customer = await SharedPreferencesHelper.getCustomer();
-    setState(() {
-      customer;
-    });
+
+    if (mounted)
+      setState(() {
+        customer;
+      });
     print(customer!.address);
   }
 

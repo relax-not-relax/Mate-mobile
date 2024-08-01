@@ -63,9 +63,11 @@ class _MyRoomScreenState extends State<MyRoomScreen> {
     totalAttendanceResponse = await attendanceRepository.GetTotalAttendance(
         customerId: customer!.customerId);
     page++;
-    setState(() {
-      myAttendance;
-    });
+
+    if (mounted)
+      setState(() {
+        myAttendance;
+      });
   }
 
   Future setStaff() async {
@@ -80,9 +82,10 @@ class _MyRoomScreenState extends State<MyRoomScreen> {
       staff = myAttendance.first.staff;
     }
 
-    setState(() {
-      staff;
-    });
+    if (mounted)
+      setState(() {
+        staff;
+      });
   }
 
   void setRoomName() {
@@ -107,9 +110,11 @@ class _MyRoomScreenState extends State<MyRoomScreen> {
         r = "New World";
         break;
     }
-    setState(() {
-      roomName = r;
-    });
+
+    if (mounted)
+      setState(() {
+        roomName = r;
+      });
   }
 
   @override
@@ -138,9 +143,11 @@ class _MyRoomScreenState extends State<MyRoomScreen> {
                 pageSize: size,
                 page: page,
                 customerId: customer!.customerId);
-        setState(() {
-          myAttendance.addAll(listAdd);
-        });
+
+        if (mounted)
+          setState(() {
+            myAttendance.addAll(listAdd);
+          });
         page++;
       }
     }

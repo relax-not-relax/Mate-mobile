@@ -136,27 +136,28 @@ class _StatisticsDetailsScreenState extends State<StatisticsDetailsScreen>
                 IconButton(
                   onPressed: sIndex > 0
                       ? () {
-                          setState(() {
-                            sIndex--;
-                            groupByWeek = cashFlowsEachWeak![sIndex];
-                            cashFlows = groupByWeek!.values.first;
-                            weekNumber = groupByWeek!.keys.first;
-                            chart = StatisticsChart(
-                              key: ValueKey('chart_$sIndex'),
-                              cashFlows: cashFlows,
-                            );
-                            costDetails = Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: cashFlows.map(
-                                (e) {
-                                  return CostDetailsElement(
-                                    cashFlow: e,
-                                  );
-                                },
-                              ).toList(),
-                            );
-                          });
+                          if (mounted)
+                            setState(() {
+                              sIndex--;
+                              groupByWeek = cashFlowsEachWeak![sIndex];
+                              cashFlows = groupByWeek!.values.first;
+                              weekNumber = groupByWeek!.keys.first;
+                              chart = StatisticsChart(
+                                key: ValueKey('chart_$sIndex'),
+                                cashFlows: cashFlows,
+                              );
+                              costDetails = Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: cashFlows.map(
+                                  (e) {
+                                    return CostDetailsElement(
+                                      cashFlow: e,
+                                    );
+                                  },
+                                ).toList(),
+                              );
+                            });
                         }
                       : null,
                   icon: Icon(
@@ -168,27 +169,28 @@ class _StatisticsDetailsScreenState extends State<StatisticsDetailsScreen>
                 IconButton(
                   onPressed: sIndex < ((cashFlowsEachWeak!.length) - 1)
                       ? () {
-                          setState(() {
-                            sIndex++;
-                            groupByWeek = cashFlowsEachWeak![sIndex];
-                            cashFlows = groupByWeek!.values.first;
-                            weekNumber = groupByWeek!.keys.first;
-                            chart = StatisticsChart(
-                              key: ValueKey('chart_$sIndex'),
-                              cashFlows: cashFlows,
-                            );
-                            costDetails = Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: cashFlows.map(
-                                (e) {
-                                  return CostDetailsElement(
-                                    cashFlow: e,
-                                  );
-                                },
-                              ).toList(),
-                            );
-                          });
+                          if (mounted)
+                            setState(() {
+                              sIndex++;
+                              groupByWeek = cashFlowsEachWeak![sIndex];
+                              cashFlows = groupByWeek!.values.first;
+                              weekNumber = groupByWeek!.keys.first;
+                              chart = StatisticsChart(
+                                key: ValueKey('chart_$sIndex'),
+                                cashFlows: cashFlows,
+                              );
+                              costDetails = Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: cashFlows.map(
+                                  (e) {
+                                    return CostDetailsElement(
+                                      cashFlow: e,
+                                    );
+                                  },
+                                ).toList(),
+                              );
+                            });
                         }
                       : null,
                   icon: Icon(

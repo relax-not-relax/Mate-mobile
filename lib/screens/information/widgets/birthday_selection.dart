@@ -39,9 +39,10 @@ class _BirthdaySelectionState extends State<BirthdaySelection> {
       lastDate: DateTime(3000),
     );
     if (datePicker != null) {
-      setState(() {
-        dateInput = datePicker;
-      });
+      if (mounted)
+        setState(() {
+          dateInput = datePicker;
+        });
       widget.onDateChanged(
         DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(dateInput),
       );

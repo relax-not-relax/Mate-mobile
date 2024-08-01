@@ -35,41 +35,60 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _selectedPageIndex = widget.screenIndex;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_selectedPageIndex == 1) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return ChatScreen(
-                isAdmin: false,
-                customerResponse: widget.customerResponse,
-              );
-            },
-          ),
-        );
-      }
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (_selectedPageIndex == 1) {
+    //     Navigator.pushReplacement(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (context) {
+    //           return ChatScreen(
+    //             isAdmin: false,
+    //             customerResponse: widget.customerResponse,
+    //           );
+    //         },
+    //       ),
+    //     );
+    //   }
+    // });
   }
 
   void _selectPage(int index) {
     if (!mounted) return;
-    setState(() {
-      _selectedPageIndex = index;
-    });
+
+    if (mounted)
+      setState(() {
+        _selectedPageIndex = index;
+      });
 
     if (index == 1) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return ChatScreen(
-              isAdmin: false,
-              customerResponse: widget.customerResponse,
-            );
-          },
-        ),
+      Future.delayed(Duration(seconds: 1)).then(
+        (value) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return ChatScreen(
+                  isAdmin: false,
+                  customerResponse: widget.customerResponse,
+                );
+              },
+            ),
+            (route) => false,
+          );
+        },
       );
+
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) {
+      //       return ChatScreen(
+      //         isAdmin: false,
+      //         customerResponse: widget.customerResponse,
+      //       );
+      //     },
+      //   ),
+      // );
     }
   }
 

@@ -53,9 +53,11 @@ class _RoomAssignScreenState extends State<RoomAssignScreen> {
         inDate: widget.inDate,
         staffId: staffSelected.staffId,
         customerIds: customerIds);
-    setState(() {
-      isAssign = true;
-    });
+
+    if (mounted)
+      setState(() {
+        isAssign = true;
+      });
   }
 
   Future displayBottomSheet(BuildContext context) {
@@ -138,9 +140,10 @@ class _RoomAssignScreenState extends State<RoomAssignScreen> {
                                     value: staffList[index],
                                     groupValue: staffSelected,
                                     onChanged: (value) {
-                                      setState(() {
-                                        staffSelected = value!;
-                                      });
+                                      if (mounted)
+                                        setState(() {
+                                          staffSelected = value!;
+                                        });
                                     },
                                   ),
                                 ],
@@ -175,34 +178,35 @@ class _RoomAssignScreenState extends State<RoomAssignScreen> {
   }
 
   void setStaff(Staff staff) {
-    setState(() {
-      assignEl = GestureDetector(
-        onLongPress: () {
-          displayBottomSheet(context);
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 20.w,
-              backgroundImage: AssetImage(staff.avatar!),
-            ),
-            SizedBox(
-              width: 16.w,
-            ),
-            Text(
-              staff.fullName,
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w400,
+    if (mounted)
+      setState(() {
+        assignEl = GestureDetector(
+          onLongPress: () {
+            displayBottomSheet(context);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 20.w,
+                backgroundImage: AssetImage(staff.avatar!),
               ),
-            ),
-          ],
-        ),
-      );
-    });
+              SizedBox(
+                width: 16.w,
+              ),
+              Text(
+                staff.fullName,
+                style: GoogleFonts.inter(
+                  color: Colors.white,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        );
+      });
   }
 
   @override
@@ -211,10 +215,11 @@ class _RoomAssignScreenState extends State<RoomAssignScreen> {
     // Call API to get staffs
     getStaffs().then(
       (value) {
-        setState(() {
-          staffList = value;
-          staffSelected = staffList[0];
-        });
+        if (mounted)
+          setState(() {
+            staffList = value;
+            staffSelected = staffList[0];
+          });
       },
     );
 

@@ -35,13 +35,15 @@ class _EditPasswordState extends State<EditPassword> {
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        setState(() {
-          textColor = Colors.black;
-        });
+        if (mounted)
+          setState(() {
+            textColor = Colors.black;
+          });
       } else {
-        setState(() {
-          textColor = const Color.fromARGB(255, 108, 110, 116);
-        });
+        if (mounted)
+          setState(() {
+            textColor = const Color.fromARGB(255, 108, 110, 116);
+          });
       }
     });
   }
@@ -115,9 +117,10 @@ class _EditPasswordState extends State<EditPassword> {
             _isObscured ? Icons.visibility : Icons.visibility_off,
           ),
           onPressed: () {
-            setState(() {
-              _isObscured = !_isObscured;
-            });
+            if (mounted)
+              setState(() {
+                _isObscured = !_isObscured;
+              });
           },
         ),
       ),

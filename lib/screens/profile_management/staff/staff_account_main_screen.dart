@@ -34,9 +34,10 @@ class _StaffAccountMainScreenState extends State<StaffAccountMainScreen> {
     super.initState();
     getStaff().then(
       (value) {
-        setState(() {
-          staff = value;
-        });
+        if (mounted)
+          setState(() {
+            staff = value;
+          });
       },
     );
   }

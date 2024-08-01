@@ -281,10 +281,12 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
     for (var element in dayAttendanceList) {
       print(element.status);
     }
-    setState(() {
-      dayAttendanceList;
-      roomAssign = countRoom();
-    });
+
+    if (mounted)
+      setState(() {
+        dayAttendanceList;
+        roomAssign = countRoom();
+      });
   }
 
   @override
@@ -309,10 +311,11 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
             DateTime(selected.year, selected.month, selected.day, 23, 59, 59);
         getAttendance(startDate, endDate).then(
           (value) {
-            setState(() {
-              dayAttendanceList;
-              roomAssign = countRoom();
-            });
+            if (mounted)
+              setState(() {
+                dayAttendanceList;
+                roomAssign = countRoom();
+              });
           },
         );
       },
@@ -399,10 +402,11 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
                             );
                           }).toList(),
                           onChanged: (int? newValue) {
-                            setState(() {
-                              // Gọi setState trong StatefulBuilder
-                              selectedMonth = newValue!;
-                            });
+                            if (mounted)
+                              setState(() {
+                                // Gọi     setState trong StatefulBuilder
+                                selectedMonth = newValue!;
+                              });
                           },
                           dropdownColor: Colors.white,
                         ),
@@ -425,9 +429,10 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
                             );
                           }),
                           onChanged: (int? newValue) {
-                            setState(() {
-                              selectedYear = newValue!;
-                            });
+                            if (mounted)
+                              setState(() {
+                                selectedYear = newValue!;
+                              });
                           },
                           dropdownColor: Colors.white,
                         ),
@@ -514,18 +519,19 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
                       return DayItem(
                         day: daysList[index],
                         onTap: () async {
-                          setState(() {
-                            // ignore: avoid_function_literals_in_foreach_calls
-                            daysList.forEach(
-                              (d) => d.isSelected = false,
-                            );
-                            daysList[index].isSelected = true;
-                            dateTitle = DateFormat.MMMMd().format(
-                              daysList[index].dateTime,
-                            );
+                          if (mounted)
+                            setState(() {
+                              // ignore: avoid_function_literals_in_foreach_calls
+                              daysList.forEach(
+                                (d) => d.isSelected = false,
+                              );
+                              daysList[index].isSelected = true;
+                              dateTitle = DateFormat.MMMMd().format(
+                                daysList[index].dateTime,
+                              );
 
-                            _scrollToCurrentDay(index);
-                          });
+                              _scrollToCurrentDay(index);
+                            });
                           DateTime date = daysList[index].dateTime;
                           await setDate(date);
                         },

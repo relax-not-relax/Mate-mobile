@@ -1,7 +1,10 @@
+import 'dart:async';
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mate_project/data/project_data.dart';
+import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/news.dart';
 import 'package:mate_project/screens/notification/widgets/notification_element.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
@@ -17,85 +20,67 @@ class StaffNotificationScreen extends StatefulWidget {
 
 class _StaffNotificationScreenState extends State<StaffNotificationScreen> {
   List<News> notifications = [];
+  DatabaseReference? messagesRef;
+  List<StreamSubscription> listStream = [];
+  @override
+  void dispose() {
+    super.dispose();
+    for (var element in listStream) {
+      element.cancel();
+    }
+  }
+
+  int staffId = 0;
+
+  Future<int> getStaffId() async {
+    staffId = (await SharedPreferencesHelper.getStaff())!.staffId;
+    return staffId;
+  }
+
+  Future<void> markAllRead() async {
+    DatabaseReference? messagesRef2;
+    messagesRef2 =
+        FirebaseDatabase.instance.ref().child('notifications/staff$staffId');
+    for (var element in notifications) {
+      if (element.status == false) {
+        messagesRef2.child(element.id).child('isNew').set(false);
+      }
+    }
+    for (int i = 0; i < notifications.length; i++) {
+      if (notifications[i].status == false) {
+        notifications[i].status = true;
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // Test data, lấy dữ liệu danh sách thông báo của staff từ database
-    notifications = [
-      News(
-        avatar: "assets/pics/admin_avatar.png",
-        title: "Mate system",
-        description:
-            'You are assigned to take care of the "Sunflower" room on July 26.',
-        time: DateTime(2024, 7, 9, 3, 20),
-        status: false,
-      ),
-      News(
-        avatar: "assets/pics/admin_avatar.png",
-        title: "Mate system",
-        description:
-            'You are assigned to take care of the "Sunflower" room on July 27.',
-        time: DateTime(2024, 7, 9, 4, 20),
-        status: false,
-      ),
-      News(
-        avatar: "assets/pics/admin_avatar.png",
-        title: "Mate system",
-        description:
-            'You are assigned to take care of the "Sunflower" room on July 28.',
-        time: DateTime(2024, 7, 9, 4, 25),
-        status: true,
-      ),
-      News(
-        avatar: "assets/pics/admin_avatar.png",
-        title: "Mate system",
-        description:
-            'You are assigned to take care of the "Sunflower" room today.',
-        time: DateTime(2024, 7, 8, 4, 25),
-        status: true,
-      ),
-      News(
-        avatar: "assets/pics/admin_avatar.png",
-        title: "Mate system",
-        description:
-            'You are assigned to take care of the "Sunflower" room today.',
-        time: DateTime(2024, 7, 8, 4, 25),
-        status: true,
-      ),
-      News(
-        avatar: "assets/pics/admin_avatar.png",
-        title: "Mate system",
-        description:
-            'You are assigned to take care of the "Sunflower" room today.',
-        time: DateTime(2024, 7, 8, 4, 25),
-        status: true,
-      ),
-      News(
-        avatar: "assets/pics/admin_avatar.png",
-        title: "Mate system",
-        description:
-            'You are assigned to take care of the "Sunflower" room today.',
-        time: DateTime(2024, 7, 8, 4, 25),
-        status: true,
-      ),
-      News(
-        avatar: "assets/pics/admin_avatar.png",
-        title: "Mate system",
-        description:
-            'You are assigned to take care of the "Sunflower" room today.',
-        time: DateTime(2024, 7, 8, 4, 25),
-        status: true,
-      ),
-      News(
-        avatar: "assets/pics/admin_avatar.png",
-        title: "Mate system",
-        description:
-            'You are assigned to take care of the "Sunflower" room today.',
-        time: DateTime(2024, 7, 8, 4, 25),
-        status: true,
-      ),
-    ];
+    getStaffId().then(
+      (value) {
+        messagesRef =
+            FirebaseDatabase.instance.ref().child('notifications/staff$value');
+        listStream.add(messagesRef!.onChildAdded.listen((event) {
+          if (event.snapshot.value != null) {
+            News news = News(
+              id: event.snapshot.key ?? "",
+              avatar: "assets/pics/admin_avatar.png",
+              title: event.snapshot.child('title').value.toString(),
+              description: event.snapshot.child('content').value.toString(),
+              time:
+                  DateTime.parse(event.snapshot.child('time').value.toString()),
+              status:
+                  !bool.parse(event.snapshot.child('isNew').value.toString()),
+            );
+            if (mounted) {
+              setState(() {
+                notifications.add(news);
+              });
+            }
+          }
+        }));
+      },
+    );
   }
 
   bool isSameWeekAndDifferentDay(DateTime timeCheck) {
@@ -139,7 +124,9 @@ class _StaffNotificationScreenState extends State<StaffNotificationScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    markAllRead();
+                  },
                   child: Text(
                     "Mark all as read",
                     style: GoogleFonts.inter(

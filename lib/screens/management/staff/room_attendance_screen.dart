@@ -74,9 +74,11 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
         attendStatus = "";
         break;
     }
-    setState(() {
-      attendStatus;
-    });
+
+    if (mounted)
+      setState(() {
+        attendStatus;
+      });
     if (type.session == "Morning") {
       if (widget.attendance.morningAttendance.checkDate.day ==
               DateTime.now().day &&
@@ -85,13 +87,15 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
           widget.attendance.morningAttendance.checkDate.year ==
               DateTime.now().year &&
           DateTime.now().hour < 12) {
-        setState(() {
-          posibleSave = true;
-        });
+        if (mounted)
+          setState(() {
+            posibleSave = true;
+          });
       } else {
-        setState(() {
-          posibleSave = false;
-        });
+        if (mounted)
+          setState(() {
+            posibleSave = false;
+          });
       }
     } else {
       if (widget.attendance.morningAttendance.checkDate.day ==
@@ -101,27 +105,31 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
           widget.attendance.morningAttendance.checkDate.year ==
               DateTime.now().year &&
           DateTime.now().hour > 12) {
-        setState(() {
-          posibleSave = true;
-        });
+        if (mounted)
+          setState(() {
+            posibleSave = true;
+          });
       } else {
-        setState(() {
-          posibleSave = false;
-        });
+        if (mounted)
+          setState(() {
+            posibleSave = false;
+          });
       }
     }
   }
 
   void waitingForSelection() {
-    setState(() {
-      isSelecting = true;
-    });
+    if (mounted)
+      setState(() {
+        isSelecting = true;
+      });
   }
 
   void finishedSelection() {
-    setState(() {
-      isSelecting = false;
-    });
+    if (mounted)
+      setState(() {
+        isSelecting = false;
+      });
   }
 
   void onSelectAttendanceSession(AttendanceType aType) {
@@ -139,10 +147,12 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
           attendStatus = "";
           break;
       }
-      setState(() {
-        type = aType;
-        attendStatus;
-      });
+
+      if (mounted)
+        setState(() {
+          type = aType;
+          attendStatus;
+        });
     } else {
       switch (widget.attendance.eveningAttendance.status) {
         case 1:
@@ -155,10 +165,12 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
           attendStatus = "";
           break;
       }
-      setState(() {
-        type = aType;
-        attendStatus;
-      });
+
+      if (mounted)
+        setState(() {
+          type = aType;
+          attendStatus;
+        });
     }
     if (type.session == "Morning") {
       if (widget.attendance.morningAttendance.checkDate.day ==
@@ -168,13 +180,15 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
           widget.attendance.morningAttendance.checkDate.year ==
               DateTime.now().year &&
           DateTime.now().hour < 12) {
-        setState(() {
-          posibleSave = true;
-        });
+        if (mounted)
+          setState(() {
+            posibleSave = true;
+          });
       } else {
-        setState(() {
-          posibleSave = false;
-        });
+        if (mounted)
+          setState(() {
+            posibleSave = false;
+          });
       }
     } else {
       if (widget.attendance.morningAttendance.checkDate.day ==
@@ -184,13 +198,15 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
           widget.attendance.morningAttendance.checkDate.year ==
               DateTime.now().year &&
           DateTime.now().hour > 12) {
-        setState(() {
-          posibleSave = true;
-        });
+        if (mounted)
+          setState(() {
+            posibleSave = true;
+          });
       } else {
-        setState(() {
-          posibleSave = false;
-        });
+        if (mounted)
+          setState(() {
+            posibleSave = false;
+          });
       }
     }
     finishedSelection();
@@ -198,10 +214,12 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
 
   void onSelectAttendance(String aStatus) {
     waitingForSelection();
-    // Lưu ý: Xử lý trường hợp đã điểm danh thì không setState
-    setState(() {
-      attendStatus = aStatus;
-    });
+    // Lưu ý: Xử lý trường hợp đã điểm danh thì không     setState
+
+    if (mounted)
+      setState(() {
+        attendStatus = aStatus;
+      });
     finishedSelection();
   }
 

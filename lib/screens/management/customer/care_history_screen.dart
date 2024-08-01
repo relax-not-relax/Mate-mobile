@@ -40,9 +40,11 @@ class _CareHistoryScreenState extends State<CareHistoryScreen> {
         page: page,
         customerId: customer!.customerId);
     page++;
-    setState(() {
-      myAttendance = myAttendanceOrigin;
-    });
+
+    if (mounted)
+      setState(() {
+        myAttendance = myAttendanceOrigin;
+      });
   }
 
   void resetSearch() async {
@@ -53,9 +55,11 @@ class _CareHistoryScreenState extends State<CareHistoryScreen> {
         page: page,
         customerId: customer!.customerId);
     page++;
-    setState(() {
-      myAttendance = myAttendanceOrigin;
-    });
+
+    if (mounted)
+      setState(() {
+        myAttendance = myAttendanceOrigin;
+      });
   }
 
   List<String> filters = [
@@ -76,10 +80,12 @@ class _CareHistoryScreenState extends State<CareHistoryScreen> {
                 pageSize: size,
                 page: page,
                 customerId: customer!.customerId);
-        setState(() {
-          myAttendanceOrigin.addAll(listAdd);
-          myAttendance.addAll(listAdd);
-        });
+
+        if (mounted)
+          setState(() {
+            myAttendanceOrigin.addAll(listAdd);
+            myAttendance.addAll(listAdd);
+          });
         page++;
       }
     }
@@ -103,9 +109,11 @@ class _CareHistoryScreenState extends State<CareHistoryScreen> {
             .toLowerCase()
             .contains(search.toLowerCase()))
         .toList();
-    setState(() {
-      myAttendance;
-    });
+
+    if (mounted)
+      setState(() {
+        myAttendance;
+      });
   }
 
   void filter(String filter) async {
@@ -127,9 +135,11 @@ class _CareHistoryScreenState extends State<CareHistoryScreen> {
         pageSize: 0,
         page: 1,
         customerId: customer!.customerId);
-    setState(() {
-      myAttendance = myAttendanceOrigin;
-    });
+
+    if (mounted)
+      setState(() {
+        myAttendance = myAttendanceOrigin;
+      });
   }
 
   @override
@@ -176,9 +186,10 @@ class _CareHistoryScreenState extends State<CareHistoryScreen> {
                             );
                           }),
                           onChanged: (int? newValue) {
-                            setState(() {
-                              selectedYear = newValue!;
-                            });
+                            if (mounted)
+                              setState(() {
+                                selectedYear = newValue!;
+                              });
                           },
                           dropdownColor: Colors.white,
                         ),
@@ -203,9 +214,10 @@ class _CareHistoryScreenState extends State<CareHistoryScreen> {
                                     value: e,
                                     groupValue: filterOption,
                                     onChanged: (String? value) {
-                                      setState(() {
-                                        filterOption = value!;
-                                      });
+                                      if (mounted)
+                                        setState(() {
+                                          filterOption = value!;
+                                        });
                                     },
                                   ),
                                   Text(

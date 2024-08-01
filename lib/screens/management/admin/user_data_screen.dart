@@ -51,24 +51,26 @@ class _UserDataScreenState extends State<UserDataScreen>
     super.initState();
     getCustomers().then(
       (value) {
-        setState(() {
-          listCustomer = value;
-          content = CustomerList(
-            customers: listCustomer,
-          );
-          customerAmount = listCustomer.length;
-        });
+        if (mounted)
+          setState(() {
+            listCustomer = value;
+            content = CustomerList(
+              customers: listCustomer,
+            );
+            customerAmount = listCustomer.length;
+          });
       },
     );
     getStaff().then(
       (value) {
-        setState(() {
-          listStaff = value;
-          content = StaffList(
-            staffs: listStaff,
-          );
-          staffAmount = listStaff.length;
-        });
+        if (mounted)
+          setState(() {
+            listStaff = value;
+            content = StaffList(
+              staffs: listStaff,
+            );
+            staffAmount = listStaff.length;
+          });
       },
     );
     tabController = TabController(length: 2, vsync: this);
@@ -111,9 +113,10 @@ class _UserDataScreenState extends State<UserDataScreen>
               indicatorColor: const Color.fromARGB(255, 182, 177, 249),
               dividerColor: const Color.fromARGB(255, 41, 45, 50),
               onTap: (value) {
-                setState(() {
-                  tIndex = value;
-                });
+                if (mounted)
+                  setState(() {
+                    tIndex = value;
+                  });
                 switch (tIndex) {
                   case 0:
                     content = CustomerList(customers: listCustomer);

@@ -22,10 +22,11 @@ class _StartScreenState extends State<StartScreen> {
         seconds: 1,
       ),
       () {
-        setState(() {
-          _width = 148.03;
-          _height = 212;
-        });
+        if (mounted)
+          setState(() {
+            _width = 148.03;
+            _height = 212;
+          });
       },
     );
 
