@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:mate_project/screens/chat/admin/messages_list_screen.dart';
 import 'package:mate_project/screens/home/admin/widgets/data_management_view.dart';
@@ -133,36 +134,54 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                               ),
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return MessagesListScreen();
-                                  },
-                                ),
-                              );
-                            },
-                            child: CircleAvatar(
-                              backgroundColor: Color.fromARGB(169, 84, 87, 91),
-                              radius: 25,
-                              child: Badge(
-                                isLabelVisible: true,
-                                backgroundColor:
-                                    const Color.fromARGB(255, 84, 110, 255),
-                                label: Text(
-                                  "1",
-                                  style: GoogleFonts.inter(
-                                    color: Colors.white,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return MessagesListScreen();
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: CircleAvatar(
+                                  backgroundColor:
+                                      Color.fromARGB(169, 84, 87, 91),
+                                  radius: 25,
+                                  child: Badge(
+                                    isLabelVisible: true,
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 84, 110, 255),
+                                    label: Text(
+                                      "1",
+                                      style: GoogleFonts.inter(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    child: const Icon(
+                                      IconlyLight.chat,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                                child: const Icon(
-                                  IconlyLight.chat,
+                              ),
+                              SizedBox(
+                                width: 4.w,
+                              ),
+                              GestureDetector(
+                                onTap: () {},
+                                child: Icon(
+                                  IconsaxPlusLinear.logout_1,
+                                  size: 24.sp,
                                   color: Colors.white,
                                 ),
                               ),
-                            ),
+                            ],
                           )
                         ],
                       ),
