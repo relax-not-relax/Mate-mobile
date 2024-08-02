@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconly/iconly.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:mate_project/screens/home/admin/admin_home_screen.dart';
 import 'package:mate_project/screens/management/admin/admin_assign_screen.dart';
 import 'package:mate_project/screens/management/admin/admin_statistics_screen.dart';
+import 'package:mate_project/screens/management/admin/event_screen.dart';
 import 'package:mate_project/screens/management/admin/user_data_screen.dart';
 
 class AdminMainScreen extends StatefulWidget {
@@ -54,6 +56,9 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
       case 3:
         activePage = AdminStatisticsScreen();
         break;
+      case 4:
+        activePage = EventScreen();
+        break;
     }
 
     return Scaffold(
@@ -66,7 +71,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
           vertical: 16.h,
         ),
         margin: EdgeInsets.symmetric(
-          horizontal: 16.w,
+          horizontal: 8.w,
           vertical: 32.h,
         ),
         decoration: const BoxDecoration(
@@ -82,7 +87,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
             textSize: 12.sp,
             activeColor: Colors.white,
             tabBackgroundColor: const Color.fromARGB(255, 127, 119, 245),
-            gap: 8.w,
+            gap: 4.w,
             padding: EdgeInsets.all(16.w),
             onTabChange: (value) {
               _selectPage(value);
@@ -104,6 +109,10 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
               GButton(
                 icon: IconlyBold.chart,
                 text: "Statistics",
+              ),
+              GButton(
+                icon: IconsaxPlusBold.music_square_add,
+                text: "Event",
               ),
             ],
           ),
