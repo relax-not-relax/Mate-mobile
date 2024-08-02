@@ -11,6 +11,7 @@ class AccountEditDateField extends StatefulWidget {
     required this.title,
     this.errorText,
     required this.initBirthday,
+    this.titleColor,
     //required this.onDateChanged,
   });
 
@@ -18,6 +19,7 @@ class AccountEditDateField extends StatefulWidget {
   final String initBirthday;
   final String title;
   final String? errorText;
+  final Color? titleColor;
   //final void Function(String) onDateChanged;
 
   @override
@@ -47,7 +49,7 @@ class _AccountEditDateFieldState extends State<AccountEditDateField> {
         ignorePointers: true,
         style: GoogleFonts.inter(
           fontSize: 12.sp,
-          color: const Color.fromARGB(255, 108, 110, 116),
+          color: widget.titleColor ?? const Color.fromARGB(255, 108, 110, 116),
           fontWeight: FontWeight.w400,
         ),
         decoration: InputDecoration(
@@ -55,20 +57,21 @@ class _AccountEditDateFieldState extends State<AccountEditDateField> {
           labelStyle: GoogleFonts.inter(
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
-            color: const Color.fromARGB(255, 67, 90, 204),
+            color: widget.titleColor ?? const Color.fromARGB(255, 67, 90, 204),
           ),
           hintText: widget.title,
           prefixIcon: Icon(
             IconlyBold.calendar,
             size: 20.sp,
-            color: const Color.fromARGB(255, 67, 90, 204),
+            color: widget.titleColor ?? const Color.fromARGB(255, 67, 90, 204),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: const BorderRadius.all(
               Radius.circular(20.0),
             ),
             borderSide: BorderSide(
-              color: const Color.fromARGB(255, 148, 141, 246),
+              color:
+                  widget.titleColor ?? const Color.fromARGB(255, 148, 141, 246),
               width: 1.5.w,
             ),
           ),
@@ -77,7 +80,8 @@ class _AccountEditDateFieldState extends State<AccountEditDateField> {
               Radius.circular(20.0),
             ),
             borderSide: BorderSide(
-              color: const Color.fromARGB(255, 148, 141, 246),
+              color:
+                  widget.titleColor ?? const Color.fromARGB(255, 148, 141, 246),
               width: 1.5.w,
             ),
           ),

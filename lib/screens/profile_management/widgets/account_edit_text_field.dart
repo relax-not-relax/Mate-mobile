@@ -9,6 +9,7 @@ class AccountEditTextField extends StatefulWidget {
     required this.controller,
     this.borderColor,
     this.errorText,
+    this.titleColor,
     required this.iconData,
     required this.type,
     required this.title,
@@ -18,6 +19,7 @@ class AccountEditTextField extends StatefulWidget {
   final TextEditingController controller;
   final String? errorText;
   final Color? borderColor;
+  final Color? titleColor;
   final IconData iconData;
   final TextInputType type;
   final String title;
@@ -35,18 +37,19 @@ class _AccountEditTextFieldState extends State<AccountEditTextField> {
   void initState() {
     super.initState();
     _focusNode = FocusNode();
-    textColor = const Color.fromARGB(255, 108, 110, 116);
+    textColor = widget.titleColor ?? const Color.fromARGB(255, 108, 110, 116);
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
         if (mounted)
           setState(() {
-            textColor = Colors.black;
+            textColor = widget.titleColor ?? Colors.black;
           });
       } else {
         if (mounted)
           setState(() {
-            textColor = const Color.fromARGB(255, 108, 110, 116);
+            textColor =
+                widget.titleColor ?? const Color.fromARGB(255, 108, 110, 116);
           });
       }
     });
@@ -72,13 +75,13 @@ class _AccountEditTextFieldState extends State<AccountEditTextField> {
         labelStyle: GoogleFonts.inter(
           fontSize: 14.sp,
           fontWeight: FontWeight.w500,
-          color: const Color.fromARGB(255, 67, 90, 204),
+          color: widget.titleColor ?? const Color.fromARGB(255, 67, 90, 204),
         ),
         hintText: widget.title,
         prefixIcon: Icon(
           widget.iconData,
           size: 20.sp,
-          color: const Color.fromARGB(255, 67, 90, 204),
+          color: widget.titleColor ?? const Color.fromARGB(255, 67, 90, 204),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: const BorderRadius.all(

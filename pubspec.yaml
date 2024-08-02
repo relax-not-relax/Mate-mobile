@@ -57,6 +57,7 @@ dependencies:
   flutter_paypal: ^0.2.1
   url_launcher: ^6.0.20
   firebase_database: ^11.0.3
+  dotted_border: ^2.1.0
 
 dev_dependencies:
   flutter_test:
