@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:iconly/iconly.dart';
+import 'package:mate_project/models/analysis_response.dart';
 import 'package:mate_project/models/cash_flow.dart';
+import 'package:mate_project/repositories/analysis_repo.dart';
 import 'package:mate_project/screens/management/admin/none_statistics_screen.dart';
 import 'package:mate_project/screens/management/admin/statistics_details_screen.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
@@ -32,6 +35,30 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
     return data.fold(0.0, (total, cashFlow) => total + cashFlow.profit);
   }
 
+  Future<void> getAdvice(AnalysisResult analysisResult) async {
+    final apiKey = "AIzaSyAqtzgSzISIP7xFzEUUWpKohXvGB1kI1aU";
+    if (apiKey == null) {
+      print('No \$API_KEY environment variable');
+    }
+    // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
+    final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey);
+    final contentS = [Content.text(analysisResult.advice)];
+    final response = await model.generateContent(contentS);
+    analysisResult.advice = response.text ?? "Cannot analys";
+    content = StatisticsDetailsScreen(
+      data: analysisResult.listCashFlow,
+      month: selectedMonth,
+      year: selectedYear,
+      totalRevenue: getTotalRevenue(data),
+      totalProfit: getTotalProfit(data),
+      advice: analysisResult.advice,
+    );
+
+    setState(() {
+      content;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -41,115 +68,116 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
     // content sẽ được thay đổi phụ thuộc vào filter tháng, năm
     // Khi mới vào trang lần đầu thì filter sẽ là tháng, năm thời điểm hiện tại
     // Nếu tháng, năm thời điểm hiện tại chưa có thì content = NoneStatisticsScreen()
-    // content = NoneStatisticsScreen(
-    //   month: selectedMonth,
-    //   year: selectedYear,
-    // );
-
-    // Nếu tháng, năm thời điểm hiện tại đã có data thì content = StatisticsDetailsScreen();
-    data = [
-      CashFlow(
-        time: DateTime(2024, 5, 7, 0),
-        revenue: 500,
-        cost: 200,
-        profit: 300,
-      ),
-      CashFlow(
-        time: DateTime(2024, 5, 10, 0),
-        revenue: 1000,
-        cost: 1200,
-        profit: -200,
-      ),
-      CashFlow(
-        time: DateTime(2024, 5, 12, 0),
-        revenue: 400,
-        cost: 50,
-        profit: 350,
-      ),
-      CashFlow(
-        time: DateTime(2024, 5, 15, 0),
-        revenue: 500,
-        cost: 200,
-        profit: 300,
-      ),
-      CashFlow(
-        time: DateTime(2024, 5, 16, 0),
-        revenue: 1000,
-        cost: 1200,
-        profit: -200,
-      ),
-      CashFlow(
-        time: DateTime(2024, 5, 20, 0),
-        revenue: 400,
-        cost: 50,
-        profit: 350,
-      ),
-      CashFlow(
-        time: DateTime(2024, 5, 22, 0),
-        revenue: 500,
-        cost: 200,
-        profit: 300,
-      ),
-      CashFlow(
-        time: DateTime(2024, 5, 24, 0),
-        revenue: 1000,
-        cost: 1200,
-        profit: -200,
-      ),
-      CashFlow(
-        time: DateTime(2024, 5, 25, 0),
-        revenue: 400,
-        cost: 50,
-        profit: 350,
-      ),
-      CashFlow(
-        time: DateTime(2024, 5, 26, 0),
-        revenue: 500,
-        cost: 200,
-        profit: 300,
-      ),
-      CashFlow(
-        time: DateTime(2024, 5, 27, 0),
-        revenue: 1000,
-        cost: 1200,
-        profit: -200,
-      ),
-      CashFlow(
-        time: DateTime(2024, 5, 28, 0),
-        revenue: 400,
-        cost: 50,
-        profit: 350,
-      ),
-      CashFlow(
-        time: DateTime(2024, 5, 29, 0),
-        revenue: 100,
-        cost: 20,
-        profit: 80,
-      ),
-      CashFlow(
-        time: DateTime(2024, 5, 30, 0),
-        revenue: 1500,
-        cost: 500,
-        profit: 1000,
-      ),
-      CashFlow(
-        time: DateTime(2024, 5, 31, 0),
-        revenue: 2000,
-        cost: 1000,
-        profit: 1000,
-      ),
-    ];
-    // Call API to get advice
-    advice =
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
-    content = StatisticsDetailsScreen(
-      data: data,
+    content = NoneStatisticsScreen(
+      getAnalysis: getAdvice,
       month: selectedMonth,
       year: selectedYear,
-      totalRevenue: getTotalRevenue(data),
-      totalProfit: getTotalProfit(data),
-      advice: advice,
     );
+
+    // Nếu tháng, năm thời điểm hiện tại đã có data thì content = StatisticsDetailsScreen();
+    // data = [
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 7, 0),
+    //     revenue: 500,
+    //     cost: 200,
+    //     profit: 300,
+    //   ),
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 10, 0),
+    //     revenue: 1000,
+    //     cost: 1200,
+    //     profit: -200,
+    //   ),
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 12, 0),
+    //     revenue: 400,
+    //     cost: 50,
+    //     profit: 350,
+    //   ),
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 15, 0),
+    //     revenue: 500,
+    //     cost: 200,
+    //     profit: 300,
+    //   ),
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 16, 0),
+    //     revenue: 1000,
+    //     cost: 1200,
+    //     profit: -200,
+    //   ),
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 20, 0),
+    //     revenue: 400,
+    //     cost: 50,
+    //     profit: 350,
+    //   ),
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 22, 0),
+    //     revenue: 500,
+    //     cost: 200,
+    //     profit: 300,
+    //   ),
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 24, 0),
+    //     revenue: 1000,
+    //     cost: 1200,
+    //     profit: -200,
+    //   ),
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 25, 0),
+    //     revenue: 400,
+    //     cost: 50,
+    //     profit: 350,
+    //   ),
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 26, 0),
+    //     revenue: 500,
+    //     cost: 200,
+    //     profit: 300,
+    //   ),
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 27, 0),
+    //     revenue: 1000,
+    //     cost: 1200,
+    //     profit: -200,
+    //   ),
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 28, 0),
+    //     revenue: 400,
+    //     cost: 50,
+    //     profit: 350,
+    //   ),
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 29, 0),
+    //     revenue: 100,
+    //     cost: 20,
+    //     profit: 80,
+    //   ),
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 30, 0),
+    //     revenue: 1500,
+    //     cost: 500,
+    //     profit: 1000,
+    //   ),
+    //   CashFlow(
+    //     time: DateTime(2024, 5, 31, 0),
+    //     revenue: 2000,
+    //     cost: 1000,
+    //     profit: 1000,
+    //   ),
+    // ];
+    // // Call API to get advice
+    // advice =
+    //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+    // content = StatisticsDetailsScreen(
+    //   data: data,
+    //   month: selectedMonth,
+    //   year: selectedYear,
+    //   totalRevenue: getTotalRevenue(data),
+    //   totalProfit: getTotalProfit(data),
+    //   advice: advice,
+    // );
   }
 
   @override

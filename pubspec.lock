@@ -153,6 +153,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  file_picker:
+    dependency: "direct main"
+    description:
+      name: file_picker
+      sha256: be325344c1f3070354a1d84a231a1ba75ea85d413774ec4bdf444c023342e030
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.5.0"
   file_selector_linux:
     dependency: transitive
     description:
@@ -336,6 +344,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.1"
+  google_generative_ai:
+    dependency: "direct main"
+    description:
+      name: google_generative_ai
+      sha256: e2f4c0ac13f0898f670ce5ac0dc4501ebe09b96f9d59163724380d9aa82065be
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.4"
   google_nav_bar:
     dependency: "direct main"
     description:
@@ -561,7 +577,7 @@ packages:
     source: hosted
     version: "1.12.0"
   mime:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: mime
       sha256: "2e123074287cc9fd6c09de8336dae606d1ddb88d9ac47358826db698c176a1f2"

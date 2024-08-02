@@ -1,19 +1,24 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:mate_project/data/project_data.dart';
+import 'package:mate_project/models/analysis_response.dart';
+import 'package:mate_project/repositories/analysis_repo.dart';
 
 class NoneStatisticsScreen extends StatelessWidget {
   const NoneStatisticsScreen({
     super.key,
     required this.month,
     required this.year,
+    required this.getAnalysis,
   });
 
   final int month;
   final int year;
+  final Function(AnalysisResult analysisResult) getAnalysis;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +67,22 @@ class NoneStatisticsScreen extends StatelessWidget {
             spacing: 8.w,
             children: [
               ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () async {
+                  AnalysisRepository analysisRepository = AnalysisRepository();
+                  FilePickerResult? result =
+                      await FilePicker.platform.pickFiles(
+                    type: FileType.custom,
+                    allowedExtensions: ['xlsx', 'xls'],
+                  );
+
+                  if (result != null) {
+                    String filePath = result.files.single.path!;
+                    getAnalysis(await analysisRepository
+                        .uploadFileToAnalysis(filePath));
+                  } else {
+                    print("Không có file được chọn");
+                  }
+                },
                 icon: Icon(
                   IconsaxPlusLinear.document_upload,
                   size: 20.sp,

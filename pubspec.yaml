@@ -58,6 +58,10 @@ dependencies:
   url_launcher: ^6.0.20
   firebase_database: ^11.0.3
   dotted_border: ^2.1.0
+  google_generative_ai: ^0.4.4
+  mime: ^1.0.0
+  file_picker: ^5.0.0
+
 
 dev_dependencies:
   flutter_test:

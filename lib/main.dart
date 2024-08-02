@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:mate_project/blocs/customer_bloc.dart';
 import 'package:mate_project/blocs/staff_bloc.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
@@ -43,6 +44,9 @@ void main() async {
       : await Firebase.initializeApp();
   await Firebase.initializeApp();
   Rememberme? rememberme = await SharedPreferencesHelper.getRememberMe();
+
+  // Access your API key as an environment variable (see "Set up your API key" above)
+
   if (rememberme != null) {
     Authenrepository authenrepository = Authenrepository();
     try {
