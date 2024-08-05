@@ -252,6 +252,7 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
         body: BlocListener<StaffBloc, StaffState>(
           listener: (context, state) async {
             if (state is SaveAttendanceLoading) {
+              //them dialog
               dialogCustom.showWaitingDialog(
                 context,
                 'assets/pics/oldpeople.png',
@@ -262,6 +263,7 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
               );
             }
             if (state is SaveAttendanceSuccess) {
+              //them dialog
               Navigator.of(context).pop();
               dialogCustom.showWaitingDialog(
                 context,
@@ -279,6 +281,7 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
             }
             if (state is SaveAttendanceFailure &&
                 state.error.type == Failure.System) {
+              //them dialog
               dialogCustom.showSelectionDialog(
                 context,
                 'assets/pics/error.png',

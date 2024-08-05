@@ -49,8 +49,8 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
       data: analysisResult.listCashFlow,
       month: selectedMonth,
       year: selectedYear,
-      totalRevenue: getTotalRevenue(data),
-      totalProfit: getTotalProfit(data),
+      totalRevenue: getTotalRevenue(analysisResult.listCashFlow),
+      totalProfit: getTotalProfit(analysisResult.listCashFlow),
       advice: analysisResult.advice,
     );
 
