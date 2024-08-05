@@ -79,6 +79,7 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
     try {
       roomId = await customerRepository.checkPack(packId: selectedPack.packId);
     } catch (error) {
+      //them dialog
       print("This pack is full");
       return;
     }
@@ -143,12 +144,15 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
             },
             onError: (error) {
               if (error['name'] == 'INSTRUMENT_DECLINED') {
+                //them dialog
                 print("Khong du so du");
               } else {
+                //them dialog
                 print("thanh toan khong thanh cong");
               }
             },
             onCancel: (params) {
+              //them dialog
               print('Thanh toan khong thanh cong');
             }),
       ),
