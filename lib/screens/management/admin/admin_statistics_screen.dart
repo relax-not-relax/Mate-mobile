@@ -10,6 +10,7 @@ import 'package:mate_project/screens/management/admin/none_statistics_screen.dar
 import 'package:mate_project/screens/management/admin/statistics_details_screen.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
+import 'package:mate_project/widgets/form/normal_dialog_custom.dart';
 
 class AdminStatisticsScreen extends StatefulWidget {
   const AdminStatisticsScreen({super.key});
@@ -19,6 +20,8 @@ class AdminStatisticsScreen extends StatefulWidget {
 }
 
 class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
+  // Note mới nhất:
+  // Đọc note ở dòng 198
   Widget? content;
   late int selectedMonth;
   late int selectedYear;
@@ -62,8 +65,8 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
   @override
   void initState() {
     super.initState();
-    selectedMonth = 5;
-    selectedYear = 2024;
+    selectedMonth = DateTime.now().month;
+    selectedYear = DateTime.now().year;
 
     // content sẽ được thay đổi phụ thuộc vào filter tháng, năm
     // Khi mới vào trang lần đầu thì filter sẽ là tháng, năm thời điểm hiện tại
@@ -73,111 +76,6 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
       month: selectedMonth,
       year: selectedYear,
     );
-
-    // Nếu tháng, năm thời điểm hiện tại đã có data thì content = StatisticsDetailsScreen();
-    // data = [
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 7, 0),
-    //     revenue: 500,
-    //     cost: 200,
-    //     profit: 300,
-    //   ),
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 10, 0),
-    //     revenue: 1000,
-    //     cost: 1200,
-    //     profit: -200,
-    //   ),
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 12, 0),
-    //     revenue: 400,
-    //     cost: 50,
-    //     profit: 350,
-    //   ),
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 15, 0),
-    //     revenue: 500,
-    //     cost: 200,
-    //     profit: 300,
-    //   ),
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 16, 0),
-    //     revenue: 1000,
-    //     cost: 1200,
-    //     profit: -200,
-    //   ),
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 20, 0),
-    //     revenue: 400,
-    //     cost: 50,
-    //     profit: 350,
-    //   ),
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 22, 0),
-    //     revenue: 500,
-    //     cost: 200,
-    //     profit: 300,
-    //   ),
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 24, 0),
-    //     revenue: 1000,
-    //     cost: 1200,
-    //     profit: -200,
-    //   ),
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 25, 0),
-    //     revenue: 400,
-    //     cost: 50,
-    //     profit: 350,
-    //   ),
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 26, 0),
-    //     revenue: 500,
-    //     cost: 200,
-    //     profit: 300,
-    //   ),
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 27, 0),
-    //     revenue: 1000,
-    //     cost: 1200,
-    //     profit: -200,
-    //   ),
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 28, 0),
-    //     revenue: 400,
-    //     cost: 50,
-    //     profit: 350,
-    //   ),
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 29, 0),
-    //     revenue: 100,
-    //     cost: 20,
-    //     profit: 80,
-    //   ),
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 30, 0),
-    //     revenue: 1500,
-    //     cost: 500,
-    //     profit: 1000,
-    //   ),
-    //   CashFlow(
-    //     time: DateTime(2024, 5, 31, 0),
-    //     revenue: 2000,
-    //     cost: 1000,
-    //     profit: 1000,
-    //   ),
-    // ];
-    // // Call API to get advice
-    // advice =
-    //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
-    // content = StatisticsDetailsScreen(
-    //   data: data,
-    //   month: selectedMonth,
-    //   year: selectedYear,
-    //   totalRevenue: getTotalRevenue(data),
-    //   totalProfit: getTotalProfit(data),
-    //   advice: advice,
-    // );
   }
 
   @override
@@ -247,8 +145,8 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
                           }).toList(),
                           onChanged: (int? newValue) {
                             if (mounted)
+                              // ignore: curly_braces_in_flow_control_structures
                               setState(() {
-                                // Gọi     setState trong StatefulBuilder
                                 selectedMonth = newValue!;
                               });
                           },
@@ -274,6 +172,7 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
                           }),
                           onChanged: (int? newValue) {
                             if (mounted)
+                              // ignore: curly_braces_in_flow_control_structures
                               setState(() {
                                 selectedYear = newValue!;
                               });
@@ -287,7 +186,19 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
                     ),
                     NormalButtonCustom(
                       name: "Confirm",
-                      action: () {},
+                      action: () {
+                        NormalDialogCustom().showWaitingDialog(
+                          context,
+                          "assets/pics/analyst.png",
+                          "Wait a minute",
+                          "The system is performing data analysis.",
+                          false,
+                          const Color.fromARGB(255, 68, 60, 172),
+                        );
+                        // get ra dữ liệu của tháng và năm được chọn => setState cho content
+                        // ...
+                        Navigator.of(context).pop();
+                      },
                       background: const Color.fromARGB(255, 84, 110, 255),
                     ),
                   ],
