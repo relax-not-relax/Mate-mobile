@@ -12,6 +12,7 @@ import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/screens/authentication/login_selection_screen.dart';
+import 'package:mate_project/screens/chat/chat_screen.dart';
 import 'package:mate_project/screens/home/customer/home_screen.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/profile_management/account_address_screen.dart';
@@ -124,7 +125,7 @@ class _CustomerAccountMainScreenState extends State<CustomerAccountMainScreen> {
                               image: DecorationImage(
                                 image: (customer!.avatar != null &&
                                         customer!.avatar!.isNotEmpty)
-                                    ? AssetImage("assets/pics/user_test.png")
+                                    ? NetworkImage(customerR!.avatar!)
                                     : AssetImage("assets/pics/user_test.png"),
                                 fit: BoxFit.cover,
                               ),
@@ -329,7 +330,24 @@ class _CustomerAccountMainScreenState extends State<CustomerAccountMainScreen> {
                     AccountEditElement(
                       icon: IconsaxPlusLinear.messages_2,
                       title: "Need help? Let’s chat",
-                      choose: () {},
+                      choose: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return MainScreen(
+                                inputScreen: ChatScreen(
+                                  isAdmin: false,
+                                  customerResponse: customerR!,
+                                ),
+                                screenIndex: 1,
+                                customerResponse: customerR!,
+                              );
+                            },
+                          ),
+                          (route) => false,
+                        );
+                      },
                     ),
                   ],
                 ),

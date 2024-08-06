@@ -26,6 +26,14 @@ class EditFavorite extends StatefulWidget {
 }
 
 class _EditFavoriteState extends State<EditFavorite> {
+  List<String> selectedF = [];
+
+  @override
+  void initState() {
+    super.initState();
+    selectedF.addAll(widget.selected);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -89,7 +97,7 @@ class _EditFavoriteState extends State<EditFavorite> {
         SizedBox(
           height: 8.h,
         ),
-        widget.selected.length > 5
+        selectedF.length > 5
             ? Align(
                 alignment: Alignment.topLeft,
                 child: Column(
@@ -127,7 +135,7 @@ class _EditFavoriteState extends State<EditFavorite> {
                 showCheckmark: false,
                 label: Text(
                   e,
-                  style: widget.selected.contains(e)
+                  style: selectedF.contains(e)
                       ? GoogleFonts.inter(
                           color: Colors.white,
                           fontSize: 13.sp,
@@ -139,10 +147,10 @@ class _EditFavoriteState extends State<EditFavorite> {
                           fontWeight: FontWeight.w500,
                         ),
                 ),
-                selected: widget.selected.contains(e),
+                selected: selectedF.contains(e),
                 onSelected: (value) {
                   widget.onHobbyChanged(
-                    widget.selected,
+                    selectedF,
                     value,
                     e,
                     widget.controller,

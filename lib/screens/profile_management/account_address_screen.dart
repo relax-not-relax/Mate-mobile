@@ -9,6 +9,7 @@ import 'package:mate_project/blocs/customer_bloc.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
 import 'package:mate_project/screens/profile_management/edit_address_screen.dart';
 import 'package:mate_project/screens/profile_management/widgets/account_edit_selection_field.dart';
@@ -26,11 +27,7 @@ class AccountAddressScreen extends StatefulWidget {
 class _AccountAddressScreenState extends State<AccountAddressScreen> {
   // ignore: prefer_final_fields
   TextEditingController _addressController = TextEditingController();
-
-  //Test data (Thay đổi khi call API để lấy dữ liệu)
-  //Check xem account đăng nhập đang là role nào (customer hay staff) và sử dụng tương ứng
   CustomerResponse? customer;
-  //late Staff staff;
 
   Future getAddress() async {
     customer = await SharedPreferencesHelper.getCustomer();
@@ -63,18 +60,17 @@ class _AccountAddressScreenState extends State<AccountAddressScreen> {
           isBordered: false,
           isBack: true,
           back: () {
-            Navigator.pushReplacement(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  // Thay đổi theo role
-                  // Nếu là Customer thì back về CustomerAccountMainScreen()
-                  return const CustomerAccountMainScreen();
-
-                  // Nếu là Staff thì back về StaffAccountMainScreen()
-                  // return const StaffAccountMainScreen();
+                  return MainScreen(
+                      inputScreen: CustomerAccountMainScreen(),
+                      screenIndex: 3,
+                      customerResponse: customer!);
                 },
               ),
+              (route) => false,
             );
           },
         ),

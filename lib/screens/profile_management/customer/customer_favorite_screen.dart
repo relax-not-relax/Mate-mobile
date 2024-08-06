@@ -13,6 +13,7 @@ import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/models/request/update_customer_request.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
 import 'package:mate_project/screens/profile_management/widgets/account_edit_selection_field.dart';
 import 'package:mate_project/screens/profile_management/widgets/account_edit_text_field.dart';
@@ -110,7 +111,10 @@ class _CustomerFavoriteScreenState extends State<CustomerFavoriteScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return const CustomerAccountMainScreen();
+                  return MainScreen(
+                      inputScreen: CustomerAccountMainScreen(),
+                      screenIndex: 3,
+                      customerResponse: customer!);
                 },
               ),
             );
