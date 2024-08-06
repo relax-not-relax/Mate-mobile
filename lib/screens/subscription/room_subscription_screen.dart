@@ -15,9 +15,14 @@ import 'package:mate_project/models/request/add_customer_to_room_request.dart';
 import 'package:mate_project/models/request/buy_pack_request.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/repositories/customer_repo.dart';
+import 'package:mate_project/screens/home/customer/home_screen.dart';
+import 'package:mate_project/screens/home/customer/main_screen.dart';
+import 'package:mate_project/screens/subscription/room_details_screen.dart';
 import 'package:mate_project/screens/subscription/widgets/subscription_selection.dart';
 import 'package:mate_project/states/customer_state.dart';
+import 'package:mate_project/widgets/form/disabled_button_custom.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
+import 'package:mate_project/widgets/form/normal_dialog_custom.dart';
 import 'package:unicons/unicons.dart';
 
 class RoomSubscriptionScreen extends StatefulWidget {
@@ -31,6 +36,14 @@ class RoomSubscriptionScreen extends StatefulWidget {
 
 class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
   bool isSelecting = false;
+  // Note mới nhất:
+  // selectedPack sẽ là gói vàng nếu người dùng mới vào trang này lần đầu
+  // Nếu người dùng đã mua gói, thì selecredPack sẽ là gói mà người dùng sở hữu
+  // Sửa đổi selectedPack trong initState
+  // Ở dòng 299, nếu người dùng đã sở hữu gói thì child: DisabledButtonCustom(name: "Go to payment"),
+  // Ở dòng 252, thêm điều kiện trong if(nếu người dùng đã sở hữu gói nào đó) (tự thêm bằng code)
+  // Ở dòng 348, nếu người dùng đã sở hữu gói nào đó thì "(Gold, Silver, Bronze)+ member" còn không thì để "Regular member"
+
   late Pack selectedPack;
   final CustomerResponse customer;
 
@@ -80,6 +93,18 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
       roomId = await customerRepository.checkPack(packId: selectedPack.packId);
     } catch (error) {
       //them dialog
+      NormalDialogCustom().showSelectionDialog(
+        context,
+        "assets/pics/sorry.png",
+        "We have some problems",
+        "This membership plan is currently full. Please consider other available options.",
+        false,
+        const Color.fromARGB(255, 84, 110, 255),
+        "Got it",
+        () {
+          Navigator.of(context).pop();
+        },
+      );
       print("This pack is full");
       return;
     }
@@ -145,14 +170,50 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
             onError: (error) {
               if (error['name'] == 'INSTRUMENT_DECLINED') {
                 //them dialog
+                NormalDialogCustom().showSelectionDialog(
+                  context,
+                  "assets/pics/sorry.png",
+                  "We have some problems",
+                  "Your balance is insufficient to purchase this package. Please try again.",
+                  false,
+                  const Color.fromARGB(255, 84, 110, 255),
+                  "Got it",
+                  () {
+                    Navigator.of(context).pop();
+                  },
+                );
                 print("Khong du so du");
               } else {
                 //them dialog
+                NormalDialogCustom().showSelectionDialog(
+                  context,
+                  "assets/pics/sorry.png",
+                  "We have some problems",
+                  "Payment unsuccessful. Please try again.",
+                  false,
+                  const Color.fromARGB(255, 84, 110, 255),
+                  "Got it",
+                  () {
+                    Navigator.of(context).pop();
+                  },
+                );
                 print("thanh toan khong thanh cong");
               }
             },
             onCancel: (params) {
               //them dialog
+              NormalDialogCustom().showSelectionDialog(
+                context,
+                "assets/pics/sorry.png",
+                "We have some problems",
+                "Payment unsuccessful. Please try again.",
+                false,
+                const Color.fromARGB(255, 84, 110, 255),
+                "Got it",
+                () {
+                  Navigator.of(context).pop();
+                },
+              );
               print('Thanh toan khong thanh cong');
             }),
       ),
@@ -191,7 +252,22 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
               weight: 3,
             ),
             onPressed: () {
-              //Navigator.pop(context);
+              // if () {
+              //   Navigator.pushAndRemoveUntil(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) {
+              //         return MainScreen(
+              //             inputScreen: HomeScreen(),
+              //             screenIndex: 0,
+              //             customerResponse: customer);
+              //       },
+              //     ),
+              //     (route) => false,
+              //   );
+              // } else {
+              //   return;
+              // }
             },
           ),
           SizedBox(
@@ -315,7 +391,7 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
                           onSelectPack: handlePackChange,
                         ),
                         SizedBox(
-                          height: 16.h,
+                          height: 8.h,
                         ),
                         Column(
                           mainAxisSize: MainAxisSize.min,
@@ -353,12 +429,36 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
                                     ],
                                   ),
                                   SizedBox(
-                                    height: 8.h,
+                                    height: 2.h,
                                   ),
                                 ],
                               );
                             },
                           ).toList(),
+                        ),
+                        SizedBox(
+                          height: 4.h,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return RoomDetailsScreen(pack: selectedPack);
+                                },
+                              ),
+                              (route) => false,
+                            );
+                          },
+                          child: Text(
+                            "View details",
+                            style: GoogleFonts.inter(
+                              fontSize: 13.sp,
+                              color: const Color.fromARGB(255, 76, 102, 232),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         )
                       ],
                     ),
