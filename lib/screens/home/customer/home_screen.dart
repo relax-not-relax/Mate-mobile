@@ -13,6 +13,7 @@ import 'package:mate_project/screens/home/customer/widgets/lock_my_room.dart';
 import 'package:mate_project/screens/home/customer/widgets/my_room.dart';
 import 'package:mate_project/screens/home/customer/widgets/open_event.dart';
 import 'package:mate_project/screens/home/customer/widgets/room_membership.dart';
+import 'package:mate_project/screens/subscription/room_subscription_screen.dart';
 import 'package:mate_project/widgets/app_bar/main_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -101,6 +102,17 @@ class _HomeScreenState extends State<HomeScreen>
           fullName: customer != null ? customer!.fullname : "loading...",
           avatar: "assets/pics/user_test.png",
         ),
+        open: () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return RoomSubscriptionScreen(customer: customer!);
+              },
+            ),
+            (route) => false,
+          );
+        },
       ),
       body: Container(
         width: 360.w,

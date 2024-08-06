@@ -3,14 +3,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mate_project/models/customer.dart';
+import 'package:mate_project/screens/subscription/room_subscription_screen.dart';
 
 class TMainAppBar extends StatelessWidget implements PreferredSizeWidget {
   const TMainAppBar({
     super.key,
     required this.customer,
+    required this.open,
   });
 
   final Customer? customer;
+  final void Function() open;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +57,7 @@ class TMainAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: open,
                   child: const Icon(
                     IconlyBold.category,
                     color: Color.fromARGB(255, 35, 47, 107),

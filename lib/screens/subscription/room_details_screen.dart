@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_project/data/project_data.dart';
 import 'package:mate_project/models/pack.dart';
+import 'package:mate_project/screens/subscription/room_subscription_screen.dart';
 
 import 'package:mate_project/screens/subscription/widgets/mirror_filter.dart';
 import 'package:readmore/readmore.dart';
@@ -22,6 +23,10 @@ class RoomDetailsScreen extends StatefulWidget {
 }
 
 class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
+  // Note mới nhất:
+  // Dòng 89, sử lý get customer chuyển về trang RoomSubscriptionScreen
+  // Nhớ đọc note dòng 311
+
   String bigImg = "";
   List<String> titles = [
     "Gold Room: Elevate Your Elderly Care Experience",
@@ -34,6 +39,12 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
     "assets/pics/user_test_1.png",
     "assets/pics/user_test_2.png",
     "assets/pics/user_test_3.png",
+  ];
+
+  List<String> descriptions = [
+    "Gold Room offers a premium living experience with comprehensive care services to cater to your refined needs. Gold Room is the perfect choice for those seeking a life of comfort, convenience, and attentive care at our elderly care facility.",
+    "Silver Room offers comfortable accommodations and a range of services to make your stay enjoyable. Silver Room is a great option for those seeking a comfortable and welcoming living space with essential amenities and services.",
+    "Bronze Room provides a comfortable and affordable living option with essential amenities and services. Bronze Room is an excellent choice for those seeking a basic yet comfortable living space at a cost-effective price."
   ];
 
   @override
@@ -52,15 +63,19 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     String title = "";
+    String description = "";
     switch (widget.pack.packId) {
       case 1:
         title = titles[0];
+        description = descriptions[0];
         break;
       case 2:
         title = titles[1];
+        description = descriptions[1];
         break;
       case 3:
         title = titles[2];
+        description = descriptions[2];
         break;
     }
 
@@ -71,7 +86,15 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            // Navigator.pushAndRemoveUntil(
+            //   context,
+            //   MaterialPageRoute(builder: (context) {
+            //     return RoomSubscriptionScreen(customer: customer)
+            //   },),
+            //   (route) => false,
+            // );
+          },
           style: const ButtonStyle(
             backgroundColor: WidgetStatePropertyAll(
               Color.fromARGB(61, 28, 28, 28),
@@ -259,7 +282,7 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
                           horizontal: 24.w,
                         ),
                         child: ReadMoreText(
-                          widget.pack.description,
+                          description,
                           trimLines: 3,
                           textAlign: TextAlign.start,
                           trimMode: TrimMode.Line,
@@ -285,6 +308,7 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
                       SizedBox(
                         height: 24.h,
                       ),
+                      // TODO: Bên dưới dòng này là widget để người dùng chọn mua gói, nếu người dùng đã mua gói thì hiển thị widget đã được comment từ dòng 378 -> 444 (nhớ đọc comment dòng 420)
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 24.w,
@@ -351,6 +375,73 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
                           ),
                         ),
                       ),
+                      // Padding(
+                      //   padding: EdgeInsets.symmetric(
+                      //     horizontal: 24.w,
+                      //   ),
+                      //   child: ElevatedButton(
+                      //     onPressed: () {},
+                      //     style: ButtonStyle(
+                      //       backgroundColor: const WidgetStatePropertyAll(
+                      //         Color.fromARGB(255, 183, 183, 183),
+                      //       ),
+                      //       fixedSize: WidgetStatePropertyAll(
+                      //         Size(360.w, 59.h),
+                      //       ),
+                      //       shape: WidgetStatePropertyAll(
+                      //         RoundedRectangleBorder(
+                      //           side: const BorderSide(
+                      //             color: Color.fromARGB(255, 183, 183, 183),
+                      //           ),
+                      //           borderRadius: BorderRadius.circular(10),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     child: Padding(
+                      //       padding: EdgeInsets.symmetric(
+                      //         horizontal: 16.w,
+                      //       ),
+                      //       child: Row(
+                      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //         crossAxisAlignment: CrossAxisAlignment.center,
+                      //         children: [
+                      //           Text(
+                      //             "Choose pack",
+                      //             style: GoogleFonts.inter(
+                      //               fontSize: 12.sp,
+                      //               fontWeight: FontWeight.w600,
+                      //               color: Colors.white,
+                      //             ),
+                      //           ),
+                      //           Wrap(
+                      //             crossAxisAlignment: WrapCrossAlignment.center,
+                      //             children: [
+                      //               Text(
+                      //                 // giá tiền của gói, nhớ thay đổi
+                      //                 "\$1000",
+                      //                 style: GoogleFonts.inter(
+                      //                   fontSize: 14.sp,
+                      //                   fontWeight: FontWeight.w700,
+                      //                   color: Colors.white,
+                      //                 ),
+                      //               ),
+                      //               Text(
+                      //                 "/per year",
+                      //                 style: GoogleFonts.inter(
+                      //                   fontSize: 12.sp,
+                      //                   fontWeight: FontWeight.w400,
+                      //                   color: Colors.white,
+                      //                 ),
+                      //                 maxLines: 1,
+                      //                 overflow: TextOverflow.ellipsis,
+                      //               )
+                      //             ],
+                      //           )
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
