@@ -255,9 +255,14 @@ class _MyRoomScreenState extends State<MyRoomScreen> {
                                 children: [
                                   CircleAvatar(
                                     radius: 24.w,
-                                    backgroundImage: AssetImage(
-                                      myInfo!.avatar!,
-                                    ),
+                                    backgroundImage: customer == null
+                                        ? AssetImage(
+                                            "assets/pics/user_test.png")
+                                        : (customer!.avatar != null &&
+                                                customer!.avatar!.isNotEmpty)
+                                            ? NetworkImage(customer!.avatar!)
+                                            : AssetImage(
+                                                "assets/pics/user_test.png"),
                                   ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -285,19 +290,6 @@ class _MyRoomScreenState extends State<MyRoomScreen> {
                                     ],
                                   )
                                 ],
-                              ),
-                              IconButton(
-                                onPressed: () {},
-                                style: ButtonStyle(
-                                  backgroundColor: WidgetStatePropertyAll(
-                                    buttonBackground,
-                                  ),
-                                ),
-                                icon: Icon(
-                                  UniconsLine.multiply,
-                                  size: 20.sp,
-                                  color: Colors.white,
-                                ),
                               ),
                             ],
                           ),
@@ -492,8 +484,11 @@ class _MyRoomScreenState extends State<MyRoomScreen> {
                               children: [
                                 CircleAvatar(
                                   radius: 22.w,
-                                  backgroundImage:
-                                      (staff == null || staff!.avatar == null)
+                                  backgroundImage: staff == null
+                                      ? const AssetImage(
+                                          "assets/pics/nurse.png")
+                                      : (staff!.avatar == null &&
+                                              staff!.avatar!.isEmpty)
                                           ? const AssetImage(
                                               "assets/pics/nurse.png")
                                           : NetworkImage(staff!.avatar!),

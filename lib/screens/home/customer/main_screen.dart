@@ -139,23 +139,26 @@ class _MainScreenState extends State<MainScreen> {
             _selectPage(value);
           },
           selectedIndex: _selectedPageIndex,
-          tabs: const [
-            GButton(
+          tabs: [
+            const GButton(
               icon: IconlyBold.home,
               text: "Home",
             ),
-            GButton(
+            const GButton(
               icon: IconlyBold.chat,
               text: "Chat",
             ),
-            GButton(
+            const GButton(
               icon: IconlyBold.calendar,
               text: "Schedule",
             ),
             GButton(
               icon: IconlyBold.user_2,
               leading: CircleAvatar(
-                backgroundImage: AssetImage("assets/pics/user_test.png"),
+                backgroundImage: (widget.customerResponse.avatar != null &&
+                        widget.customerResponse.avatar!.isNotEmpty)
+                    ? NetworkImage(widget.customerResponse.avatar!)
+                    : AssetImage("assets/pics/user_test.png"),
                 radius: 16,
               ),
               text: "Account",

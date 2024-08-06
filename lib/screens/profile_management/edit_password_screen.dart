@@ -7,6 +7,7 @@ import 'package:mate_project/enums/failure_enum.dart';
 import 'package:mate_project/events/customer_event.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/request/password_request.dart';
+import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/home/staff/staff_main_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
 import 'package:mate_project/screens/profile_management/staff/staff_account_main_screen.dart';
@@ -25,6 +26,7 @@ class EditPasswordScreen extends StatefulWidget {
 }
 
 class _EditPasswordScreenState extends State<EditPasswordScreen> {
+  // Note mới nhất: đọc comment dòng 181
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -176,14 +178,15 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
                 (route) => false,
               );
             } else {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const CustomerAccountMainScreen();
-                  },
-                ),
-              );
+              // TODO: chỗ customerResponse không biết truyền biến gì
+              // Navigator.pushReplacement(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return const MainScreen(inputScreen: CustomerAccountMainScreen(), screenIndex: 3, customerResponse: );
+              //     },
+              //   ),
+              // );
             }
           },
         ),

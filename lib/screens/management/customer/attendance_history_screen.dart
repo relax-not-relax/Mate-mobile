@@ -7,6 +7,7 @@ import 'package:mate_project/models/attendance.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/models/room.dart';
 import 'package:mate_project/repositories/attendance_repo.dart';
+import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/management/customer/my_room_screen.dart';
 import 'package:mate_project/screens/management/customer/widgets/attendance_history_details.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
@@ -313,19 +314,24 @@ class _AttendanceHistoryScreenState extends State<AttendanceHistoryScreen> {
         isBordered: false,
         isBack: true,
         back: () {
-          Navigator.pushReplacement(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
               builder: (context) {
-                return MyRoomScreen(
-                  myRoom: Room(
-                    roomId: 1,
-                    managerId: 1,
-                    roomName: "“Sunflower” Room",
+                return MainScreen(
+                  inputScreen: MyRoomScreen(
+                    myRoom: Room(
+                      roomId: 1,
+                      managerId: 1,
+                      roomName: "“Sunflower” Room",
+                    ),
                   ),
+                  screenIndex: 2,
+                  customerResponse: customer!,
                 );
               },
             ),
+            (route) => false,
           );
         },
         action: IconButton(
