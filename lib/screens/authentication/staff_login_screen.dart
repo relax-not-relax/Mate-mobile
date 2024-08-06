@@ -114,6 +114,7 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
               });
             }
             if (state is LoginFail && state.error.type == Failure.System) {
+              Navigator.of(context).pop();
               dialogCustom.showSelectionDialog(
                 context,
                 'assets/pics/error.png',

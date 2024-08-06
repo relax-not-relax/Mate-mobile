@@ -117,6 +117,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
           });
         }
         if (state is LoginFail && state.error.type == Failure.System) {
+          Navigator.of(context).pop();
           dialogCustom.showSelectionDialog(
             context,
             'assets/pics/error.png',

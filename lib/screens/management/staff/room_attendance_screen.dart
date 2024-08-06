@@ -255,26 +255,25 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
               //them dialog
               dialogCustom.showWaitingDialog(
                 context,
-                'assets/pics/oldpeople.png',
-                "Wating..",
-                "Togetherness - Companion - Sharing",
-                true,
+                'assets/pics/checking.gif',
+                "Wate a minute",
+                "The system is currently storing attendance records.",
+                false,
                 const Color.fromARGB(255, 68, 60, 172),
               );
             }
             if (state is SaveAttendanceSuccess) {
               //them dialog
               Navigator.of(context).pop();
-              dialogCustom.showWaitingDialog(
+              dialogCustom.showSelectionDialog(
                 context,
-                'assets/pics/oldpeople.png',
-                "Save success",
-                "Togetherness - Companion - Sharing",
-                true,
-                const Color.fromARGB(255, 68, 60, 172),
-              );
-              Future.delayed(Duration(seconds: 1)).then(
-                (value) {
+                "assets/pics/checkAt.png",
+                "Successfully!",
+                "Attendance has been marked successfully.",
+                false,
+                const Color.fromARGB(255, 84, 110, 255),
+                "Got it",
+                () {
                   Navigator.of(context).pop();
                 },
               );
@@ -285,9 +284,9 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
               dialogCustom.showSelectionDialog(
                 context,
                 'assets/pics/error.png',
-                'Save Fail',
-                'Please check again',
-                true,
+                'Have a trouble!',
+                'Attendance marking was unsuccessful',
+                false,
                 const Color.fromARGB(255, 230, 57, 71),
                 'Continue',
                 () {
