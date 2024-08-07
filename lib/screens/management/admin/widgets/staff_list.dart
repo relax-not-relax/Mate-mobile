@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_project/models/staff.dart';
+import 'package:mate_project/screens/management/admin/add_staff_screen.dart';
 import 'package:mate_project/screens/management/admin/widgets/search_field.dart';
 import 'package:mate_project/screens/management/admin/widgets/staff_element.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
@@ -209,6 +210,35 @@ class _StaffListState extends State<StaffList> {
               displayBottomSheet(context);
             },
             hint: "Search for staff",
+          ),
+        ),
+        SizedBox(
+          height: 8.h,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 24.w,
+          ),
+          child: InkWell(
+            onTap: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const AddStaffScreen();
+                  },
+                ),
+                (route) => false,
+              );
+            },
+            child: Text(
+              "Add a new staff?",
+              style: GoogleFonts.inter(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
+                color: const Color.fromARGB(255, 84, 110, 255),
+              ),
+            ),
           ),
         ),
         SizedBox(

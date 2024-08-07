@@ -73,9 +73,12 @@ class _StaffElementState extends State<StaffElement> {
               children: [
                 CircleAvatar(
                   radius: 25.w,
-                  backgroundImage: widget.staff.avatar == null
-                      ? AssetImage("assets/pics/no_ava.png")
-                      : NetworkImage(widget.staff.avatar!),
+                  backgroundImage: widget.staff.avatar != null &&
+                          widget.staff.avatar!.isNotEmpty
+                      ? widget.staff.avatar!.compareTo("LinkstaffAVT") == 0
+                          ? const AssetImage("assets/pics/nurse.png")
+                          : NetworkImage(widget.staff.avatar!)
+                      : const AssetImage("assets/pics/nurse.png"),
                 ),
                 SizedBox(
                   width: 16.w,
