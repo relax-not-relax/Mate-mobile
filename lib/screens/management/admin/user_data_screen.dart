@@ -28,6 +28,7 @@ class _UserDataScreenState extends State<UserDataScreen>
   late int staffAmount;
   CustomerRepository customerRepository = CustomerRepository();
   StaffRepository staffRepository = StaffRepository();
+  Widget content = Container();
 
   List<CustomerResponse> listCustomer = [];
   List<Staff> listStaff = [];
@@ -51,32 +52,33 @@ class _UserDataScreenState extends State<UserDataScreen>
     super.initState();
     getCustomers().then(
       (value) {
-        if (mounted)
+        if (mounted) {
           setState(() {
             listCustomer = value;
+            print(listCustomer);
             content = CustomerList(
               customers: listCustomer,
             );
             customerAmount = listCustomer.length;
           });
+        }
       },
     );
     getStaff().then(
       (value) {
-        if (mounted)
+        if (mounted) {
           setState(() {
             listStaff = value;
-            content = StaffList(
-              staffs: listStaff,
-            );
             staffAmount = listStaff.length;
           });
+        }
       },
     );
     tabController = TabController(length: 2, vsync: this);
     // Test data (Call API để lấy dữ liệu)
     customerAmount = 100;
     staffAmount = 30;
+    tIndex = 0;
   }
 
   @override
@@ -85,7 +87,20 @@ class _UserDataScreenState extends State<UserDataScreen>
     super.dispose();
   }
 
-  Widget content = Container();
+  void switchTab(int index) {
+    setState(() {
+      switch (tIndex) {
+        case 0:
+          content = CustomerList(customers: listCustomer);
+          break;
+        case 1:
+          content = StaffList(
+            staffs: listStaff,
+          );
+          break;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,20 +128,12 @@ class _UserDataScreenState extends State<UserDataScreen>
               indicatorColor: const Color.fromARGB(255, 182, 177, 249),
               dividerColor: const Color.fromARGB(255, 41, 45, 50),
               onTap: (value) {
-                if (mounted)
+                if (mounted) {
                   setState(() {
                     tIndex = value;
                   });
-                switch (tIndex) {
-                  case 0:
-                    content = CustomerList(customers: listCustomer);
-                    break;
-                  case 1:
-                    content = StaffList(
-                      staffs: listStaff,
-                    );
-                    break;
                 }
+                switchTab(tIndex);
               },
               tabs: [
                 Tab(

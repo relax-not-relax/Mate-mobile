@@ -99,4 +99,9 @@ class CustomerResponse {
       'customerInRooms': roomToJson
     };
   }
+
+  @override
+  String toString() {
+    return "${fullname} ${avatar}";
+  }
 }

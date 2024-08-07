@@ -78,8 +78,11 @@ class _CustomerElementState extends State<CustomerElement> {
               children: [
                 CircleAvatar(
                   radius: 25.w,
-                  backgroundImage: widget.customer.avatar != null
-                      ? NetworkImage(widget.customer.avatar!)
+                  backgroundImage: widget.customer.avatar != null &&
+                          widget.customer.avatar!.isNotEmpty
+                      ? widget.customer.avatar!.compareTo("linkAVT") == 0
+                          ? const AssetImage("assets/pics/no_ava.png")
+                          : NetworkImage(widget.customer.avatar!)
                       : const AssetImage("assets/pics/no_ava.png"),
                 ),
                 SizedBox(
