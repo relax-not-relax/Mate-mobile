@@ -3,9 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_project/models/customer.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/repositories/customer_repo.dart';
 import 'package:mate_project/screens/management/admin/widgets/customer_element.dart';
 import 'package:mate_project/screens/management/admin/widgets/search_field.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
+import 'package:mate_project/widgets/form/normal_dialog_custom.dart';
 
 class CustomerList extends StatefulWidget {
   const CustomerList({super.key, required this.customers});
@@ -42,7 +44,6 @@ class _CustomerListState extends State<CustomerList> {
   void initState() {
     super.initState();
     _controller.text = "";
-    // Call API to get customers
   }
 
   @override
@@ -96,7 +97,34 @@ class _CustomerListState extends State<CustomerList> {
                   height: 16.h,
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    NormalDialogCustom().showWaitingDialog(
+                      context,
+                      "assets/pics/analyst.png",
+                      "Wait a minute",
+                      "Deactive user!",
+                      false,
+                      const Color.fromARGB(255, 68, 60, 172),
+                    );
+                    CustomerRepository customerRepository =
+                        CustomerRepository();
+                    await customerRepository
+                        .deactiveCustomer(customer.customerId);
+                    Navigator.of(context).pop();
+                    if (mounted) {
+                      setState(() {
+                        customers.remove(customer);
+                      });
+                    }
+                    NormalDialogCustom().showWaitingDialog(
+                      context,
+                      "assets/pics/analyst.png",
+                      "Done",
+                      "Deactive user!",
+                      true,
+                      const Color.fromARGB(255, 68, 60, 172),
+                    );
+                  },
                   child: Text(
                     "Deactivate user",
                     style: GoogleFonts.inter(

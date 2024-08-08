@@ -420,7 +420,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         gender: _genderController.text,
                         phoneNumber: _phoneController.text,
                         address: customer.address!,
-                        favorite: customer.address!,
+                        favorite: customer.favorite!,
                         note: customer.note!,
                       );
                       if (!_customerBloc.isClosed) {

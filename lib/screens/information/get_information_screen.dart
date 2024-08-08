@@ -11,6 +11,7 @@ import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/information/widgets/birthday_selection.dart';
 import 'package:mate_project/screens/information/widgets/gender_selection.dart';
 import 'package:mate_project/screens/information/widgets/hobbies_selection.dart';
+import 'package:mate_project/screens/subscription/room_subscription_screen.dart';
 import 'package:mate_project/widgets/form/disabled_button_custom.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
 import 'package:mate_project/widgets/form/normal_dialog_custom.dart';
@@ -216,7 +217,7 @@ class _GetInformationScreenState extends State<GetInformationScreen> {
               String favorite = "";
               if (hobbiesSelected.isNotEmpty) {
                 for (String element in hobbiesSelected) {
-                  favorite += element + " ";
+                  favorite += element + ", ";
                 }
               }
 
@@ -232,16 +233,16 @@ class _GetInformationScreenState extends State<GetInformationScreen> {
                   favorite: favorite.trim(),
                   note: "");
               try {
-                await customerRepository.UpdateInformation(
-                    data: data, customerId: customer.customerId);
+                print(data.toJson().toString());
+                print(customer.toJson().toString());
+                CustomerResponse cus =
+                    await customerRepository.UpdateInformation(
+                        data: data, customerId: customer.customerId);
                 Navigator.pushAndRemoveUntil(
-                  // ignore: use_build_context_synchronously
                   context,
                   MaterialPageRoute(
-                      builder: (context) => MainScreen(
-                            customerResponse: customer,
-                            inputScreen: const HomeScreen(),
-                            screenIndex: 0,
+                      builder: (context) => RoomSubscriptionScreen(
+                            customer: cus,
                           )),
                   (Route<dynamic> route) => false,
                 );

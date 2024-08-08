@@ -126,8 +126,6 @@ class _MyRoomScreenState extends State<MyRoomScreen> {
 
   @override
   void dispose() {
-    // Sử dụng CustomerBloc một cách an toàn
-    _customerBloc.close();
     super.dispose();
   }
 

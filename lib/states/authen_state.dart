@@ -57,6 +57,19 @@ class LoginSuccess extends AuthenticationState {
   LoginSuccess({required this.customerResponse});
 }
 
+class LoginGoogleSuccess extends AuthenticationState {
+  final CustomerResponse customerResponse;
+
+  LoginGoogleSuccess({required this.customerResponse});
+}
+
+class LoginGoogleNewSuccess extends AuthenticationState {
+  final String email;
+  final String googleId;
+
+  LoginGoogleNewSuccess({required this.email, required this.googleId});
+}
+
 class LoginSuccessStaffAdmin extends AuthenticationState {
   final Staff staff;
 
@@ -69,20 +82,27 @@ class LoginSuccessAdmin extends AuthenticationState {
   LoginSuccessAdmin({required this.admin});
 }
 
-class LoginSuccessNotPack extends AuthenticationState {
-  final CustomerResponse customerResponse;
-
-  LoginSuccessNotPack({required this.customerResponse});
-}
-
 class LoginLoading extends AuthenticationState {}
 
 class LoginFail extends AuthenticationState {
   final CustomException error;
-
   LoginFail({required this.error});
 }
 
 class LogoutLoading extends AuthenticationState {}
 
 class LogoutSuccess extends AuthenticationState {}
+
+class RegisterGoogleSuccess extends AuthenticationState {
+  final CustomerResponse customer;
+
+  RegisterGoogleSuccess({required this.customer});
+}
+
+class RegisterGoogleLoading extends AuthenticationState {}
+
+class RegisterGoogleFailure extends AuthenticationState {
+  final CustomException error;
+
+  RegisterGoogleFailure({required this.error});
+}

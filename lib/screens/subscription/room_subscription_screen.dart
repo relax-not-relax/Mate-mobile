@@ -17,6 +17,7 @@ import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/repositories/customer_repo.dart';
 import 'package:mate_project/screens/home/customer/home_screen.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
+import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
 import 'package:mate_project/screens/subscription/room_details_screen.dart';
 import 'package:mate_project/screens/subscription/widgets/subscription_selection.dart';
 import 'package:mate_project/states/customer_state.dart';
@@ -74,8 +75,6 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
 
   @override
   void dispose() {
-    // Sử dụng CustomerBloc một cách an toàn
-    _customerBloc.close();
     super.dispose();
   }
 
@@ -282,6 +281,20 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
           }
           if (state is BuyPackSuccess) {
             print("Buy done");
+            await Future.delayed(const Duration(seconds: 2));
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return MainScreen(
+                    customerResponse: customer,
+                    inputScreen: const HomeScreen(),
+                    screenIndex: 0,
+                  );
+                },
+              ),
+              (route) => false,
+            );
           }
           if (state is BuyPackLoading) {
             print("Loading");
@@ -445,7 +458,8 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return RoomDetailsScreen(pack: selectedPack);
+                                  return RoomDetailsScreen(
+                                      customer: customer, pack: selectedPack);
                                 },
                               ),
                               (route) => false,

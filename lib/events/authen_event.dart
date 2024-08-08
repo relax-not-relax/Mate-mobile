@@ -42,6 +42,13 @@ class LoginPressed extends AuthenticationEvent {
       required this.rememberCheck});
 }
 
+class LoginGooglePressed extends AuthenticationEvent {
+  final String email;
+  final String googleId;
+
+  LoginGooglePressed({required this.email, required this.googleId});
+}
+
 class LoginStaffOrAdminPressed extends AuthenticationEvent {
   final String email;
   final String password;
@@ -53,6 +60,14 @@ class LoginStaffOrAdminPressed extends AuthenticationEvent {
       required this.password,
       required this.fcm,
       required this.rememberCheck});
+}
+
+class RegisterGooglePressed extends AuthenticationEvent {
+  final String email;
+  final String fullName;
+  final String googleId;
+  RegisterGooglePressed(
+      {required this.email, required this.fullName, required this.googleId});
 }
 
 class LogoutPressed extends AuthenticationEvent {

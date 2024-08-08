@@ -36,6 +36,7 @@ class Authenrepository {
       "password": password,
       "fullname": fullName
     };
+    print(data.toString());
 
     String jsonBody = jsonEncode(data);
     final response = await http.post(
@@ -48,6 +49,35 @@ class Authenrepository {
     print(jsonBody);
     if (response.statusCode == 200) {
       print('ok');
+      final jsonData = json.decode(response.body);
+      print(CustomerResponse.fromJson(jsonData).toJson().toString());
+      return CustomerResponse.fromJson(jsonData);
+    } else {
+      throw Exception('Failed to register');
+    }
+  }
+
+  Future<CustomerResponse> registerGoogle(
+      {required String fullName,
+      required String email,
+      required String googleId}) async {
+    Map<String, String> data = {
+      "googleId": googleId,
+      "email": email,
+      "fullname": fullName
+    };
+    print(data.toString());
+
+    String jsonBody = jsonEncode(data);
+    final response = await http.post(
+      Uri.parse("${Config.apiRoot}api/customer/Google"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonBody,
+    );
+    print(jsonBody);
+    if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       print(CustomerResponse.fromJson(jsonData).toJson().toString());
       return CustomerResponse.fromJson(jsonData);
@@ -241,6 +271,35 @@ class Authenrepository {
       throw Exception(jsonData['error']);
     } else {
       throw Exception('System failure');
+    }
+  }
+
+  Future<CustomerResponse?> authenCustomerGoogle(
+      {required String email, required String googleId}) async {
+    Map<String, String> data = {"googleId": googleId, "email": email};
+
+    String jsonBody = jsonEncode(data);
+
+    final response = await http.post(
+        Uri.parse('${Config.apiRoot}api/authen/Authentication-Google'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonBody);
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      CustomerResponse customer = CustomerResponse.fromJson(jsonData);
+      print(customer.toJson());
+      await SharedPreferencesHelper.setCustomer(customer);
+      return customer;
+    } else if (response.statusCode == 400) {
+      final jsonData = json.decode(response.body);
+      throw Exception(jsonData['error']);
+    } else if (response.statusCode == 404) {
+      return null;
+    } else {
+      throw Exception("System error");
     }
   }
 
