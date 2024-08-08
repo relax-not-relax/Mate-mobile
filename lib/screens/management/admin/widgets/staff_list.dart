@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_project/models/staff.dart';
+import 'package:mate_project/repositories/staff_repo.dart';
 import 'package:mate_project/screens/management/admin/add_staff_screen.dart';
 import 'package:mate_project/screens/management/admin/widgets/search_field.dart';
 import 'package:mate_project/screens/management/admin/widgets/staff_element.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
+import 'package:mate_project/widgets/form/normal_dialog_custom.dart';
 
 class StaffList extends StatefulWidget {
   const StaffList({super.key, required this.staffs});
@@ -89,9 +91,34 @@ class _StaffListState extends State<StaffList> {
                   height: 16.h,
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    NormalDialogCustom().showWaitingDialog(
+                      context,
+                      "assets/pics/analyst.png",
+                      "Wait a minute",
+                      "Deleting staff",
+                      false,
+                      const Color.fromARGB(255, 68, 60, 172),
+                    );
+                    StaffRepository staffRepository = StaffRepository();
+                    await staffRepository.deactiveStaff(staff.staffId);
+                    Navigator.of(context).pop();
+                    if (mounted) {
+                      setState(() {
+                        staffList.remove(staff);
+                      });
+                    }
+                    NormalDialogCustom().showWaitingDialog(
+                      context,
+                      "assets/pics/analyst.png",
+                      "Done",
+                      "Deactive staff!",
+                      true,
+                      const Color.fromARGB(255, 68, 60, 172),
+                    );
+                  },
                   child: Text(
-                    "Delete user",
+                    "Delete staff",
                     style: GoogleFonts.inter(
                       color: const Color.fromARGB(255, 234, 68, 53),
                       fontSize: 12.sp,

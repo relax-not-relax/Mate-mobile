@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mate_project/blocs/authen_bloc.dart';
 import 'package:mate_project/enums/failure_enum.dart';
 import 'package:mate_project/events/authen_event.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/rememberme.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/screens/authentication/customer_register_google_screen.dart';
 import 'package:mate_project/screens/authentication/customer_register_screen.dart';
 import 'package:mate_project/screens/home/customer/home_screen.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
@@ -69,6 +71,18 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
             "Togetherness - Companion - Sharing",
             true,
             const Color.fromARGB(255, 68, 60, 172),
+          );
+        }
+
+        if (state is LoginGoogleNewSuccess) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CustomerRegisterGoogleScreen(
+                      googleId: state.googleId,
+                      email: state.email,
+                    )),
+            (Route<dynamic> route) => false,
           );
         }
         if (state is LoginSuccess) {
@@ -389,44 +403,61 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                           SizedBox(
                             height: 40.h,
                           ),
-                          Container(
-                            width: 360.w,
-                            height: 59.h,
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromARGB(10, 20, 19, 19),
-                                  offset: Offset(0, 4),
-                                  blurRadius: 6.6,
-                                  spreadRadius: 2,
-                                )
-                              ],
-                            ),
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    'assets/pics/google_icon.png',
-                                    width: 20.w,
-                                    height: 20.w,
-                                  ),
-                                  SizedBox(
-                                    width: 16.w,
-                                  ),
-                                  Text(
-                                    "Continue with Google",
-                                    style: GoogleFonts.inter(
-                                      color: Color.fromARGB(255, 115, 115, 115),
-                                      fontSize: 13.sp,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
+                          InkWell(
+                            onTap: () async {
+                              GoogleSignIn googleSignIn = GoogleSignIn();
+                              await googleSignIn.signOut();
+                              final GoogleSignInAccount? googleSignInAccount =
+                                  await googleSignIn.signIn();
+                              if (googleSignInAccount != null) {
+                                print(googleSignInAccount.email);
+                                print(googleSignInAccount.id);
+                                BlocProvider.of<AuthenticationBloc>(context)
+                                    .add(LoginGooglePressed(
+                                        email: googleSignInAccount.email,
+                                        googleId: googleSignInAccount.id));
+                              }
+                            },
+                            child: Container(
+                              width: 360.w,
+                              height: 59.h,
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromARGB(10, 20, 19, 19),
+                                    offset: Offset(0, 4),
+                                    blurRadius: 6.6,
+                                    spreadRadius: 2,
+                                  )
                                 ],
+                              ),
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/pics/google_icon.png',
+                                      width: 20.w,
+                                      height: 20.w,
+                                    ),
+                                    SizedBox(
+                                      width: 16.w,
+                                    ),
+                                    Text(
+                                      "Continue with Google",
+                                      style: GoogleFonts.inter(
+                                        color:
+                                            Color.fromARGB(255, 115, 115, 115),
+                                        fontSize: 13.sp,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           )

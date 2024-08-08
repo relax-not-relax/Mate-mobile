@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_project/blocs/authen_bloc.dart';
 import 'package:mate_project/events/authen_event.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
+import 'package:mate_project/screens/information/get_information_screen.dart';
 import 'package:mate_project/states/authen_state.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
 import 'package:mate_project/widgets/form/normal_dialog_custom.dart';
@@ -120,6 +121,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           email: customerInfo['email']));
                   Navigator.of(context).pop();
                 },
+              );
+            }
+            if (state is RegisterDone) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const GetInformationScreen()),
+                (Route<dynamic> route) => false,
               );
             }
             if (state is ConfirmCodeFailure) {

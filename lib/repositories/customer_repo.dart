@@ -55,6 +55,48 @@ class CustomerRepository {
     }
   }
 
+  Future<CustomerResponse> getCustomerCurrent() async {
+    var account = await SharedPreferencesHelper.getCustomer();
+    final response = await http.get(
+        Uri.parse('${Config.apiRoot}api/customer/${account!.customerId}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${account.accessToken}',
+        });
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      CustomerResponse customer = CustomerResponse.fromJson(jsonData);
+      print(customer.toJson());
+      customer.accessToken = account.accessToken;
+      return customer;
+    } else if (response.statusCode == 400) {
+      final jsonData = json.decode(response.body);
+      throw Exception(jsonData['error']);
+    } else {
+      throw Exception('System failure');
+    }
+  }
+
+  Future<bool> deactiveCustomer(int customerId) async {
+    var account = await SharedPreferencesHelper.getAdmin();
+    final response = await http.delete(
+        Uri.parse('${Config.apiRoot}api/customer/Deacticve/$customerId'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${account!.accessToken}',
+        });
+    print(customerId);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 400) {
+      return false;
+    } else {
+      return false;
+    }
+  }
+
   Future<List<CustomerResponse>> GetCustomerByAdmin(
       {required int page, required int pageSize}) async {
     var account = await SharedPreferencesHelper.getAdmin();
@@ -73,7 +115,9 @@ class CustomerRepository {
       List<CustomerResponse> listCustomer = [];
       for (var element in listJson) {
         CustomerResponse customer = CustomerResponse.fromJson(element);
-        listCustomer.add(customer);
+        if (customer.status == true) {
+          listCustomer.add(customer);
+        }
       }
       return listCustomer;
     } else if (response.statusCode == 400) {
@@ -135,6 +179,7 @@ class CustomerRepository {
   Future<void> addToRoom({required AddToRoomRequest data}) async {
     var account = await SharedPreferencesHelper.getCustomer();
     String jsonBody = jsonEncode(data);
+    print(data.toJson().toString());
     final response = await http.post(
       Uri.parse("${Config.apiRoot}api/room/Add-Customer-Into-Room"),
       headers: <String, String>{

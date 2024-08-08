@@ -23,7 +23,31 @@ class AuthenticationBloc
     on<ConfirmCodePressed>(_onConfirmCodePressed);
     on<RegisterDonePressed>(_onRegisterDonePressed);
     on<LoginPressed>(_onLoginPressed);
+    on<LoginGooglePressed>(_onLoginGooglePressed);
     on<LoginStaffOrAdminPressed>(_onLoginStaffOrAdminPressed);
+    on<RegisterGooglePressed>(_onRegisterGooglePressed);
+  }
+
+  Future<void> _onRegisterGooglePressed(
+      RegisterGooglePressed event, Emitter<AuthenticationState> emit) async {
+    emit(RegisterGoogleLoading());
+    try {
+      if (event.fullName == "" || event.fullName.trim() == "") {
+        emit(RegisterGoogleFailure(
+            error:
+                CustomException(type: Failure.Fullname, content: "Reuqired")));
+      }
+      CustomerResponse customer = await authenticationRepository.registerGoogle(
+          fullName: event.fullName,
+          email: event.email,
+          googleId: event.googleId);
+      await SharedPreferencesHelper.setCustomer(customer);
+      emit(RegisterGoogleSuccess(customer: customer));
+    } catch (ex) {
+      emit(RegisterGoogleFailure(
+          error: CustomException(
+              type: Failure.System, content: "Register fail!")));
+    }
   }
 
   Future<void> _onLoginStaffOrAdminPressed(
@@ -126,12 +150,36 @@ class AuthenticationBloc
           email: event.email,
           password: event.password,
           confirmPass: event.password);
+      await SharedPreferencesHelper.setCustomer(cus);
       emit(RegisterDone(cus));
     } catch (error) {
       if (error is CustomException) {
         emit(RegisterFail());
       } else {
         emit(RegisterFail());
+      }
+    }
+  }
+
+  Future<void> _onLoginGooglePressed(
+      LoginGooglePressed event, Emitter<AuthenticationState> emit) async {
+    emit(LoginLoading());
+    try {
+      CustomerResponse? customer = await authenticationRepository
+          .authenCustomerGoogle(email: event.email, googleId: event.googleId);
+      if (customer == null) {
+        emit(LoginGoogleNewSuccess(
+            email: event.email, googleId: event.googleId));
+      } else {
+        emit(LoginSuccess(customerResponse: customer));
+      }
+    } catch (error) {
+      if (error is CustomException) {
+        emit(LoginFail(error: error));
+      } else {
+        emit(LoginFail(
+            error: CustomException(
+                type: Failure.System, content: error.toString())));
       }
     }
   }

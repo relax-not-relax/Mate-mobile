@@ -94,6 +94,11 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
     try {
       await customerRepository.addToRoom(data: event.addToRoomRequest);
       await customerRepository.BuyPack(data: event.buyPackRequest);
+
+      CustomerResponse customerResponse =
+          await customerRepository.getCustomerCurrent();
+      SharedPreferencesHelper.setCustomer(customerResponse);
+      emit(BuyPackSuccess());
     } catch (er) {
       if (er is CustomException) {
         emit(BuyPackFailure(error: er));

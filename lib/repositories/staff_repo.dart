@@ -69,6 +69,24 @@ class StaffRepository {
     }
   }
 
+  Future<bool> deactiveStaff(int staffId) async {
+    var account = await SharedPreferencesHelper.getAdmin();
+    final response = await http.put(
+        Uri.parse('${Config.apiRoot}api/staff/Ban/$staffId}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${account!.accessToken}',
+        });
+
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 400) {
+      return false;
+    } else {
+      return false;
+    }
+  }
+
   Future<List<Staff>> GetStaffByAdmin(
       {required int page, required int pageSize}) async {
     var account = await SharedPreferencesHelper.getAdmin();
@@ -88,7 +106,9 @@ class StaffRepository {
       List<Staff> listStaff = [];
       for (var element in listJson) {
         Staff staff = Staff.fromJson(element);
-        listStaff.add(staff);
+        if (staff.status != null && staff.status == true) {
+          listStaff.add(staff);
+        }
       }
       return listStaff;
     } else if (response.statusCode == 400) {

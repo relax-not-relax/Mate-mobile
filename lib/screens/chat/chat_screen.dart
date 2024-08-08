@@ -159,10 +159,29 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void askChoice(String question) {
     if (mounted) {
+      String answer = "";
+      switch (question) {
+        case "Room-specific pricing policies?":
+          answer =
+              'Hello, our Pricing policies will depend on the types of services and rooms you want. Here are some services we provide:\n\nGold: \$289\n\nSilver: \$199\n\nBronze: \$99\n\nCome and join us today!';
+          break;
+        case "Some benefits for gold, silver and bronze room?":
+          answer =
+              "Gold: \n- single room\n- Service available: Massage, Assistance in organizing special events in special occasions \n- TV available in the room\n- High - quality dishes (buffet)\n- Take attendance 3 times/day\n\nSilver:\n- Phòng đôi/n- services available: Massage, Assist in organizing the special events in the special occasion/n- TV available/n- Delicious food \n- Take attendance 3 times/day\n\nBronze:\n- Take attendance 3 times/day\n- phòng 3-5 người\n- Good food\n- TV available\n\nIt’s our pleasure to provide these services for you! Enjoy your “youth” here.";
+          break;
+        case "Types of rooms do you have for gold, silver, bronze?":
+          answer =
+              "Heyy,.. We do have different kind of rooms for Gold, Silver, Bronze\n\nGold:\n“Sunflower”\n“Lily”\n\nSilver:\n“New Zone”\n“New World”\n\nBronzes\n“Soulmate”\n“F4 plus”";
+          break;
+        case "Frequency of music concert organization?":
+          answer =
+              "Howdy, friends! That’s a good question though. We often have a music concert annually. This activities will be contributed by the elder to a larger community. We are gonna send out the invitation a month before the concert starts! Remember to check the information daily on our Fanpage!";
+          break;
+      }
       setState(() {
         data.value.add(
           Chat(
-              avatar: "assets/pics/user_test.png",
+              avatar: customerRespone.avatar ?? "",
               text: question,
               id_1: 1,
               id_2: 2,
@@ -170,16 +189,15 @@ class _ChatScreenState extends State<ChatScreen> {
               time: DateTime.now()),
         );
 
-        // data.value.add(
-        //   Chat(
-        //     avatar: "assets/pics/admin_avatar.png",
-        //     text:
-        //         "Howdy, friends! That’s a good question though. We often have a music concert annually. This activities will be contributed by the elder to a larger community. We are gonna send out the invitation a month before the concert starts! Remember to check the information daily on our Fanpage!",
-        //     id_1: 2,
-        //     id_2: 1,
-        //     isShowAvatar: true,
-        //   ),
-        // );
+        data.value.add(
+          Chat(
+              avatar: "assets/pics/admin_avatar.png",
+              text: answer,
+              id_1: 2,
+              id_2: 1,
+              isShowAvatar: true,
+              time: DateTime.now()),
+        );
 
         content = Conversation(
           messages: data.value,
