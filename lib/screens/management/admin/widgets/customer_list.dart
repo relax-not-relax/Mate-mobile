@@ -101,7 +101,7 @@ class _CustomerListState extends State<CustomerList> {
                     //them dialog new
                     NormalDialogCustom().showWaitingDialog(
                       context,
-                      "assets/pics/analyst.png",
+                      "assets/pics/app_logo_2.png",
                       "Wait a minute",
                       "Deactive user!",
                       false,
@@ -118,13 +118,17 @@ class _CustomerListState extends State<CustomerList> {
                       });
                     }
                     //them dialog new
-                    NormalDialogCustom().showWaitingDialog(
+                    NormalDialogCustom().showSelectionDialog(
                       context,
-                      "assets/pics/analyst.png",
-                      "Done",
-                      "Deactive user!",
-                      true,
+                      "assets/pics/app_logo_2.png",
+                      "Successfully!",
+                      "Successfully deactivated user!",
+                      false,
                       const Color.fromARGB(255, 68, 60, 172),
+                      "Continue",
+                      () {
+                        Navigator.of(context).pop();
+                      },
                     );
                   },
                   child: Text(

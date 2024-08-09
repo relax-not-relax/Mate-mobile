@@ -34,7 +34,7 @@ class _FirstChatState extends State<FirstChat> {
   Widget build(BuildContext context) {
     return Container(
       width: 320.w,
-      height: 800.h * 0.6,
+      height: 800.h * 0.65,
       padding: EdgeInsets.symmetric(
         horizontal: 16.w,
         vertical: 24.h,
@@ -53,105 +53,102 @@ class _FirstChatState extends State<FirstChat> {
           Radius.circular(15),
         ),
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/pics/app_logo_2.png",
-              width: 89.w,
-              height: 129.h,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            "assets/pics/app_logo_2.png",
+            width: 89.w,
+            height: 129.h,
+          ),
+          SizedBox(
+            height: 16.h,
+          ),
+          Text(
+            "Welcome to Mate",
+            style: GoogleFonts.inter(
+              color: const Color.fromARGB(255, 40, 36, 102),
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w700,
             ),
-            SizedBox(
-              height: 16.h,
+          ),
+          SizedBox(
+            height: 8.h,
+          ),
+          Text(
+            "Howdy, Friends! Welcome to the Mate Customer Service. How can we support you?",
+            style: GoogleFonts.inter(
+              color: Color.fromARGB(255, 79, 81, 89),
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w500,
             ),
-            Text(
-              "Welcome to Mate",
-              style: GoogleFonts.inter(
-                color: const Color.fromARGB(255, 40, 36, 102),
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            SizedBox(
-              height: 8.h,
-            ),
-            Text(
-              "Howdy, Friends! Welcome to the Mate Customer Service. How can we support you?",
-              style: GoogleFonts.inter(
-                color: Color.fromARGB(255, 79, 81, 89),
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 5,
-              overflow: TextOverflow.ellipsis,
-            ),
-            SizedBox(
-              height: 16.h,
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 8.w,
-                children: [
-                  Icon(
-                    IconsaxPlusLinear.messages_2,
+            textAlign: TextAlign.center,
+            maxLines: 5,
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(
+            height: 16.h,
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8.w,
+              children: [
+                Icon(
+                  IconsaxPlusLinear.messages_2,
+                  color: const Color.fromARGB(255, 63, 82, 191),
+                  size: 21.sp,
+                ),
+                Text(
+                  "Automated response",
+                  style: GoogleFonts.inter(
                     color: const Color.fromARGB(255, 63, 82, 191),
-                    size: 21.sp,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w700,
                   ),
-                  Text(
-                    "Automated response",
-                    style: GoogleFonts.inter(
-                      color: const Color.fromARGB(255, 63, 82, 191),
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w700,
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 8.h,
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Wrap(
+              children: questions.map(
+                (e) {
+                  return ActionChip(
+                    onPressed: () {
+                      widget.ask(e);
+                    },
+                    label: Text(
+                      e,
+                      style: GoogleFonts.inter(
+                        color: const Color.fromARGB(255, 68, 60, 172),
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 8.h,
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Wrap(
-                children: questions.map(
-                  (e) {
-                    return ActionChip(
-                      onPressed: () {
-                        widget.ask(e);
-                      },
-                      label: Text(
-                        e,
-                        style: GoogleFonts.inter(
-                          color: const Color.fromARGB(255, 68, 60, 172),
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        30,
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          30,
-                        ),
-                        side: const BorderSide(
-                          color: Color.fromARGB(255, 68, 60, 172),
-                        ),
+                      side: const BorderSide(
+                        color: Color.fromARGB(255, 68, 60, 172),
                       ),
-                      backgroundColor: Colors.white,
-                    );
-                  },
-                ).toList(),
-              ),
-            )
-          ],
-        ),
+                    ),
+                    backgroundColor: Colors.white,
+                  );
+                },
+              ).toList(),
+            ),
+          )
+        ],
       ),
     );
   }

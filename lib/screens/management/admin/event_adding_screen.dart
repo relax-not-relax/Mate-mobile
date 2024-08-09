@@ -187,7 +187,7 @@ class _EventAddingScreenState extends State<EventAddingScreen> {
                 if (_selectedImage == null) {
                   const NormalDialogCustom().showSelectionDialog(
                     context,
-                    "assets/pics/oldpeople.png",
+                    "assets/pics/error.png",
                     "Image is required",
                     "Please choose an image",
                     false,
@@ -201,9 +201,9 @@ class _EventAddingScreenState extends State<EventAddingScreen> {
                   //them dialog new
                   const NormalDialogCustom().showWaitingDialog(
                     context,
-                    "assets/pics/analyst.png",
+                    "assets/pics/oldpeople.png",
                     "Wait a minute",
-                    "Adding event",
+                    "Event is preparing",
                     false,
                     const Color.fromARGB(255, 68, 60, 172),
                   );
@@ -212,7 +212,7 @@ class _EventAddingScreenState extends State<EventAddingScreen> {
                       Navigator.pop(context);
                       const NormalDialogCustom().showSelectionDialog(
                         context,
-                        "assets/pics/oldpeople.png",
+                        "assets/pics/error.png",
                         "Start date is required",
                         "Please choose start date",
                         false,
@@ -249,8 +249,8 @@ class _EventAddingScreenState extends State<EventAddingScreen> {
                       Navigator.pop(context);
                       const NormalDialogCustom().showSelectionDialog(
                         context,
-                        "assets/pics/oldpeople.png",
-                        "Create Fail",
+                        "assets/pics/error.png",
+                        "Have a trouble",
                         er.content,
                         false,
                         const Color.fromARGB(255, 195, 0, 0),

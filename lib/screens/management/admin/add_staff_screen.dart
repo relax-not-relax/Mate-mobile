@@ -110,7 +110,7 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
                 //them dialog new
                 NormalDialogCustom().showWaitingDialog(
                   context,
-                  "assets/pics/analyst.png",
+                  "assets/pics/oldpeople.png",
                   "Wait a minute",
                   "Adding staff",
                   false,

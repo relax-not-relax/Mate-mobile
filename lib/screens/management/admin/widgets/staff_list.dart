@@ -95,9 +95,9 @@ class _StaffListState extends State<StaffList> {
                     //them dialog new
                     NormalDialogCustom().showWaitingDialog(
                       context,
-                      "assets/pics/analyst.png",
+                      "assets/pics/app_logo_2.png",
                       "Wait a minute",
-                      "Deleting staff",
+                      "Delete staff",
                       false,
                       const Color.fromARGB(255, 68, 60, 172),
                     );
@@ -111,12 +111,12 @@ class _StaffListState extends State<StaffList> {
                     }
                     const NormalDialogCustom().showSelectionDialog(
                       context,
-                      'assets/pics/checkAt.png',
-                      'Done',
-                      'Deactive staff!',
-                      true,
-                      Color.fromARGB(255, 49, 121, 255),
-                      'Continue',
+                      "assets/pics/app_logo_2.png",
+                      "Successfully!",
+                      "Successfully deleted staff!",
+                      false,
+                      const Color.fromARGB(255, 68, 60, 172),
+                      "Continue",
                       () {
                         Navigator.of(context).pop();
                       },

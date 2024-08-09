@@ -70,6 +70,14 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
 
   Future<void> getAdvice(AnalysisResult analysisResult) async {
     //them dialog new
+    const NormalDialogCustom().showWaitingDialog(
+      context,
+      "assets/pics/analyst.png",
+      "Wait a minute",
+      "The system is performing data analysis.",
+      false,
+      const Color.fromARGB(255, 68, 60, 172),
+    );
     const apiKey = "AIzaSyAqtzgSzISIP7xFzEUUWpKohXvGB1kI1aU";
     final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey);
     final contentS = [Content.text(analysisResult.advice)];
