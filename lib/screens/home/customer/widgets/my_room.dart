@@ -5,14 +5,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:mate_project/models/room.dart';
+import 'package:mate_project/models/room_assign.dart';
 
 class MyRoom extends StatefulWidget {
   const MyRoom({
     super.key,
     required this.room,
+    required this.roomA,
   });
 
   final Room room;
+  final RoomAssign? roomA;
 
   @override
   State<MyRoom> createState() => _MyRoomState();
@@ -92,7 +95,7 @@ class _MyRoomState extends State<MyRoom> {
                   ),
                 ),
                 Text(
-                  "10 members",
+                  "${widget.roomA == null ? "" : widget.roomA!.customerInRoom.length} members",
                   style: GoogleFonts.inter(
                     color: Colors.white,
                     fontSize: 13.sp,

@@ -92,6 +92,7 @@ class _StaffListState extends State<StaffList> {
                 ),
                 TextButton(
                   onPressed: () async {
+                    //them dialog new
                     NormalDialogCustom().showWaitingDialog(
                       context,
                       "assets/pics/analyst.png",
@@ -108,13 +109,17 @@ class _StaffListState extends State<StaffList> {
                         staffList.remove(staff);
                       });
                     }
-                    NormalDialogCustom().showWaitingDialog(
+                    const NormalDialogCustom().showSelectionDialog(
                       context,
-                      "assets/pics/analyst.png",
-                      "Done",
-                      "Deactive staff!",
+                      'assets/pics/checkAt.png',
+                      'Done',
+                      'Deactive staff!',
                       true,
-                      const Color.fromARGB(255, 68, 60, 172),
+                      Color.fromARGB(255, 49, 121, 255),
+                      'Continue',
+                      () {
+                        Navigator.of(context).pop();
+                      },
                     );
                   },
                   child: Text(

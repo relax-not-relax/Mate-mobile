@@ -36,7 +36,6 @@ class _AccountAddressScreenState extends State<AccountAddressScreen> {
       setState(() {
         customer;
       });
-    print(customer!.address);
   }
 
   @override
@@ -59,7 +58,8 @@ class _AccountAddressScreenState extends State<AccountAddressScreen> {
           title: "My Address",
           isBordered: false,
           isBack: true,
-          back: () {
+          back: () async {
+            await Future.delayed(Duration(seconds: 1));
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(

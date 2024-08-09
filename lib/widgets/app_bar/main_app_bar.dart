@@ -39,7 +39,7 @@ class TMainAppBar extends StatelessWidget implements PreferredSizeWidget {
                     children: [
                       CircleAvatar(
                         //backgroundImage: NetworkImage(customer!.avatar!),
-                        backgroundImage: AssetImage(customer!.avatar!),
+                        backgroundImage: NetworkImage(customer!.avatar!),
                         radius: 25,
                       ),
                       SizedBox(

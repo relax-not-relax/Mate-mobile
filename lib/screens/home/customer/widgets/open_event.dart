@@ -32,10 +32,10 @@ class _OpenEventState extends State<OpenEvent> {
   @override
   void initState() {
     super.initState();
-    formattedDate = formatter.format(widget.event.start);
-    splittedDate = formattedDate!.split(' ');
-    formattedDateTime =
-        '${timeFormatter.format(widget.event.start)} ${dayFormatter.format(widget.event.start)}, ${monthFormatter.format(widget.event.start)} ${dateFormatter.format(widget.event.start)}, ${yearFormatter.format(widget.event.start)}';
+    // formattedDate = formatter.format(widget.event.startTime);
+    // splittedDate = formattedDate!.split(' ');
+    // formattedDateTime =
+    //     '${timeFormatter.format(widget.event.startTime)} ${dayFormatter.format(widget.event.startTime)}, ${monthFormatter.format(widget.event.startTime)} ${dateFormatter.format(widget.event.startTime)}, ${yearFormatter.format(widget.event.startTime)}';
   }
 
   @override
@@ -65,7 +65,7 @@ class _OpenEventState extends State<OpenEvent> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    splittedDate[0],
+                    widget.event.startTime.day.toString(),
                     style: GoogleFonts.inter(
                       fontSize: 30.sp,
                       fontWeight: FontWeight.w600,
@@ -73,7 +73,7 @@ class _OpenEventState extends State<OpenEvent> {
                     ),
                   ),
                   Text(
-                    splittedDate[1],
+                    widget.event.startTime.month.toString(),
                     style: GoogleFonts.inter(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w400,
@@ -91,12 +91,12 @@ class _OpenEventState extends State<OpenEvent> {
                 children: [
                   Container(
                     height: 140.h,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('assets/pics/concert.png'),
+                        image: NetworkImage(widget.event.imageLink),
                         fit: BoxFit.cover,
                       ),
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(15),
                         bottomRight: Radius.circular(15),
                       ),

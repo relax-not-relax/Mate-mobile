@@ -216,6 +216,37 @@ class AttendanceRepo {
     }
   }
 
+  Future<List<Attendance>> GetAttendanceByRoomCustomer(
+      {required DateTime inDate, required int roomId}) async {
+    String inD = DateFormat("yyyy-MM-ddTHH:mm:ss.SSS").format(inDate);
+    var account = await SharedPreferencesHelper.getCustomer();
+    final response = await http.get(
+      Uri.parse(
+          "${Config.apiRoot}api/attendance/getByAdmin?inDate=$inD&roomId=$roomId&Page=1&PageSize=111"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ${account!.accessToken}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      List<dynamic> listJson = jsonData['results'] as List<dynamic>? ?? [];
+      List<Attendance> listAttendance = [];
+      for (var element in listJson) {
+        Attendance attendance = Attendance.fromJson(element);
+        listAttendance.add(attendance);
+        print(attendance.toJson().toString());
+      }
+      return listAttendance;
+    } else if (response.statusCode == 400) {
+      final jsonData = json.decode(response.body);
+      throw Exception(jsonData['error']);
+    } else {
+      throw Exception('System failure');
+    }
+  }
+
   Future<List<Attendance>> GetAttendanceOfCustomer(
       {required int pageSize,
       required int page,

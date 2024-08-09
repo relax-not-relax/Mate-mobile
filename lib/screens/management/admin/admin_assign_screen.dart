@@ -166,7 +166,7 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
     super.initState();
     getRoomGold(1, DateTime.now()).then(
       (value) {
-        if (mounted)
+        if (mounted) {
           setState(() {
             roomsList = value;
             content = RoomAssignList(
@@ -178,6 +178,7 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
               },
             );
           });
+        }
       },
     );
     selectedMonth = DateTime.now().month;
@@ -258,10 +259,11 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                                   value: e,
                                   groupValue: filterOption,
                                   onChanged: (String? value) {
-                                    if (mounted)
+                                    if (mounted) {
                                       setState(() {
                                         filterOption = value!;
                                       });
+                                    }
                                   },
                                 ),
                                 Text(
@@ -368,11 +370,12 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                             );
                           }).toList(),
                           onChanged: (int? newValue) {
-                            if (mounted)
+                            if (mounted) {
                               setState(() {
                                 // Gọi   setState trong StatefulBuilder
                                 selectedMonth = newValue!;
                               });
+                            }
                           },
                           dropdownColor: const Color.fromARGB(255, 35, 38, 47),
                         ),
@@ -395,10 +398,11 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                             );
                           }),
                           onChanged: (int? newValue) {
-                            if (mounted)
+                            if (mounted) {
                               setState(() {
                                 selectedYear = newValue!;
                               });
+                            }
                           },
                           dropdownColor: const Color.fromARGB(255, 35, 38, 47),
                         ),
@@ -488,7 +492,7 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                   return DayItem(
                     day: daysList[index],
                     onTap: () {
-                      if (mounted)
+                      if (mounted) {
                         setState(() {
                           // ignore: avoid_function_literals_in_foreach_calls
                           daysList.forEach(
@@ -509,7 +513,7 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                                       .dateTime)
                               .then(
                             (value) {
-                              if (mounted)
+                              if (mounted) {
                                 setState(() {
                                   roomsList = value;
                                   content = RoomAssignList(
@@ -525,9 +529,11 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                                     },
                                   );
                                 });
+                              }
                             },
                           );
                         });
+                      }
                     },
                   );
                 },
@@ -548,7 +554,7 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
             indicatorColor: const Color.fromARGB(255, 182, 177, 249),
             dividerColor: const Color.fromARGB(255, 41, 45, 50),
             onTap: (value) {
-              if (mounted)
+              if (mounted) {
                 setState(() {
                   tIndex = value;
                   switch (tIndex) {
@@ -562,7 +568,7 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                                   .dateTime)
                           .then(
                         (value) {
-                          if (mounted)
+                          if (mounted) {
                             setState(() {
                               roomsList = value;
                               content = RoomAssignList(
@@ -578,6 +584,7 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                                 },
                               );
                             });
+                          }
                         },
                       );
                       break;
@@ -591,7 +598,7 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                                   .dateTime)
                           .then(
                         (value) {
-                          if (mounted)
+                          if (mounted) {
                             setState(() {
                               roomsList = value;
                               content = RoomAssignList(
@@ -607,6 +614,7 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                                 },
                               );
                             });
+                          }
                         },
                       );
                       break;
@@ -620,7 +628,7 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                                   .dateTime)
                           .then(
                         (value) {
-                          if (mounted)
+                          if (mounted) {
                             setState(() {
                               roomsList = value;
                               content = RoomAssignList(
@@ -636,11 +644,13 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
                                 },
                               );
                             });
+                          }
                         },
                       );
                       break;
                   }
                 });
+              }
             },
             tabs: const [
               Tab(

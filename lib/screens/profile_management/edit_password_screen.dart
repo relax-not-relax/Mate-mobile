@@ -7,6 +7,7 @@ import 'package:mate_project/enums/failure_enum.dart';
 import 'package:mate_project/events/customer_event.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/request/password_request.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/home/staff/staff_main_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
@@ -139,7 +140,6 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
       }
     }
 
-    print(2222);
     if (!_isPasswordMismatch && !_isUnChecked && _isValid && !widget.isStaff) {
       _customerBloc.add(SaveChangePasswordPressed(
           passwordRequest: PasswordRequest(
@@ -163,7 +163,7 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
           title: "Change Password",
           isBordered: false,
           isBack: true,
-          back: () {
+          back: () async {
             if (widget.isStaff) {
               Navigator.pushAndRemoveUntil(
                 context,
@@ -178,15 +178,20 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
                 (route) => false,
               );
             } else {
+              CustomerResponse? customer =
+                  await SharedPreferencesHelper.getCustomer();
               // TODO: chỗ customerResponse không biết truyền biến gì
-              // Navigator.pushReplacement(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) {
-              //       return const MainScreen(inputScreen: CustomerAccountMainScreen(), screenIndex: 3, customerResponse: );
-              //     },
-              //   ),
-              // );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return MainScreen(
+                        inputScreen: const CustomerAccountMainScreen(),
+                        screenIndex: 3,
+                        customerResponse: customer!);
+                  },
+                ),
+              );
             }
           },
         ),

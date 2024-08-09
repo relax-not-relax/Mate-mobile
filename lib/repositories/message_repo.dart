@@ -9,17 +9,24 @@ class MessageRepository {
       (value) {
         if (value.snapshot.exists) {
           for (var element in value.snapshot.children) {
-            var ele = element.children.last;
-            Message message = Message(
-                status: true,
-                customerId: int.parse(ele.child('customerId').value.toString()),
-                avatar: ele.child('avatar').value.toString(),
-                name: ele.child('name').value.toString(),
-                lastMessage: ele.child('lastMessage').value.toString(),
-                time: DateTime.parse(ele.child('time').value.toString()),
-                isAdmin: bool.parse(ele.child('isAdmin').value.toString()));
-            rs.add(message);
+            List<Message> listTmp = [];
+            for (var ele in element.children) {
+              Message message = Message(
+                  status: true,
+                  customerId:
+                      int.parse(ele.child('customerId').value.toString()),
+                  avatar: ele.child('avatar').value.toString(),
+                  name: ele.child('name').value.toString(),
+                  lastMessage: ele.child('lastMessage').value.toString(),
+                  time: DateTime.parse(ele.child('time').value.toString()),
+                  isAdmin: bool.parse(ele.child('isAdmin').value.toString()));
+              listTmp.add(message);
+            }
+            Message messageWithMaxTime =
+                listTmp.reduce((a, b) => a.time.isAfter(b.time) ? a : b);
+            rs.add(messageWithMaxTime);
           }
+          rs.sort((a, b) => b.time.compareTo(a.time));
         }
         return rs;
       },
