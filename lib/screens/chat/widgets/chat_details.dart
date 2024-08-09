@@ -23,6 +23,11 @@ class _ChatDetailsState extends State<ChatDetails> {
     return widget.isAnswer
         ? Container(
             width: 360.w,
+            margin: widget.chatElement.isShowAvatar
+                ? EdgeInsets.only(
+                    top: 16.h,
+                  )
+                : const EdgeInsets.all(0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,6 +79,11 @@ class _ChatDetailsState extends State<ChatDetails> {
           )
         : Container(
             width: 360.w,
+            margin: widget.chatElement.isShowAvatar
+                ? EdgeInsets.only(
+                    top: 16.h,
+                  )
+                : const EdgeInsets.all(0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,

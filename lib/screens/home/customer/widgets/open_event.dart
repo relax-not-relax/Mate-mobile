@@ -73,7 +73,7 @@ class _OpenEventState extends State<OpenEvent> {
                     ),
                   ),
                   Text(
-                    widget.event.startTime.month.toString(),
+                    DateFormat.MMMM().format(widget.event.startTime),
                     style: GoogleFonts.inter(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w400,
@@ -144,7 +144,8 @@ class _OpenEventState extends State<OpenEvent> {
                               ),
                               Flexible(
                                 child: Text(
-                                  formattedDateTime ?? "",
+                                  DateFormat('EEEE, MMM d, yyyy')
+                                      .format(widget.event.startTime),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.inter(
