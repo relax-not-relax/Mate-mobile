@@ -106,14 +106,17 @@ class _EditStaffProfileScreenState extends State<EditStaffProfileScreen> {
     print(staff.toJson().toString());
     _nameController.text = staff.fullName;
     _emailController.text = staff.email;
-    _phoneController.text = staff.phoneNumber ?? "";
+    _phoneController.text = staff.phoneNumber ?? "xxxxxxxxxx";
     _birthdayController.text = staff.dateOfBirth != null
         ? convertDateTimeString(staff.dateOfBirth!)
-        : "";
-    _genderController.text = staff.gender ?? "Male";
+        : "01/01/2000";
+    _genderController.text = staff.gender ?? "Other";
     for (var gender in genders) {
-      if ((gender.toUpperCase().compareTo(staff.gender!.toUpperCase())) == 0) {
+      if (staff.gender != null &&
+          (gender.toUpperCase().compareTo(staff.gender!.toUpperCase())) == 0) {
         genderOption = gender;
+      } else {
+        genderOption = "Other";
       }
     }
     avatar = staff.avatar ?? "assets/pics/no_ava.png";
@@ -406,7 +409,7 @@ class _EditStaffProfileScreenState extends State<EditStaffProfileScreen> {
                     title: "Birthday",
                     initBirthday: staff.dateOfBirth != null
                         ? convertDateTimeString(staff.dateOfBirth!)
-                        : "",
+                        : "01/01/2000",
                     errorText: (state is UpdateStaffFailure &&
                             state.error.type == Failure.Birthday)
                         ? state.error.content
@@ -436,7 +439,7 @@ class _EditStaffProfileScreenState extends State<EditStaffProfileScreen> {
                             convertDateFormat(_birthdayController.text),
                         gender: _genderController.text,
                         phoneNumber: _phoneController.text,
-                        address: staff.address!,
+                        address: staff.address ?? "",
                       );
                       if (!_staffBloc.isClosed) {
                         BlocProvider.of<StaffBloc>(context).add(

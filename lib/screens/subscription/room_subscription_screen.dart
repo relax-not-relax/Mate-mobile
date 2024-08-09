@@ -15,6 +15,7 @@ import 'package:mate_project/models/request/add_customer_to_room_request.dart';
 import 'package:mate_project/models/request/buy_pack_request.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
 import 'package:mate_project/repositories/customer_repo.dart';
+import 'package:mate_project/screens/authentication/login_selection_screen.dart';
 import 'package:mate_project/screens/home/customer/home_screen.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/profile_management/customer/customer_account_main_screen.dart';
@@ -58,7 +59,7 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
     super.initState();
     selectedPack = Pack(
       packId: 1,
-      price: 1100,
+      price: 289,
       packName: "Gold Room",
       description: "",
       duration: 0,
@@ -251,22 +252,19 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
               weight: 3,
             ),
             onPressed: () {
-              // if () {
-              //   Navigator.pushAndRemoveUntil(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) {
-              //         return MainScreen(
-              //             inputScreen: HomeScreen(),
-              //             screenIndex: 0,
-              //             customerResponse: customer);
-              //       },
-              //     ),
-              //     (route) => false,
-              //   );
-              // } else {
-              //   return;
-              // }
+              SharedPreferencesHelper.removeCustomer().then(
+                (value) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const LoginSelectionScreen();
+                      },
+                    ),
+                    (route) => false,
+                  );
+                },
+              );
             },
           ),
           SizedBox(
@@ -281,7 +279,6 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
           }
           if (state is BuyPackSuccess) {
             print("Buy done");
-            await Future.delayed(const Duration(seconds: 2));
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(

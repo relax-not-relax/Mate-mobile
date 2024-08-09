@@ -47,7 +47,7 @@ class _CustomerAccountMainScreenState extends State<CustomerAccountMainScreen> {
     super.initState();
     getCustomer().then(
       (value) {
-        if (mounted)
+        if (mounted) {
           setState(() {
             customerR = value;
             customer = Customer(
@@ -62,6 +62,7 @@ class _CustomerAccountMainScreenState extends State<CustomerAccountMainScreen> {
                 note: value.note,
                 phoneNumber: value.phoneNumber);
           });
+        }
       },
     );
     packId = 1;

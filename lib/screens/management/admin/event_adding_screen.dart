@@ -7,12 +7,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:mate_project/helper/custom_exception.dart';
+import 'package:mate_project/models/event.dart';
+import 'package:mate_project/repositories/event_repository.dart';
 import 'package:mate_project/screens/home/admin/admin_main_screen.dart';
 import 'package:mate_project/screens/management/admin/event_screen.dart';
 import 'package:mate_project/screens/profile_management/widgets/account_edit_date_field.dart';
 import 'package:mate_project/screens/profile_management/widgets/account_edit_text_field.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
 import 'package:mate_project/widgets/form/normal_button_custom.dart';
+import 'package:mate_project/widgets/form/normal_dialog_custom.dart';
 
 class EventAddingScreen extends StatefulWidget {
   const EventAddingScreen({super.key});
@@ -28,7 +32,7 @@ class _EventAddingScreenState extends State<EventAddingScreen> {
   TextEditingController _descriptionController = TextEditingController();
   // ignore: prefer_final_fields
   TextEditingController _startDateController = TextEditingController();
-
+  EventRepository eventRepository = EventRepository();
   File? _selectedImage;
 
   @override
@@ -153,7 +157,8 @@ class _EventAddingScreenState extends State<EventAddingScreen> {
                                 child: Text(
                                   "Select event image",
                                   style: GoogleFonts.inter(
-                                    color: Color.fromARGB(255, 129, 129, 129),
+                                    color: const Color.fromARGB(
+                                        255, 129, 129, 129),
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -178,7 +183,86 @@ class _EventAddingScreenState extends State<EventAddingScreen> {
             ),
             NormalButtonCustom(
               name: "Add",
-              action: () {},
+              action: () async {
+                if (_selectedImage == null) {
+                  const NormalDialogCustom().showSelectionDialog(
+                    context,
+                    "assets/pics/oldpeople.png",
+                    "Image is required",
+                    "Please choose an image",
+                    false,
+                    Color.fromARGB(255, 195, 0, 0),
+                    "Continue",
+                    () {
+                      Navigator.pop(context);
+                    },
+                  );
+                } else {
+                  //them dialog new
+                  const NormalDialogCustom().showWaitingDialog(
+                    context,
+                    "assets/pics/analyst.png",
+                    "Wait a minute",
+                    "Adding event",
+                    false,
+                    const Color.fromARGB(255, 68, 60, 172),
+                  );
+                  try {
+                    if (_startDateController.text.isEmpty) {
+                      Navigator.pop(context);
+                      const NormalDialogCustom().showSelectionDialog(
+                        context,
+                        "assets/pics/oldpeople.png",
+                        "Start date is required",
+                        "Please choose start date",
+                        false,
+                        Color.fromARGB(255, 195, 0, 0),
+                        "Continue",
+                        () {
+                          Navigator.pop(context);
+                        },
+                      );
+                    } else {
+                      DateTime startDate = DateFormat("dd/MM/yyyy")
+                          .parse(_startDateController.text);
+                      await eventRepository.CreateEvent(
+                          title: _titleController.text,
+                          startDate: startDate,
+                          description: _descriptionController.text,
+                          image: _selectedImage!);
+                      Navigator.pop(context);
+                      const NormalDialogCustom().showSelectionDialog(
+                        context,
+                        "assets/pics/oldpeople.png",
+                        "Create Success",
+                        "New event has been created",
+                        false,
+                        Color.fromARGB(255, 31, 158, 255),
+                        "Continue",
+                        () {
+                          Navigator.pop(context);
+                        },
+                      );
+                    }
+                  } catch (er) {
+                    if (er is CustomException) {
+                      Navigator.pop(context);
+                      const NormalDialogCustom().showSelectionDialog(
+                        context,
+                        "assets/pics/oldpeople.png",
+                        "Create Fail",
+                        er.content,
+                        false,
+                        const Color.fromARGB(255, 195, 0, 0),
+                        "Continue",
+                        () {
+                          Navigator.pop(context);
+                        },
+                      );
+                    }
+                  }
+                }
+              },
               background: const Color.fromARGB(255, 84, 110, 255),
             ),
           ],

@@ -136,7 +136,7 @@ class _StatisticsDetailsScreenState extends State<StatisticsDetailsScreen>
                 IconButton(
                   onPressed: sIndex > 0
                       ? () {
-                          if (mounted)
+                          if (mounted) {
                             setState(() {
                               sIndex--;
                               groupByWeek = cashFlowsEachWeak![sIndex];
@@ -158,6 +158,7 @@ class _StatisticsDetailsScreenState extends State<StatisticsDetailsScreen>
                                 ).toList(),
                               );
                             });
+                          }
                         }
                       : null,
                   icon: Icon(
@@ -169,7 +170,7 @@ class _StatisticsDetailsScreenState extends State<StatisticsDetailsScreen>
                 IconButton(
                   onPressed: sIndex < ((cashFlowsEachWeak!.length) - 1)
                       ? () {
-                          if (mounted)
+                          if (mounted) {
                             setState(() {
                               sIndex++;
                               groupByWeek = cashFlowsEachWeak![sIndex];
@@ -191,6 +192,7 @@ class _StatisticsDetailsScreenState extends State<StatisticsDetailsScreen>
                                 ).toList(),
                               );
                             });
+                          }
                         }
                       : null,
                   icon: Icon(
@@ -331,37 +333,6 @@ class _StatisticsDetailsScreenState extends State<StatisticsDetailsScreen>
               height: 16.h,
             ),
             costDetails!,
-            SizedBox(
-              height: 24.h,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Revenue details",
-                  style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Text(
-                    "See all",
-                    style: GoogleFonts.inter(
-                      color: const Color.fromARGB(255, 118, 141, 255),
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 16.h,
-            ),
             SizedBox(
               height: 150.h,
             ),

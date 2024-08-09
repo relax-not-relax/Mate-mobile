@@ -11,8 +11,23 @@ import 'dart:convert';
 import 'package:mate_project/helper/config.dart';
 
 class StaffRepository {
+  bool isValidEmail(String email) {
+    final RegExp emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+    return emailRegex.hasMatch(email);
+  }
+
+  bool isValidPassword(String password) {
+    final RegExp passwordRegex = RegExp(
+      r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).+$',
+    );
+    return passwordRegex.hasMatch(password);
+  }
+
   Future<Staff?> GetStaff({required int staffId}) async {
     var account = await SharedPreferencesHelper.getCustomer();
+
     final response = await http.get(
       Uri.parse("${Config.apiRoot}api/staff/$staffId"),
       headers: <String, String>{
@@ -72,7 +87,7 @@ class StaffRepository {
   Future<bool> deactiveStaff(int staffId) async {
     var account = await SharedPreferencesHelper.getAdmin();
     final response = await http.put(
-        Uri.parse('${Config.apiRoot}api/staff/Ban/$staffId}'),
+        Uri.parse('${Config.apiRoot}api/staff/Ban/$staffId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer ${account!.accessToken}',
@@ -157,6 +172,66 @@ class StaffRepository {
       throw Exception(jsonData['error']);
     } else {
       throw Exception('System failure');
+    }
+  }
+
+  Future<Staff> CreateStaff(
+      {required String fullName,
+      required String email,
+      required String password}) async {
+    if (fullName.trim().isEmpty) {
+      throw CustomException(
+          type: Failure.Fullname, content: 'Fullname is required');
+    }
+    if (password.contains(' ')) {
+      throw CustomException(
+          type: Failure.Password,
+          content: 'Password must be not contain space');
+    }
+    if (password.length > 30 || password.length < 8) {
+      throw CustomException(
+          type: Failure.Password,
+          content: "Password's length is between 8 - 30 character");
+    }
+    if (!isValidPassword(password)) {
+      throw CustomException(
+          type: Failure.Password,
+          content:
+              'Password must contain number, uppercase character, special character');
+    }
+
+    if (!isValidEmail(email)) {
+      throw CustomException(type: Failure.Email, content: 'Invalid email');
+    }
+    if (fullName.length > 200) {
+      throw CustomException(
+          type: Failure.Fullname,
+          content: 'Full Name must be less than 200 character');
+    }
+    var account = await SharedPreferencesHelper.getAdmin();
+    Map<String, String> data = {
+      "email": email,
+      "password": password,
+      "fullname": fullName,
+      "gender": "Male"
+    };
+    String jsonBody = jsonEncode(data);
+    final response = await http.post(
+      Uri.parse("${Config.apiRoot}api/staff"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ${account!.accessToken}',
+      },
+      body: jsonBody,
+    );
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      return Staff.fromJson(jsonData);
+    } else if (response.statusCode == 400) {
+      final jsonData = json.decode(response.body);
+      throw CustomException(type: Failure.System, content: jsonData['error']);
+    } else {
+      throw CustomException(type: Failure.System, content: 'System failure');
     }
   }
 }

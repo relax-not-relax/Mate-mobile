@@ -34,7 +34,7 @@ class _RoomAssignItemState extends State<RoomAssignItem> {
     if (room!.roomId == 1 || room!.roomId == 2) {
       pack = Pack(
         packId: 1,
-        price: 1500,
+        price: 289,
         packName: "Gold Room",
         description: "",
         duration: 0,
@@ -43,7 +43,7 @@ class _RoomAssignItemState extends State<RoomAssignItem> {
     } else if (room!.roomId == 3 || room!.roomId == 4) {
       pack = Pack(
         packId: 2,
-        price: 1000,
+        price: 199,
         packName: "Silver Room",
         description: "",
         duration: 0,
@@ -52,7 +52,7 @@ class _RoomAssignItemState extends State<RoomAssignItem> {
     } else {
       pack = Pack(
         packId: 3,
-        price: 500,
+        price: 99,
         packName: "Bronze Room",
         description: "",
         duration: 0,

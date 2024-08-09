@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:iconly/iconly.dart';
+import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/analysis_response.dart';
 import 'package:mate_project/models/cash_flow.dart';
 import 'package:mate_project/repositories/analysis_repo.dart';
@@ -38,28 +39,61 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
     return data.fold(0.0, (total, cashFlow) => total + cashFlow.profit);
   }
 
+  Future<void> setContent() async {
+    await getAnanlysSaved(selectedMonth, selectedYear).then(
+      (value) {
+        if (value != null) {
+          print(9898);
+          content = StatisticsDetailsScreen(
+            data: value.listCashFlow,
+            month: value.listCashFlow.first.time.month,
+            year: value.listCashFlow.first.time.year,
+            totalRevenue: getTotalRevenue(value.listCashFlow),
+            totalProfit: getTotalProfit(value.listCashFlow),
+            advice: value.advice,
+          );
+          setState(() {
+            content;
+          });
+        } else {
+          setState(() {
+            content = NoneStatisticsScreen(
+              getAnalysis: getAdvice,
+              month: selectedMonth,
+              year: selectedYear,
+            );
+          });
+        }
+      },
+    );
+  }
+
   Future<void> getAdvice(AnalysisResult analysisResult) async {
-    final apiKey = "AIzaSyAqtzgSzISIP7xFzEUUWpKohXvGB1kI1aU";
-    if (apiKey == null) {
-      print('No \$API_KEY environment variable');
-    }
-    // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
+    //them dialog new
+    const apiKey = "AIzaSyAqtzgSzISIP7xFzEUUWpKohXvGB1kI1aU";
     final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey);
     final contentS = [Content.text(analysisResult.advice)];
     final response = await model.generateContent(contentS);
     analysisResult.advice = response.text ?? "Cannot analys";
     content = StatisticsDetailsScreen(
       data: analysisResult.listCashFlow,
-      month: selectedMonth,
-      year: selectedYear,
+      month: analysisResult.listCashFlow.first.time.month,
+      year: analysisResult.listCashFlow.first.time.year,
       totalRevenue: getTotalRevenue(analysisResult.listCashFlow),
       totalProfit: getTotalProfit(analysisResult.listCashFlow),
       advice: analysisResult.advice,
     );
+    List<AnalysisResult> listAdd = [];
+    listAdd.add(analysisResult);
+    await SharedPreferencesHelper.addAnalysisResults(listAdd);
 
     setState(() {
       content;
     });
+  }
+
+  Future<AnalysisResult?> getAnanlysSaved(int month, int year) async {
+    return await SharedPreferencesHelper.getAnalysisResultsByTime(month, year);
   }
 
   @override
@@ -67,14 +101,35 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
     super.initState();
     selectedMonth = DateTime.now().month;
     selectedYear = DateTime.now().year;
-
-    // content sẽ được thay đổi phụ thuộc vào filter tháng, năm
-    // Khi mới vào trang lần đầu thì filter sẽ là tháng, năm thời điểm hiện tại
-    // Nếu tháng, năm thời điểm hiện tại chưa có thì content = NoneStatisticsScreen()
     content = NoneStatisticsScreen(
       getAnalysis: getAdvice,
       month: selectedMonth,
       year: selectedYear,
+    );
+    getAnanlysSaved(selectedMonth, selectedYear).then(
+      (value) {
+        if (value != null) {
+          content = StatisticsDetailsScreen(
+            data: value.listCashFlow,
+            month: value.listCashFlow.first.time.month,
+            year: value.listCashFlow.first.time.year,
+            totalRevenue: getTotalRevenue(value.listCashFlow),
+            totalProfit: getTotalProfit(value.listCashFlow),
+            advice: value.advice,
+          );
+          setState(() {
+            content;
+          });
+        } else {
+          setState(() {
+            content = NoneStatisticsScreen(
+              getAnalysis: getAdvice,
+              month: selectedMonth,
+              year: selectedYear,
+            );
+          });
+        }
+      },
     );
   }
 
@@ -186,7 +241,7 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
                     ),
                     NormalButtonCustom(
                       name: "Confirm",
-                      action: () {
+                      action: () async {
                         NormalDialogCustom().showWaitingDialog(
                           context,
                           "assets/pics/analyst.png",
@@ -195,9 +250,11 @@ class _AdminStatisticsScreenState extends State<AdminStatisticsScreen> {
                           false,
                           const Color.fromARGB(255, 68, 60, 172),
                         );
-                        // get ra dữ liệu của tháng và năm được chọn => setState cho content
-                        // ...
-                        Navigator.of(context).pop();
+                        print(selectedMonth);
+                        print(selectedYear);
+                        await setContent();
+                        Navigator.pop(context);
+                        Navigator.pop(context);
                       },
                       background: const Color.fromARGB(255, 84, 110, 255),
                     ),

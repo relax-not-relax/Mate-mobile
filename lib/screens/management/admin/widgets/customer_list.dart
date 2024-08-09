@@ -98,6 +98,7 @@ class _CustomerListState extends State<CustomerList> {
                 ),
                 TextButton(
                   onPressed: () async {
+                    //them dialog new
                     NormalDialogCustom().showWaitingDialog(
                       context,
                       "assets/pics/analyst.png",
@@ -116,6 +117,7 @@ class _CustomerListState extends State<CustomerList> {
                         customers.remove(customer);
                       });
                     }
+                    //them dialog new
                     NormalDialogCustom().showWaitingDialog(
                       context,
                       "assets/pics/analyst.png",

@@ -249,13 +249,15 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
           automaticallyImplyLeading: false,
           leading: IconButton(
             onPressed: () {
-              // Navigator.pushAndRemoveUntil(
-              //   context,
-              //   MaterialPageRoute(builder: (context) {
-              //     return RoomSubscriptionScreen(customer: customer)
-              //   },),
-              //   (route) => false,
-              // );
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return RoomSubscriptionScreen(customer: widget.customer);
+                  },
+                ),
+                (route) => false,
+              );
             },
             style: const ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(
@@ -276,7 +278,6 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
           }
           if (state is BuyPackSuccess) {
             print("Buy done");
-            await Future.delayed(const Duration(seconds: 2));
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(

@@ -25,7 +25,7 @@ class _SubscriptionSelectionState extends State<SubscriptionSelection> {
     packSelection = [
       Pack(
         packId: 1,
-        price: 1500,
+        price: 289,
         packName: "Gold Room",
         description: "",
         duration: 0,
@@ -33,7 +33,7 @@ class _SubscriptionSelectionState extends State<SubscriptionSelection> {
       ),
       Pack(
         packId: 2,
-        price: 1000,
+        price: 199,
         packName: "Silver Room",
         description: "",
         duration: 0,
@@ -41,7 +41,7 @@ class _SubscriptionSelectionState extends State<SubscriptionSelection> {
       ),
       Pack(
         packId: 3,
-        price: 500,
+        price: 99,
         packName: "Bronze Room",
         description: "",
         duration: 0,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:mate_project/models/admin.dart';
+import 'package:mate_project/models/analysis_response.dart';
 import 'package:mate_project/models/pack.dart';
 import 'package:mate_project/models/rememberme.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
@@ -18,6 +19,47 @@ class SharedPreferencesHelper {
   static const String ADMIN_KEY = "admin";
   static const String REMEMBER_KEY = "rememberme";
   static const String REMEMBER_STAFF_ADMIN_KEY = "rememberstaffadmin";
+  static const String STATISTICS = "statistics";
+
+  static Future<List<AnalysisResult>> getAnalysisResults() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonString = prefs.getString(STATISTICS);
+
+    if (jsonString != null) {
+      List<dynamic> jsonList = jsonDecode(jsonString);
+      return jsonList.map((e) => AnalysisResult.fromJson(e)).toList();
+    }
+    return [];
+  }
+
+  static Future<AnalysisResult?> getAnalysisResultsByTime(
+      int month, int year) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonString = prefs.getString(STATISTICS);
+
+    if (jsonString != null) {
+      List<dynamic> jsonList = jsonDecode(jsonString);
+      List<AnalysisResult> list =
+          jsonList.map((e) => AnalysisResult.fromJson(e)).toList();
+      return list
+          .where((e) =>
+              e.listCashFlow.isNotEmpty &&
+              e.listCashFlow.first.time.month == month &&
+              e.listCashFlow.first.time.year == year)
+          .firstOrNull;
+    }
+    return null;
+  }
+
+  static Future<void> addAnalysisResults(List<AnalysisResult> results) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<AnalysisResult> listPre = await getAnalysisResults();
+    if (listPre.isNotEmpty) {
+      results.addAll(listPre);
+    }
+    String jsonString = jsonEncode(results.map((e) => e.toJson()).toList());
+    await prefs.setString(STATISTICS, jsonString);
+  }
 
   static Future<void> setRememberMe(String password, String email) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

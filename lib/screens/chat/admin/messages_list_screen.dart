@@ -12,6 +12,7 @@ import 'package:mate_project/screens/chat/chat_screen.dart';
 import 'package:mate_project/screens/home/admin/admin_home_screen.dart';
 import 'package:mate_project/screens/home/admin/admin_main_screen.dart';
 import 'package:mate_project/widgets/app_bar/normal_app_bar.dart';
+import 'package:mate_project/widgets/form/normal_dialog_custom.dart';
 
 class MessagesListScreen extends StatefulWidget {
   const MessagesListScreen({super.key});
@@ -34,6 +35,7 @@ class _MessagesListScreenState extends State<MessagesListScreen> {
   @override
   void initState() {
     super.initState();
+
     getListMessgae().then(
       (value) {
         if (mounted)

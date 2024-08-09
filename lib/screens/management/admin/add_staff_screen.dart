@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconly/iconly.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:mate_project/helper/custom_exception.dart';
+import 'package:mate_project/models/staff.dart';
+import 'package:mate_project/repositories/staff_repo.dart';
 import 'package:mate_project/screens/home/admin/admin_main_screen.dart';
 import 'package:mate_project/screens/management/admin/user_data_screen.dart';
 import 'package:mate_project/screens/management/admin/widgets/edit_password_admin.dart';
@@ -24,6 +27,7 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  StaffRepository staffRepository = StaffRepository();
 
   @override
   void initState() {
@@ -102,30 +106,62 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
             ),
             NormalButtonCustom(
               name: "Confirm",
-              action: () {
-                NormalDialogCustom().showSelectionDialog(
+              action: () async {
+                //them dialog new
+                NormalDialogCustom().showWaitingDialog(
                   context,
-                  "assets/pics/oldpeople.png",
-                  "Successfully registered",
-                  "Staff has been successfully registered",
+                  "assets/pics/analyst.png",
+                  "Wait a minute",
+                  "Adding staff",
                   false,
-                  const Color.fromARGB(255, 84, 110, 255),
-                  "Continue",
-                  () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return const AdminMainScreen(
-                            inputScreen: UserDataScreen(),
-                            screenIndex: 1,
-                          );
-                        },
-                      ),
-                      (route) => false,
-                    );
-                  },
+                  const Color.fromARGB(255, 68, 60, 172),
                 );
+                try {
+                  Navigator.pop(context);
+                  await staffRepository.CreateStaff(
+                      fullName: _nameController.text,
+                      email: _emailController.text,
+                      password: _passwordController.text);
+
+                  NormalDialogCustom().showSelectionDialog(
+                    context,
+                    "assets/pics/oldpeople.png",
+                    "Successfully registered",
+                    "Staff has been successfully registered",
+                    false,
+                    const Color.fromARGB(255, 84, 110, 255),
+                    "Continue",
+                    () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const AdminMainScreen(
+                              inputScreen: UserDataScreen(),
+                              screenIndex: 1,
+                            );
+                          },
+                        ),
+                        (route) => false,
+                      );
+                    },
+                  );
+                } catch (er) {
+                  if (er is CustomException) {
+                    NormalDialogCustom().showSelectionDialog(
+                      context,
+                      "assets/pics/oldpeople.png",
+                      "Create fail",
+                      er.content,
+                      false,
+                      Color.fromARGB(255, 185, 0, 0),
+                      "Continue",
+                      () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  }
+                }
               },
               background: const Color.fromARGB(255, 84, 110, 255),
             ),

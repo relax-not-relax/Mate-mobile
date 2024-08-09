@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
+import 'package:mate_project/helper/sharedpreferenceshelper.dart';
+import 'package:mate_project/screens/authentication/login_selection_screen.dart';
 import 'package:mate_project/screens/chat/admin/messages_list_screen.dart';
 import 'package:mate_project/screens/home/admin/widgets/data_management_view.dart';
 import 'package:mate_project/screens/home/admin/widgets/statistics_view.dart';
@@ -174,7 +176,21 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                 width: 4.w,
                               ),
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  SharedPreferencesHelper.removeAdmin().then(
+                                    (value) {
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return const LoginSelectionScreen();
+                                          },
+                                        ),
+                                        (route) => false,
+                                      );
+                                    },
+                                  );
+                                },
                                 child: Icon(
                                   IconsaxPlusLinear.logout_1,
                                   size: 24.sp,

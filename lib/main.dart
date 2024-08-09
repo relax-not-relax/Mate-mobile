@@ -1,33 +1,27 @@
 import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:mate_project/blocs/customer_bloc.dart';
 import 'package:mate_project/blocs/staff_bloc.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
+import 'package:mate_project/models/admin.dart';
 import 'package:mate_project/models/rememberme.dart';
 import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/models/staff.dart';
 import 'package:mate_project/repositories/attendance_repo.dart';
 import 'package:mate_project/repositories/staff_repo.dart';
-import 'package:mate_project/screens/chat/admin/messages_list_screen.dart';
+import 'package:mate_project/repositories/customer_repo.dart';
 import 'package:mate_project/screens/home/admin/admin_home_screen.dart';
 import 'package:mate_project/screens/home/admin/admin_main_screen.dart';
-import 'package:mate_project/models/room.dart';
-import 'package:mate_project/repositories/customer_repo.dart';
-import 'package:mate_project/screens/authentication/customer_login_screen.dart';
-import 'package:mate_project/screens/chat/chat_screen.dart';
-import 'package:mate_project/screens/chat/widgets/first_chat.dart';
 import 'package:mate_project/screens/home/customer/main_screen.dart';
 import 'package:mate_project/screens/home/customer/home_screen.dart';
+import 'package:mate_project/screens/home/staff/staff_home_screen.dart';
 import 'package:mate_project/screens/home/staff/staff_main_screen.dart';
 import 'package:mate_project/screens/introduction/onboard_screen.dart';
 import 'package:mate_project/blocs/authen_bloc.dart';
 import 'package:mate_project/repositories/authen_repo.dart';
-import 'package:mate_project/screens/management/staff/staff_schedule_screen.dart';
-import 'package:mate_project/screens/profile_management/staff/staff_account_main_screen.dart';
 import 'package:mate_project/screens/subscription/room_subscription_screen.dart';
 
 void main() async {
@@ -43,24 +37,15 @@ void main() async {
         )
       : await Firebase.initializeApp();
   await Firebase.initializeApp();
-  Rememberme? rememberme = await SharedPreferencesHelper.getRememberMe();
+  var customerResponse = await SharedPreferencesHelper.getCustomer();
+  var staff = await SharedPreferencesHelper.getStaff();
+  var admin = await SharedPreferencesHelper.getAdmin();
 
-  // Access your API key as an environment variable (see "Set up your API key" above)
-
-  if (rememberme != null) {
-    Authenrepository authenrepository = Authenrepository();
-    try {
-      CustomerResponse customerResponse = await authenrepository.authenCustomer(
-          email: rememberme.email, password: rememberme.password, fcm: "");
-      runApp(MyApp(customer: customerResponse));
-    } catch (error) {
-      runApp(MyApp(customer: null));
-    }
-  } else {
-    runApp(MyApp(
-      customer: null,
-    ));
-  }
+  runApp(MyApp(
+    customer: customerResponse,
+    admin: admin,
+    staff: staff,
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -69,8 +54,10 @@ class MyApp extends StatelessWidget {
   final AttendanceRepo attendanceRepo = AttendanceRepo();
   final StaffRepository staffRepository = StaffRepository();
   final CustomerResponse? customer;
+  final Staff? staff;
+  final Admin? admin;
 
-  MyApp({super.key, required this.customer});
+  MyApp({super.key, required this.customer, this.staff, this.admin});
 
   // This widget is the root of your application.
   @override
@@ -114,19 +101,29 @@ class MyApp extends StatelessWidget {
                   customer: customer!,
                 ), // Trang đích sau khi thanh toán bị hủy
           },
-          home: customer == null
+          home: (customer == null && admin == null && staff == null)
               ? const OnboardScreen(
                   index: 0,
                 )
-              : customer!.packs.isEmpty
-                  ? RoomSubscriptionScreen(
-                      customer: customer!,
-                    )
-                  : MainScreen(
-                      customerResponse: customer!,
-                      inputScreen: const HomeScreen(),
-                      screenIndex: 0,
-                    ),
+              : (customer != null)
+                  ? (customer!.packs.isEmpty
+                      ? RoomSubscriptionScreen(
+                          customer: customer!,
+                        )
+                      : MainScreen(
+                          customerResponse: customer!,
+                          inputScreen: const HomeScreen(),
+                          screenIndex: 0,
+                        ))
+                  : (admin != null)
+                      ? const AdminMainScreen(
+                          inputScreen: AdminHomeScreen(),
+                          screenIndex: 0,
+                        )
+                      : const StaffMainScreen(
+                          inputScreen: StaffHomeScreen(),
+                          screenIndex: 0,
+                        ),
 
           // home: AdminMainScreen(
           //   inputScreen: AdminHomeScreen(),

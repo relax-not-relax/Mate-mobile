@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mate_project/models/event.dart';
 import 'package:mate_project/models/month.dart';
+import 'package:mate_project/repositories/event_repository.dart';
 import 'package:mate_project/screens/home/customer/widgets/open_event.dart';
 import 'package:mate_project/screens/management/admin/event_adding_screen.dart';
 import 'package:mate_project/screens/management/admin/widgets/month_item.dart';
@@ -24,7 +25,9 @@ class _EventScreenState extends State<EventScreen> {
   String yearTitle = "";
   List<String> monthKeys = [];
   List<String> monthsValues = [];
+  List<Event> listEvent = [];
   Event? event;
+  EventRepository eventRepository = EventRepository();
 
   final Map<String, String> monthsAbbreviated = {
     'Jan': 'January',
@@ -40,6 +43,10 @@ class _EventScreenState extends State<EventScreen> {
     'Nov': 'November',
     'Dec': 'December',
   };
+
+  Future<List<Event>> getEvent() async {
+    return (await eventRepository.GetAllEvent());
+  }
 
   List<Month> generateMonths(List<String> monthSet) {
     List<Month> months = [];
@@ -63,6 +70,16 @@ class _EventScreenState extends State<EventScreen> {
   @override
   void initState() {
     super.initState();
+    getEvent().then(
+      (value) {
+        setState(() {
+          listEvent = value;
+          event = listEvent
+              .where((e) => e.startTime.month == DateTime.now().month)
+              .lastOrNull;
+        });
+      },
+    );
     monthKeys = monthsAbbreviated.keys.toList();
     monthsValues = monthsAbbreviated.values.toList();
     monthList = generateMonths(monthKeys);
@@ -81,17 +98,6 @@ class _EventScreenState extends State<EventScreen> {
         _scrollToCurrentMonth(selectedMonthIndex);
       }
     });
-
-    // Test data
-    // Gọi API lấy ra event trong tháng
-    // event = Event(
-    //   title: "Summer sounds",
-    //   imgUrl: "assets/pics/concert.png",
-    //   description:
-    //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    //   start: DateTime.now(),
-    // );
-    event = null;
   }
 
   void _scrollToCurrentMonth(int index) {
@@ -165,6 +171,10 @@ class _EventScreenState extends State<EventScreen> {
                         monthList[index].isSelected = true;
                         monthTitle = monthList[index].monthName;
                         _scrollToCurrentMonth(index);
+
+                        event = listEvent
+                            .where((e) => e.startTime.month == (index + 1))
+                            .lastOrNull;
                       });
                     },
                   );
