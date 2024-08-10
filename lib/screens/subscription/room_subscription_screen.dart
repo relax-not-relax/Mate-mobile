@@ -151,7 +151,7 @@ class _RoomSubscriptionScreenState extends State<RoomSubscriptionScreen> {
                   passConfirm:
                       "Khasioudbiob!@noipnzxcdi@#asfouib&^%*(98bnn1293b9876vbHhnH97*HG9bi9g*6rGh90*876tfggh*^bHGHBGG*&687gGB*yg68FGb*&7*6fggv*867FGV76f*7gbGBGH867fgasdiub&basd87bv87bvas8d76f6",
                   startDate: DateTime.now(),
-                  amount: 1,
+                  amount: selectedPack.price,
                   paypalTransactionId: customer.customerId.toString() +
                       DateFormat('yyyyMMddHHmmss').format(DateTime.now()),
                   title: "${customer.email} pay for ${selectedPack.packName}",
