@@ -3,7 +3,7 @@ class BuyPackRequest {
   int packId;
   String passConfirm;
   DateTime startDate;
-  int amount;
+  double amount;
   String paypalTransactionId;
   String title;
   String description;
@@ -29,7 +29,7 @@ class BuyPackRequest {
       packId: json['packId'],
       passConfirm: json['passConfirm'],
       startDate: DateTime.parse(json['startDate']),
-      amount: json['amount'],
+      amount: double.parse(json['amount']),
       paypalTransactionId: json['paypalTransactionId'],
       title: json['title'],
       description: json['description'],

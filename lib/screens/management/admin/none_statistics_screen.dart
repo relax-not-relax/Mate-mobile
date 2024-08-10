@@ -8,8 +8,9 @@ import 'package:mate_project/data/project_data.dart';
 import 'package:mate_project/models/analysis_response.dart';
 import 'package:mate_project/repositories/analysis_repo.dart';
 
+// ignore: must_be_immutable
 class NoneStatisticsScreen extends StatelessWidget {
-  const NoneStatisticsScreen({
+  NoneStatisticsScreen({
     super.key,
     required this.month,
     required this.year,
@@ -19,6 +20,8 @@ class NoneStatisticsScreen extends StatelessWidget {
   final int month;
   final int year;
   final Function(AnalysisResult analysisResult) getAnalysis;
+
+  AnalysisRepository analysisRepository = AnalysisRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +119,9 @@ class NoneStatisticsScreen extends StatelessWidget {
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () async {
+                  analysisRepository.downloadExcelFile(month, year);
+                },
                 icon: Icon(
                   IconsaxPlusLinear.document_forward,
                   size: 20.sp,
