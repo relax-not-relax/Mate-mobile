@@ -8,4 +8,9 @@ class DateWeekday {
     required this.weekday,
     this.isSelected,
   });
+
+  @override
+  String toString() {
+    return "isSelected: $isSelected";
+  }
 }

@@ -99,9 +99,10 @@ class _StaffAccountMainScreenState extends State<StaffAccountMainScreen> {
                             height: 50.w,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: staff != null
+                                image: staff != null &&
+                                        staff!.avatar != "LinkstaffAVT"
                                     ? NetworkImage(staff!.avatar ?? "")
-                                    : AssetImage("assets/pics/nurse-1.png"),
+                                    : AssetImage("assets/pics/nurse.png"),
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.circular(50),

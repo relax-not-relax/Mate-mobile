@@ -253,18 +253,20 @@ class _CustomerListState extends State<CustomerList> {
           child: SearchField(
             controller: _controller,
             search: (p0) {
-              print(9182390);
-              if (mounted) {
-                if (p0.isNotEmpty) {
-                  setState(() {
-                    customerShows = customers
-                        .where((e) => e.fullname.contains(p0))
-                        .toList();
-                  });
-                } else {
-                  customerShows = customers;
-                }
-              }
+              // print(9182390);
+              // if (mounted) {
+              //   if (p0.isNotEmpty) {
+              //     setState(() {
+              //       customerShows = customers
+              //           .where((e) => e.fullname.contains(p0))
+              //           .toList();
+              //     });
+              //   } else {
+              //     customerShows = customers;
+              //   }
+              // }
+
+              print(p0);
             },
             filter: () {
               displayBottomSheet(context);

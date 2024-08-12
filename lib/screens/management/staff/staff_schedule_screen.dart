@@ -156,7 +156,7 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
     return -1;
   }
 
-  List<DateWeekday> generateDays(int year, int month) {
+  List<DateWeekday> initGenerateDays(int year, int month) {
     List<DateWeekday> days = [];
     int daysInMonth =
         DateTime(year, month + 1, 1).subtract(Duration(days: 1)).day;
@@ -165,6 +165,33 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
       if (current.day == DateTime.now().day &&
           current.month == DateTime.now().month &&
           current.year == DateTime.now().year) {
+        days.add(
+          DateWeekday(
+            dateTime: current,
+            weekday: ProjectData.getWeekday(current),
+            isSelected: true,
+          ),
+        );
+      } else {
+        days.add(
+          DateWeekday(
+            dateTime: current,
+            weekday: ProjectData.getWeekday(current),
+            isSelected: false,
+          ),
+        );
+      }
+    }
+    return days;
+  }
+
+  List<DateWeekday> generateDays(int year, int month) {
+    List<DateWeekday> days = [];
+    int daysInMonth =
+        DateTime(year, month + 1, 1).subtract(Duration(days: 1)).day;
+    for (int day = 1; day <= daysInMonth; day++) {
+      DateTime current = DateTime(year, month, day);
+      if (current.day == 1) {
         days.add(
           DateWeekday(
             dateTime: current,
@@ -295,7 +322,7 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
 
     selectedMonth = DateTime.now().month;
     selectedYear = DateTime.now().year;
-    daysList = generateDays(selectedYear, selectedMonth);
+    daysList = initGenerateDays(selectedYear, selectedMonth);
     DateTime selected = daysList
         .where(
           (day) => day.isSelected == true,
@@ -327,6 +354,31 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
       if (selectedDayIndex != -1) {
         _scrollToCurrentDay(selectedDayIndex);
       }
+    });
+  }
+
+  Future<void> getByFilter(int month, int year) async {
+    List<DateWeekday> newList = generateDays(year, month);
+
+    setState(() {
+      daysList.clear();
+      daysList.addAll(newList);
+      DateTime selected = daysList
+          .where(
+            (day) => day.isSelected == true,
+          )
+          .first
+          .dateTime;
+      dateTitle = DateFormat.MMMMd().format(selected);
+      print(daysList);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // Scroll to current day after build completes
+        final selectedDayIndex = daysList.indexWhere((day) => day.isSelected!);
+        if (selectedDayIndex != -1) {
+          _scrollToCurrentDay(selectedDayIndex);
+        }
+      });
     });
   }
 
@@ -443,7 +495,10 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
                     ),
                     NormalButtonCustom(
                       name: "Confirm",
-                      action: () {},
+                      action: () {
+                        Navigator.of(context).pop();
+                        getByFilter(selectedMonth, selectedYear);
+                      },
                       background: const Color.fromARGB(255, 84, 110, 255),
                     ),
                   ],
@@ -557,28 +612,44 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: dayAttendanceList.map(
-                        (e) {
-                          return RoomAssignItem(
-                            attendance: e,
-                          );
-                        },
-                      ).toList(),
-                    ),
-                    SizedBox(
-                      height: 150.h,
+              child: dayAttendanceList.isNotEmpty
+                  ? SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: dayAttendanceList.map(
+                              (e) {
+                                return RoomAssignItem(
+                                  attendance: e,
+                                );
+                              },
+                            ).toList(),
+                          ),
+                          SizedBox(
+                            height: 150.h,
+                          )
+                        ],
+                      ),
                     )
-                  ],
-                ),
-              ),
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "No room assigned!",
+                          style: GoogleFonts.inter(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                    ),
             ),
           ),
         ],
