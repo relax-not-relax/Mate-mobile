@@ -13,8 +13,8 @@ class StatisticsView extends StatefulWidget {
   });
 
   final DateTime currentMonth;
-  final int revenue;
-  final int profit;
+  final double revenue;
+  final double profit;
 
   @override
   State<StatisticsView> createState() => _StatisticsViewState();
@@ -94,11 +94,11 @@ class _StatisticsViewState extends State<StatisticsView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               StatisticsSelection(
-                amount: formatNumber(widget.revenue),
+                amount: formatNumber(widget.revenue.toInt()),
                 title: "Revenue",
               ),
               StatisticsSelection(
-                amount: formatNumber(widget.profit),
+                amount: formatNumber(widget.profit.toInt()),
                 title: "Profit",
               ),
             ],

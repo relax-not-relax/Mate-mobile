@@ -70,7 +70,7 @@ class _DataManagementViewState extends State<DataManagementView> {
                         height: 30.w,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage(member),
+                            image: NetworkImage(member),
                             fit: BoxFit.cover,
                           ),
                           borderRadius: BorderRadius.circular(30.w),
