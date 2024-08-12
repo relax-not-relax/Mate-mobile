@@ -149,7 +149,7 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
           customerInRoom: customerInRooms,
           isAssigned: attendanceRoom2.first.staff != null,
           assignDate: DateTime.now(),
-          staff: attendanceRoom1.first.staff);
+          staff: attendanceRoom2.first.staff);
       rs.add(room2);
     }
     return rs;

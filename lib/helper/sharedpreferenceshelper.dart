@@ -51,6 +51,20 @@ class SharedPreferencesHelper {
     return null;
   }
 
+  static Future<AnalysisResult?> getAnalysisResultsByLastTime(
+      int month, int year) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonString = prefs.getString(STATISTICS);
+
+    if (jsonString != null) {
+      List<dynamic> jsonList = jsonDecode(jsonString);
+      List<AnalysisResult> list =
+          jsonList.map((e) => AnalysisResult.fromJson(e)).toList();
+      return list.where((e) => e.listCashFlow.isNotEmpty).firstOrNull;
+    }
+    return null;
+  }
+
   static Future<void> addAnalysisResults(List<AnalysisResult> results) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<AnalysisResult> listPre = await getAnalysisResults();
