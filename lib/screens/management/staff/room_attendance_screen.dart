@@ -312,7 +312,7 @@ class _RoomAttendanceScreenState extends State<RoomAttendanceScreen> {
                         children: [
                           CircleAvatar(
                             radius: 24.w,
-                            backgroundImage: AssetImage(customer.avatar!),
+                            backgroundImage: NetworkImage(customer.avatar!),
                           ),
                           SizedBox(
                             width: 16.w,

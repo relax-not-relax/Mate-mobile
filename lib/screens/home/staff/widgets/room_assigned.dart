@@ -7,7 +7,14 @@ import 'package:iconly/iconly.dart';
 import 'package:unicons/unicons.dart';
 
 class RoomAssigned extends StatefulWidget {
-  const RoomAssigned({super.key});
+  RoomAssigned(
+      {super.key,
+      required this.roomNumber,
+      required this.roomName,
+      required this.isAttended});
+  final int roomNumber;
+  final String roomName;
+  final bool isAttended;
 
   @override
   State<RoomAssigned> createState() => _RoomAssignedState();
@@ -80,7 +87,7 @@ class _RoomAssignedState extends State<RoomAssigned> {
                 height: 24.h,
               ),
               Text(
-                "“Sunflower” Room",
+                "${widget.roomName} Room",
                 style: GoogleFonts.inter(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w700,
@@ -94,7 +101,9 @@ class _RoomAssignedState extends State<RoomAssigned> {
                 crossAxisAlignment: WrapCrossAlignment.start,
                 children: [
                   Text(
-                    "10 rooms",
+                    widget.roomNumber > 1
+                        ? "${widget.roomNumber} rooms"
+                        : "${widget.roomNumber} room",
                     style: GoogleFonts.inter(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
@@ -150,71 +159,74 @@ class _RoomAssignedState extends State<RoomAssigned> {
               ),
 
               // Used when the room has not been attended yet
-              // Container(
-              //   padding:
-              //       EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-              //   decoration: BoxDecoration(
-              //     color: const Color.fromARGB(80, 250, 101, 88),
-              //     borderRadius: BorderRadius.circular(30.w),
-              //   ),
-              //   child: Center(
-              //     child: Wrap(
-              //       alignment: WrapAlignment.spaceEvenly,
-              //       crossAxisAlignment: WrapCrossAlignment.center,
-              //       spacing: 4.w,
-              //       children: [
-              //         Icon(
-              //           UniconsLine.file_exclamation,
-              //           color: const Color.fromARGB(255, 218, 92, 83),
-              //           size: 16.sp,
-              //         ),
-              //         Text(
-              //           "Waiting to be counted",
-              //           style: GoogleFonts.inter(
-              //             color: const Color.fromARGB(255, 218, 92, 83),
-              //             fontSize: 12.sp,
-              //             fontWeight: FontWeight.w500,
-              //           ),
-              //           overflow: TextOverflow.ellipsis,
-              //           maxLines: 1,
-              //         )
-              //       ],
-              //     ),
-              //   ),
-              // ),
-
-              // Used when the room is attended
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(77, 105, 212, 133),
-                  borderRadius: BorderRadius.circular(30.w),
-                ),
-                child: Center(
-                  child: Wrap(
-                    alignment: WrapAlignment.spaceEvenly,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 4.w,
-                    children: [
-                      Icon(
-                        UniconsLine.file_exclamation,
-                        color: const Color.fromARGB(255, 52, 168, 83),
-                        size: 16.sp,
+              !widget.isAttended
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 12.w, vertical: 10.h),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(80, 250, 101, 88),
+                        borderRadius: BorderRadius.circular(30.w),
                       ),
-                      Text(
-                        "Attended",
-                        style: GoogleFonts.inter(
-                          color: const Color.fromARGB(255, 52, 168, 83),
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
+                      child: Center(
+                        child: Wrap(
+                          alignment: WrapAlignment.spaceEvenly,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 4.w,
+                          children: [
+                            Icon(
+                              UniconsLine.file_exclamation,
+                              color: const Color.fromARGB(255, 218, 92, 83),
+                              size: 16.sp,
+                            ),
+                            Text(
+                              "Waiting to be counted",
+                              style: GoogleFonts.inter(
+                                color: const Color.fromARGB(255, 218, 92, 83),
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            )
+                          ],
                         ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      )
-                    ],
-                  ),
-                ),
-              ),
+                      ),
+                    )
+                  :
+
+                  // Used when the room is attended
+                  Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 12.w, vertical: 10.h),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(77, 105, 212, 133),
+                        borderRadius: BorderRadius.circular(30.w),
+                      ),
+                      child: Center(
+                        child: Wrap(
+                          alignment: WrapAlignment.spaceEvenly,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 4.w,
+                          children: [
+                            Icon(
+                              UniconsLine.file_exclamation,
+                              color: const Color.fromARGB(255, 52, 168, 83),
+                              size: 16.sp,
+                            ),
+                            Text(
+                              "Attended",
+                              style: GoogleFonts.inter(
+                                color: const Color.fromARGB(255, 52, 168, 83),
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
             ],
           )
         ],
