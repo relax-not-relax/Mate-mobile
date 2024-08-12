@@ -63,7 +63,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   }
 
   Future<AnalysisResult?> getAnanlysSaved(int month, int year) async {
-    return await SharedPreferencesHelper.getAnalysisResultsByTime(month, year);
+    return await SharedPreferencesHelper.getAnalysisResultsByLastTime(
+        month, year);
   }
 
   @override
