@@ -5,6 +5,12 @@ import 'package:iconly/iconly.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
+import 'package:mate_project/models/analysis_response.dart';
+import 'package:mate_project/models/cash_flow.dart';
+import 'package:mate_project/models/response/CustomerResponse.dart';
+import 'package:mate_project/models/staff.dart';
+import 'package:mate_project/repositories/customer_repo.dart';
+import 'package:mate_project/repositories/staff_repo.dart';
 import 'package:mate_project/screens/authentication/login_selection_screen.dart';
 import 'package:mate_project/screens/chat/admin/messages_list_screen.dart';
 import 'package:mate_project/screens/home/admin/widgets/data_management_view.dart';
@@ -20,15 +26,87 @@ class AdminHomeScreen extends StatefulWidget {
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
   late DateTime now;
   String formatDate = "";
-  List<String> members = [
-    "assets/pics/user_test_1.png",
-    "assets/pics/user_test_2.png",
-    "assets/pics/user_test_3.png",
-  ];
+  List<String> members = [];
+  List<String> staffs = [];
+  CustomerRepository customerRepository = CustomerRepository();
+  StaffRepository staffRepository = StaffRepository();
+  int amountCustomer = 0;
+  int amountStaff = 1;
+  List<CustomerResponse> listCustomer = [];
+
+  List<Staff> listStaff = [];
+
+  List<CashFlow> data = [];
+  double profit = 0;
+  double revenue = 0;
+
+  double getTotalRevenue(List<CashFlow> data) {
+    return data.fold(0.0, (total, cashFlow) => total + cashFlow.revenue);
+  }
+
+  double getTotalProfit(List<CashFlow> data) {
+    return data.fold(0.0, (total, cashFlow) => total + cashFlow.profit);
+  }
+
+  Future<List<CustomerResponse>> getCustomers() async {
+    List<CustomerResponse> rs =
+        (await customerRepository.GetCustomerByAdmin(page: 1, pageSize: 1000));
+
+    return rs;
+  }
+
+  Future<List<Staff>> getStaff() async {
+    List<Staff> rs =
+        (await staffRepository.GetStaffByAdmin(page: 1, pageSize: 1000));
+
+    return rs;
+  }
+
+  Future<AnalysisResult?> getAnanlysSaved(int month, int year) async {
+    return await SharedPreferencesHelper.getAnalysisResultsByTime(month, year);
+  }
 
   @override
   void initState() {
     super.initState();
+    getCustomers().then(
+      (value) {
+        if (mounted) {
+          setState(() {
+            if (value.isNotEmpty) {
+              amountCustomer = value.where((e) => e.status = true).length;
+            }
+            for (var element in value) {
+              members.add(element.avatar ?? "");
+            }
+          });
+        }
+      },
+    );
+    getStaff().then(
+      (value) {
+        if (mounted) {
+          setState(() {
+            amountStaff = value.where((e) => e.status = true).length;
+            for (var element in value) {
+              staffs.add(element.avatar ?? "");
+            }
+          });
+        }
+      },
+    );
+    getAnanlysSaved(DateTime.now().month, DateTime.now().year).then(
+      (value) {
+        if (mounted)
+          setState(() {
+            if (value != null && value.listCashFlow.isNotEmpty) {
+              revenue = getTotalRevenue(value!.listCashFlow);
+              profit = getTotalProfit(value.listCashFlow);
+            }
+          });
+      },
+    );
+
     now = DateTime.now();
     formatDate = DateFormat('dd.MM').format(now);
   }
@@ -79,8 +157,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               left: 0,
               child: StatisticsView(
                 currentMonth: DateTime.now(),
-                revenue: 120120,
-                profit: 1102,
+                revenue: revenue,
+                profit: profit,
               ),
             ),
             Positioned(
@@ -156,7 +234,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                       Color.fromARGB(169, 84, 87, 91),
                                   radius: 25,
                                   child: Badge(
-                                    isLabelVisible: true,
+                                    isLabelVisible: false,
                                     backgroundColor:
                                         const Color.fromARGB(255, 84, 110, 255),
                                     label: Text(
@@ -235,12 +313,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           DataManagementView(
-                            amount: 100,
-                            userImgs: members,
+                            amount: amountStaff,
+                            userImgs: staffs,
                             title: "Mate’s staff",
                           ),
                           DataManagementView(
-                            amount: 100,
+                            amount: amountCustomer,
                             userImgs: members,
                             title: "Customers",
                           ),

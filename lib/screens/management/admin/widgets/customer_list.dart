@@ -21,6 +21,7 @@ class _CustomerListState extends State<CustomerList> {
   TextEditingController _controller = TextEditingController();
   // Test data, gọi API để lấy danh sách khách hàng của hệ thống
   List<CustomerResponse> customers;
+  List<CustomerResponse> customerShows = [];
   List<String> filters = [
     "A - Z",
     "Z - A",
@@ -44,6 +45,9 @@ class _CustomerListState extends State<CustomerList> {
   void initState() {
     super.initState();
     _controller.text = "";
+    setState(() {
+      customerShows = customers;
+    });
   }
 
   @override
@@ -114,6 +118,7 @@ class _CustomerListState extends State<CustomerList> {
                     Navigator.of(context).pop();
                     if (mounted) {
                       setState(() {
+                        customerShows.remove(customer);
                         customers.remove(customer);
                       });
                     }
@@ -247,7 +252,20 @@ class _CustomerListState extends State<CustomerList> {
           ),
           child: SearchField(
             controller: _controller,
-            search: (p0) {},
+            search: (p0) {
+              print(9182390);
+              if (mounted) {
+                if (p0.isNotEmpty) {
+                  setState(() {
+                    customerShows = customers
+                        .where((e) => e.fullname.contains(p0))
+                        .toList();
+                  });
+                } else {
+                  customerShows = customers;
+                }
+              }
+            },
             filter: () {
               displayBottomSheet(context);
             },
@@ -266,7 +284,7 @@ class _CustomerListState extends State<CustomerList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
-                  children: customers.map(
+                  children: customerShows.map(
                     (e) {
                       return CustomerElement(
                         customer: e,
