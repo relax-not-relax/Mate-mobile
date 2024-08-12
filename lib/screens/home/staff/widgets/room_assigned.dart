@@ -110,11 +110,6 @@ class _RoomAssignedState extends State<RoomAssigned> {
                       color: const Color.fromARGB(255, 118, 141, 255),
                     ),
                   ),
-                  Icon(
-                    UniconsLine.angle_double_right,
-                    size: 24.sp,
-                    color: const Color.fromARGB(255, 118, 141, 255),
-                  ),
                 ],
               )
             ],
@@ -157,76 +152,6 @@ class _RoomAssignedState extends State<RoomAssigned> {
               SizedBox(
                 width: 8.w,
               ),
-
-              // Used when the room has not been attended yet
-              !widget.isAttended
-                  ? Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 12.w, vertical: 10.h),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(80, 250, 101, 88),
-                        borderRadius: BorderRadius.circular(30.w),
-                      ),
-                      child: Center(
-                        child: Wrap(
-                          alignment: WrapAlignment.spaceEvenly,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          spacing: 4.w,
-                          children: [
-                            Icon(
-                              UniconsLine.file_exclamation,
-                              color: const Color.fromARGB(255, 218, 92, 83),
-                              size: 16.sp,
-                            ),
-                            Text(
-                              "Waiting to be counted",
-                              style: GoogleFonts.inter(
-                                color: const Color.fromARGB(255, 218, 92, 83),
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            )
-                          ],
-                        ),
-                      ),
-                    )
-                  :
-
-                  // Used when the room is attended
-                  Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 12.w, vertical: 10.h),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(77, 105, 212, 133),
-                        borderRadius: BorderRadius.circular(30.w),
-                      ),
-                      child: Center(
-                        child: Wrap(
-                          alignment: WrapAlignment.spaceEvenly,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          spacing: 4.w,
-                          children: [
-                            Icon(
-                              UniconsLine.file_exclamation,
-                              color: const Color.fromARGB(255, 52, 168, 83),
-                              size: 16.sp,
-                            ),
-                            Text(
-                              "Attended",
-                              style: GoogleFonts.inter(
-                                color: const Color.fromARGB(255, 52, 168, 83),
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
             ],
           )
         ],

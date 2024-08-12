@@ -58,6 +58,9 @@ class _SearchFieldState extends State<SearchField> {
       onTapOutside: (event) {
         FocusScope.of(context).unfocus();
       },
+      onFieldSubmitted: (value) {
+        widget.search(value);
+      },
       decoration: InputDecoration(
         prefixIcon: const Icon(
           IconlyLight.search,

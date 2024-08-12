@@ -96,23 +96,18 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
             tabs: const [
               GButton(
                 icon: IconlyBold.home,
-                text: "Home",
               ),
               GButton(
                 icon: IconlyBold.folder,
-                text: "Data",
               ),
               GButton(
                 icon: IconlyBold.paper,
-                text: "Assign",
               ),
               GButton(
                 icon: IconlyBold.chart,
-                text: "Statistics",
               ),
               GButton(
                 icon: IconsaxPlusBold.music_square_add,
-                text: "Event",
               ),
             ],
           ),

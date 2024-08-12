@@ -237,7 +237,9 @@ class _StaffListState extends State<StaffList> {
           ),
           child: SearchField(
             controller: _controller,
-            search: (p0) {},
+            search: (p0) {
+              print(p0);
+            },
             filter: () {
               displayBottomSheet(context);
             },
