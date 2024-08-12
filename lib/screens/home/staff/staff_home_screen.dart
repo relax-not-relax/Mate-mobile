@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mate_project/helper/helper.dart';
+import 'package:mate_project/helper/sharedpreferenceshelper.dart';
+import 'package:mate_project/models/attendance.dart';
+import 'package:mate_project/models/staff.dart';
+import 'package:mate_project/repositories/attendance_repo.dart';
 import 'package:mate_project/screens/home/staff/widgets/room_assigned.dart';
 
 class StaffHomeScreen extends StatefulWidget {
@@ -11,6 +16,50 @@ class StaffHomeScreen extends StatefulWidget {
 }
 
 class _StaffHomeScreenState extends State<StaffHomeScreen> {
+  AttendanceRepo attendanceRepository = AttendanceRepo();
+  String roomName = 'Loading';
+  int roomNumber = 0;
+  bool isAttended = true;
+
+  Future<void> getAttendance() async {
+    Staff? staff = await SharedPreferencesHelper.getStaff();
+    DateTime date = DateTime.now();
+    DateTime startDate = DateTime(date.year, date.month, date.day, 0, 0, 0);
+    DateTime endDate = DateTime(date.year, date.month, date.day, 23, 59, 59);
+    List<Attendance> listAttendance =
+        await attendanceRepository.GetAttendanceByDay(
+            startDate: startDate, endDate: endDate, staffId: staff!.staffId);
+
+    if (listAttendance.isEmpty) {
+      setState(() {
+        roomName = 'No';
+        roomNumber = 0;
+        isAttended = true;
+      });
+    } else {
+      roomName = Helper.getRoomName(listAttendance.first.roomId);
+      Set<int> uniqueIds = listAttendance.map((e) => e.roomId).toSet();
+      roomNumber = uniqueIds.length;
+      if (listAttendance.any((e) => e.status == 3)) {
+        isAttended = false;
+      } else {
+        isAttended = true;
+      }
+      setState(() {
+        roomName;
+        isAttended;
+        roomNumber;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getAttendance();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +104,11 @@ class _StaffHomeScreenState extends State<StaffHomeScreen> {
               bottom: 150.h,
               right: 0,
               left: 0,
-              child: RoomAssigned(),
+              child: RoomAssigned(
+                roomNumber: roomNumber,
+                roomName: roomName,
+                isAttended: isAttended,
+              ),
             ),
             Positioned(
               top: 32.h,
