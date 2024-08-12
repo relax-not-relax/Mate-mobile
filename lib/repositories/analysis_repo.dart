@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:share/share.dart';
 
 class AnalysisRepository {
   Future<AnalysisResult> uploadFileToAnalysis(String filePath) async {
@@ -41,13 +42,6 @@ class AnalysisRepository {
 
     // Yêu cầu quyền ghi bộ nhớ ngoài
     var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      status = await Permission.storage.request();
-      if (!status.isGranted) {
-        print('Permission denied');
-        return;
-      }
-    }
 
     try {
       final response = await http.get(
@@ -71,6 +65,9 @@ class AnalysisRepository {
         final file = File(filePath);
 
         await file.writeAsBytes(response.bodyBytes);
+
+        Share.shareFiles([file.path], text: 'Here is a file for you.');
+
         print('Excel file downloaded successfully to $filePath');
       } else {
         print(

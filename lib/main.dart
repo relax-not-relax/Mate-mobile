@@ -41,23 +41,7 @@ void main() async {
   var customerResponse = await SharedPreferencesHelper.getCustomer();
   var staff = await SharedPreferencesHelper.getStaff();
   var admin = await SharedPreferencesHelper.getAdmin();
-  var status = await Permission.storage.status;
-  if (!status.isGranted) {
-    status = await Permission.storage.request();
-    if (status.isGranted) {
-      print('Storage permission granted');
-    } else {
-      print('Storage permission denied');
-    }
-  } else {
-    print('Storage permission already granted');
-  }
-  if (await Permission.storage.isPermanentlyDenied) {
-    // The user opted to never again see the permission request dialog for this
-    // app. The only way to change the permission's status now is to let the
-    // user manually enable it in the system settings.
-    openAppSettings();
-  }
+
 
   runApp(MyApp(
     customer: customerResponse,
