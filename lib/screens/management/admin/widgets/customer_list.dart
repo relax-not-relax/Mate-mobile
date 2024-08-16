@@ -30,6 +30,8 @@ class _CustomerListState extends State<CustomerList> {
     "Bronze membership",
     "Inactive",
   ];
+  List<int> filterInt = [];
+  String search = '';
   List<bool> selectedOptions = [
     false,
     false,
@@ -48,6 +50,47 @@ class _CustomerListState extends State<CustomerList> {
     setState(() {
       customerShows = customers;
     });
+  }
+
+  void setList(List<int> filter, String search) {
+    filterInt = filter;
+    if (mounted) {
+      if (search.isNotEmpty) {
+        setState(() {
+          customerShows = customers
+              .where((e) =>
+                  e.fullname.toLowerCase().contains(search.toLowerCase()))
+              .toList();
+        });
+      } else {
+        setState(() {
+          customerShows = customers;
+        });
+      }
+    }
+    if (filter.contains(0) && mounted) {
+      setState(
+        () {
+          customerShows.sort((a, b) => a.fullname.compareTo(b.fullname));
+        },
+      );
+    }
+    if (filter.contains(1)) {
+      setState(() {
+        customerShows.sort((a, b) => b.fullname.compareTo(a.fullname));
+      });
+    }
+    if (filter.contains(2) || filter.contains(3) || filter.contains(4)) {
+      setState(() {
+        customerShows = customerShows
+            .where((e) =>
+                e.packs.isNotEmpty &&
+                ((filter.contains(2) && e.packs.first.packId == 1) ||
+                    (filter.contains(3) && e.packs.first.packId == 2) ||
+                    (filter.contains(4) && e.packs.first.packId == 3)))
+            .toList();
+      });
+    }
   }
 
   @override
@@ -223,13 +266,16 @@ class _CustomerListState extends State<CustomerList> {
                     ),
                     NormalButtonCustom(
                       name: "Confirm",
-                      action: () {
-                        List<String> selectedStrings = [];
+                      action: () async {
+                        List<int> selectedStrings = [];
                         for (int i = 0; i < selectedOptions.length; i++) {
                           if (selectedOptions[i]) {
-                            selectedStrings.add(filters[i]);
+                            selectedStrings.add(i);
                           }
                         }
+                        filterInt = selectedStrings;
+                        setList(selectedStrings, search);
+                        Navigator.pop(context);
                       },
                       background: const Color.fromARGB(255, 84, 110, 255),
                     ),
@@ -253,20 +299,8 @@ class _CustomerListState extends State<CustomerList> {
           child: SearchField(
             controller: _controller,
             search: (p0) {
-              // print(9182390);
-              // if (mounted) {
-              //   if (p0.isNotEmpty) {
-              //     setState(() {
-              //       customerShows = customers
-              //           .where((e) => e.fullname.contains(p0))
-              //           .toList();
-              //     });
-              //   } else {
-              //     customerShows = customers;
-              //   }
-              // }
-
-              print(p0);
+              search = p0;
+              setList(filterInt, search);
             },
             filter: () {
               displayBottomSheet(context);
