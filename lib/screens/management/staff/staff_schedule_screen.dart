@@ -223,7 +223,6 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
   }
 
   Future<void> setDate(DateTime date) async {
-    print('ok');
     DateTime startDate = DateTime(date.year, date.month, date.day, 0, 0, 0);
     DateTime endDate = DateTime(date.year, date.month, date.day, 23, 59, 59);
     dayAttendanceList = [];
@@ -371,6 +370,19 @@ class _StaffScheduleScreenState extends State<StaffScheduleScreen> {
           .dateTime;
       dateTitle = DateFormat.MMMMd().format(selected);
       print(daysList);
+      DateTime startDate =
+          DateTime(selected.year, selected.month, selected.day, 0, 0, 0);
+      DateTime endDate =
+          DateTime(selected.year, selected.month, selected.day, 23, 59, 59);
+      getAttendance(startDate, endDate).then(
+        (value) {
+          if (mounted)
+            setState(() {
+              dayAttendanceList;
+              roomAssign = countRoom();
+            });
+        },
+      );
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         // Scroll to current day after build completes
