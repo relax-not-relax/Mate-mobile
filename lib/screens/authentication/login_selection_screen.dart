@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mate_project/helper/languages_helper.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/rememberme.dart';
 import 'package:mate_project/screens/authentication/customer_login_screen.dart';
@@ -40,7 +41,7 @@ class LoginSelectionScreen extends StatelessWidget {
                   height: 32.h,
                 ),
                 Text(
-                  "Account Login",
+                  LanguagesHelper().getString(LanguagesHelper.accountLogin),
                   style: GoogleFonts.inter(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w700,

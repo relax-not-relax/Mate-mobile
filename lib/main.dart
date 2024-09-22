@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mate_project/blocs/customer_bloc.dart';
 import 'package:mate_project/blocs/staff_bloc.dart';
 import 'package:mate_project/generated/l10n.dart';
+import 'package:mate_project/helper/languages_helper.dart';
 import 'package:mate_project/helper/sharedpreferenceshelper.dart';
 import 'package:mate_project/models/admin.dart';
 import 'l10n/app_localizations.dart';
@@ -43,6 +44,7 @@ void main() async {
   var customerResponse = await SharedPreferencesHelper.getCustomer();
   var staff = await SharedPreferencesHelper.getStaff();
   var admin = await SharedPreferencesHelper.getAdmin();
+  LanguagesHelper.lg = 'en';
 
   runApp(MyApp(
     customer: customerResponse,
@@ -103,18 +105,6 @@ class _MyAppState extends State<MyApp> {
       ],
       child: ScreenUtilInit(
         builder: (context, child) => MaterialApp(
-          supportedLocales: [
-            Locale('vi', ''), // Ngôn ngữ Việt (mặc định)
-            Locale('en', ''), // Ngôn ngữ Anh
-          ],
-          locale: _locale,
-          // Cấu hình các delegates
-          // localizationsDelegates: [
-          //   AppLocalizations,
-          //   GlobalMaterialLocalizations.delegate,
-          //   GlobalWidgetsLocalizations.delegate,
-          //   GlobalCupertinoLocalizations.delegate,
-          // ],
           title: 'Flutter Demo',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(
