@@ -57,6 +57,7 @@ class _CustomerFavoriteScreenState extends State<CustomerFavoriteScreen> {
       (value) {
         print(customer!.favorite);
         _favoriteController.text = customer!.favorite ?? "";
+
         favorites = customer!.favorite!
             .split(",")
             .map(
@@ -89,10 +90,12 @@ class _CustomerFavoriteScreenState extends State<CustomerFavoriteScreen> {
           newHobbies.add(hobby);
           textController.text = newHobbies.join(", ");
           fieldHeight += 16.h;
+          favorites = newHobbies;
         } else {
           newHobbies.remove(hobby);
           textController.text = newHobbies.join(", ");
           fieldHeight -= 16.h;
+          favorites = newHobbies;
         }
       });
   }
