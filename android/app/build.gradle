@@ -48,7 +48,7 @@ android {
         versionName flutterVersionName
         multiDexEnabled true
     }
-signingConfigs {
+    signingConfigs {
         release {
             keyAlias = keystoreProperties['keyAlias']
             keyPassword = keystoreProperties['keyPassword']
