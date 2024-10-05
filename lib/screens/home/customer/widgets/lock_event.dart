@@ -32,7 +32,7 @@ class LockEvent extends StatelessWidget {
             ),
             Flexible(
               child: Text(
-                "Become a member to view this content",
+                "There are no events scheduled at this time",
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.inter(

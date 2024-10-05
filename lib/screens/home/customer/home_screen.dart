@@ -53,27 +53,39 @@ class _HomeScreenState extends State<HomeScreen>
     switch (type) {
       case 1:
         roomId1 = 1;
-        roomName1 = "Sunflower";
+        roomName1 = "Iris";
         break;
       case 2:
         roomId1 = 2;
-        roomName1 = "Lily";
+        roomName1 = "Peony";
         break;
       case 3:
         roomId1 = 3;
-        roomName1 = "Soulmate";
+        roomName1 = "Lotus";
         break;
       case 4:
         roomId1 = 4;
-        roomName1 = "F4 Plus";
+        roomName1 = "Infinite Frontier";
         break;
       case 5:
         roomId1 = 5;
-        roomName1 = "New Zone";
+        roomName1 = "New Haven";
         break;
       case 6:
         roomId1 = 6;
-        roomName1 = "New World";
+        roomName1 = "Horizon Edge";
+        break;
+      case 7:
+        roomId1 = 7;
+        roomName1 = "HeartLink";
+        break;
+      case 8:
+        roomId1 = 8;
+        roomName1 = "TrueBond";
+        break;
+      case 9:
+        roomId1 = 9;
+        roomName1 = "DreamScape";
         break;
     }
     List<Attendance> attendanceRoom1 =

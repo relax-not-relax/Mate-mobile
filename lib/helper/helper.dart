@@ -2,11 +2,11 @@ import 'package:mate_project/models/pack.dart';
 
 class Helper {
   static String convertRoomToPackName(int roomId) {
-    if (roomId == 1 || roomId == 2) {
+    if (roomId == 1 || roomId == 2 || roomId == 3) {
       return "Gold";
-    } else if (roomId == 3 || roomId == 4) {
+    } else if (roomId == 4 || roomId == 5 || roomId == 6) {
       return "Silver";
-    } else if (roomId == 5 || roomId == 6) {
+    } else if (roomId == 7 || roomId == 8 || roomId == 9) {
       return "Bronze";
     } else {
       return "No";
@@ -46,17 +46,23 @@ class Helper {
   static String getRoomName(int roomId) {
     switch (roomId) {
       case 1:
-        return "Sunflower";
+        return "Iris";
       case 2:
-        return "Lily";
+        return "Peony";
       case 3:
-        return "Soulmate";
+        return "Lotus";
       case 4:
-        return "F4 plus";
+        return "Infinite Frontier";
       case 5:
-        return "New Zone";
+        return "New Haven";
       case 6:
-        return "New World";
+        return "Horizon Edge";
+      case 7:
+        return "HeartLink";
+      case 8:
+        return "TrueBond";
+      case 9:
+        return "DreamScape";
     }
     return "";
   }

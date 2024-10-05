@@ -250,12 +250,24 @@ class CustomerRepository {
         return 2;
       }
 
+      final response3 = await http.get(
+        Uri.parse("${Config.apiRoot}api/room/Customer-In-Room?RoomId=3"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${account.accessToken}',
+        },
+      );
+      final jsonData3 = json.decode(response3.body);
+      if (int.parse(jsonData3['totalNumberOfRecords'].toString()) < 1) {
+        return 3;
+      }
+
       throw CustomException(
           type: Failure.RoomFull, content: 'This package is currently full');
     } else if (packId == 2) {
       //Silver Room
       final response = await http.get(
-        Uri.parse("${Config.apiRoot}api/room/Customer-In-Room?RoomId=3"),
+        Uri.parse("${Config.apiRoot}api/room/Customer-In-Room?RoomId=4"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer ${account!.accessToken}',
@@ -263,11 +275,11 @@ class CustomerRepository {
       );
       final jsonData = json.decode(response.body);
       if (int.parse(jsonData['totalNumberOfRecords'].toString()) < 2) {
-        return 3;
+        return 4;
       }
 
       final response2 = await http.get(
-        Uri.parse("${Config.apiRoot}api/room/Customer-In-Room?RoomId=4"),
+        Uri.parse("${Config.apiRoot}api/room/Customer-In-Room?RoomId=5"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer ${account.accessToken}',
@@ -275,34 +287,57 @@ class CustomerRepository {
       );
       final jsonData2 = json.decode(response2.body);
       if (int.parse(jsonData2['totalNumberOfRecords'].toString()) < 2) {
-        return 4;
-      }
-      throw CustomException(
-          type: Failure.RoomFull, content: 'This package is currently full');
-    } else {
-      //Bronze Room
-      final response = await http.get(
-        Uri.parse("${Config.apiRoot}api/room/Customer-In-Room?RoomId=5"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer ${account!.accessToken}',
-        },
-      );
-      final jsonData = json.decode(response.body);
-      if (int.parse(jsonData['totalNumberOfRecords'].toString()) < 5) {
         return 5;
       }
-
-      final response2 = await http.get(
+      final response3 = await http.get(
         Uri.parse("${Config.apiRoot}api/room/Customer-In-Room?RoomId=6"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer ${account.accessToken}',
         },
       );
-      final jsonData2 = json.decode(response2.body);
-      if (int.parse(jsonData2['totalNumberOfRecords'].toString()) >= 5) {
+      final jsonData3 = json.decode(response3.body);
+      if (int.parse(jsonData3['totalNumberOfRecords'].toString()) < 2) {
         return 6;
+      }
+      throw CustomException(
+          type: Failure.RoomFull, content: 'This package is currently full');
+    } else {
+      //Bronze Room
+      final response = await http.get(
+        Uri.parse("${Config.apiRoot}api/room/Customer-In-Room?RoomId=7"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${account!.accessToken}',
+        },
+      );
+      final jsonData = json.decode(response.body);
+      if (int.parse(jsonData['totalNumberOfRecords'].toString()) < 3) {
+        return 7;
+      }
+
+      final response2 = await http.get(
+        Uri.parse("${Config.apiRoot}api/room/Customer-In-Room?RoomId=8"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${account.accessToken}',
+        },
+      );
+      final jsonData2 = json.decode(response2.body);
+      if (int.parse(jsonData2['totalNumberOfRecords'].toString()) < 3) {
+        return 8;
+      }
+
+      final response3 = await http.get(
+        Uri.parse("${Config.apiRoot}api/room/Customer-In-Room?RoomId=9"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${account.accessToken}',
+        },
+      );
+      final jsonData3 = json.decode(response3.body);
+      if (int.parse(jsonData3['totalNumberOfRecords'].toString()) < 3) {
+        return 9;
       }
       throw CustomException(
           type: Failure.RoomFull, content: 'This package is currently full');

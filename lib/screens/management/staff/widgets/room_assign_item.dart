@@ -31,7 +31,7 @@ class _RoomAssignItemState extends State<RoomAssignItem> {
     room =
         (await roomRepository.GetRoomStaff(roomId: widget.attendance.roomId))!;
     customer = widget.attendance.customer!;
-    if (room!.roomId == 1 || room!.roomId == 2) {
+    if (room!.roomId == 1 || room!.roomId == 2 || room!.roomId == 3) {
       pack = Pack(
         packId: 1,
         price: 289,
@@ -40,7 +40,7 @@ class _RoomAssignItemState extends State<RoomAssignItem> {
         duration: 0,
         status: true,
       );
-    } else if (room!.roomId == 3 || room!.roomId == 4) {
+    } else if (room!.roomId == 4 || room!.roomId == 5 || room!.roomId == 6) {
       pack = Pack(
         packId: 2,
         price: 199,
