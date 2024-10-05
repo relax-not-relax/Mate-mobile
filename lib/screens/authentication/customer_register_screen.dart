@@ -62,6 +62,18 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
             }
             if (state is SendCodeFailure) {
               Navigator.pop(context);
+              dialogCustom.showSelectionDialog(
+                context,
+                'assets/pics/error.png',
+                'Account already exists',
+                'Please try another mail address',
+                true,
+                const Color.fromARGB(255, 230, 57, 71),
+                'Continue',
+                () {
+                  Navigator.of(context).pop();
+                },
+              );
             }
             if (state is SendCodeSucess) {
               Navigator.pushAndRemoveUntil(
@@ -160,29 +172,6 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                     SizedBox(
                       height: 48.h,
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Or continue with',
-                        style: GoogleFonts.inter(
-                          color: Color.fromARGB(255, 184, 184, 184),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13.sp,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 16.h,
-                    ),
-                    const Align(
-                      alignment: Alignment.center,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        backgroundImage: AssetImage(
-                          "assets/pics/google_icon.png",
-                        ),
-                      ),
-                    )
                   ],
                 ),
               ),

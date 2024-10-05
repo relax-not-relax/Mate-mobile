@@ -93,26 +93,34 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
   Future<List<RoomAssign>> getRoomGold(int type, DateTime inDate) async {
     int roomId1 = 0;
     int roomId2 = 0;
+    int roomId3 = 0;
     String roomName1 = "";
     String roomName2 = "";
+    String roomName3 = "";
     switch (type) {
       case 1:
         roomId1 = 1;
         roomId2 = 2;
-        roomName1 = "Sunflower";
-        roomName2 = "Lily";
+        roomId3 = 3;
+        roomName1 = "Iris";
+        roomName2 = "Peony";
+        roomName3 = "Lotus";
         break;
       case 2:
-        roomId1 = 3;
-        roomId2 = 4;
-        roomName1 = "Soulmate";
-        roomName2 = "F4 Plus";
+        roomId1 = 4;
+        roomId2 = 5;
+        roomId3 = 6;
+        roomName1 = "Infinite Frontier";
+        roomName2 = "New Haven";
+        roomName3 = "Horizon Edge";
         break;
       case 3:
-        roomId1 = 5;
-        roomId2 = 6;
-        roomName1 = "New Zone";
-        roomName2 = "New World";
+        roomId1 = 7;
+        roomId2 = 8;
+        roomId3 = 9;
+        roomName1 = "HeartLink";
+        roomName2 = "TrueBond";
+        roomName3 = "DreamScape";
         break;
     }
     List<RoomAssign> rs = [];
@@ -120,6 +128,8 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
         await getAttendanceInRoom(inDate, roomId1);
     List<Attendance> attendanceRoom2 =
         await getAttendanceInRoom(inDate, roomId2);
+    List<Attendance> attendanceRoom3 =
+        await getAttendanceInRoom(inDate, roomId3);
     if (attendanceRoom1.isNotEmpty) {
       List<CustomerInRoom> customerInRooms = [];
       for (var element in attendanceRoom1) {
@@ -151,6 +161,22 @@ class _AdminAssignScreenState extends State<AdminAssignScreen>
           assignDate: DateTime.now(),
           staff: attendanceRoom2.first.staff);
       rs.add(room2);
+    }
+    if (attendanceRoom3.isNotEmpty) {
+      List<CustomerInRoom> customerInRooms = [];
+      for (var element in attendanceRoom3) {
+        CustomerInRoom cusInRoom = CustomerInRoom(
+            room: Room(roomId: roomId3, managerId: 0, roomName: roomName3),
+            customer: element.customer!,
+            joinDate: element.checkDate);
+        customerInRooms.add(cusInRoom);
+      }
+      RoomAssign room3 = RoomAssign(
+          customerInRoom: customerInRooms,
+          isAssigned: attendanceRoom3.first.staff != null,
+          assignDate: DateTime.now(),
+          staff: attendanceRoom3.first.staff);
+      rs.add(room3);
     }
     return rs;
   }
