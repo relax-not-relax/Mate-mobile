@@ -95,7 +95,7 @@ class _EditTextFieldState extends State<EditTextField> {
               horizontal: 16.w,
             ),
             filled: true,
-            fillColor: const Color.fromARGB(255, 238, 241, 255),
+            fillColor: const Color.fromRGBO(198, 247, 228, 100),
           ),
         )
       ],
